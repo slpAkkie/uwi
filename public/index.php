@@ -1,15 +1,8 @@
 <?php
 
-/**
- * |-------------------------------------------------
- * | Register class autoloader
- * |-------------------------------------------------
- * | Probably should be replaced with
- * | composer psr-4 autoload
- * |-------------------------------------------------
- */
-
-spl_autoload_register('spl_autoload');
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', true);
+ini_set('display_startup_errors', true);
 
 
 
@@ -32,3 +25,36 @@ if (!defined('APP_ROOT_PATH'))
 
 if (!defined('CONFIG_PATH'))
     define('CONFIG_PATH', APP_ROOT_PATH . DIR_SEP . 'config');
+
+// Define class root path for autoloader
+if (!defined('SCAL_PROJECT_ROOT'))
+    define('SCAL_PROJECT_ROOT', APP_ROOT_PATH);
+
+
+
+/**
+ * |-------------------------------------------------
+ * | Register class autoloader
+ * |-------------------------------------------------
+ * | Here is used Scal autoloader
+ * | Written by me
+ * |-------------------------------------------------
+ */
+
+// Require, set configuration and register autoloader
+require_once(APP_ROOT_PATH . DIR_SEP . 'vendor' . DIR_SEP . 'Scal' . DIR_SEP . 'Scal.php');
+Scal\Loader::$custom_conf_path = SCAL_PROJECT_ROOT . DIR_SEP . 'Scal.json';
+spl_autoload_register('spl_autoload');
+
+
+
+/**
+ * |-------------------------------------------------
+ * | Run bootstrapper
+ * |-------------------------------------------------
+ * | Bootstrapper disassemble the request
+ * | and run the App container
+ * |-------------------------------------------------
+ */
+
+require_once(APP_ROOT_PATH . DIR_SEP . 'bootstrap' . DIR_SEP . 'app.php');
