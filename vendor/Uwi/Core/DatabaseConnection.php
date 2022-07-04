@@ -6,5 +6,5 @@ use PDO;
 
 class DatabaseConnection extends PDO
 {
-    // TODO: Implement
+    // TODO: Implement...
 }

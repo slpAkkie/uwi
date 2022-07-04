@@ -4,5 +4,5 @@ namespace Uwi\Support\Str;
 
 class Str
 {
-    // TODO: Implement
+    // TODO: Implement...
 }

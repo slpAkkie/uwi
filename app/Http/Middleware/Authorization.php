@@ -6,5 +6,5 @@ use Uwi\Http\Middleware\Middleware;
 
 class Authorization extends Middleware
 {
-    // TODO: Implement
+    // TODO: Implement...
 }
