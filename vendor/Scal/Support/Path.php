@@ -50,7 +50,6 @@ class Path
 
         if (PHP_OS === 'Linux') $path = DIRECTORY_SEPARATOR . $path;
 
-        exit;
         return $path;
     }
 
