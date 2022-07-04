@@ -1,5 +1,6 @@
 {
   "np": {
+    "App" : "app",
     "Uwi" : "vendor\\Uwi"
   }
 }
