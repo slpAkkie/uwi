@@ -45,11 +45,12 @@ class Path
         $path = preg_replace(
             ['/[\/\\\]/', '/^\./'],
             [DIRECTORY_SEPARATOR, realpath('')],
-            DIRECTORY_SEPARATOR . trim($path, '/\\')
+            trim($path, '/\\')
         );
 
         if (PHP_OS === 'Linux') $path = DIRECTORY_SEPARATOR . $path;
 
+        exit;
         return $path;
     }
 
