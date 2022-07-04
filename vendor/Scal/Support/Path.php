@@ -42,11 +42,15 @@ class Path
      */
     private static function normalizePath(string $path): string
     {
-        return preg_replace(
+        $path = preg_replace(
             ['/[\/\\\]/', '/^\./'],
             [DIRECTORY_SEPARATOR, realpath('')],
             DIRECTORY_SEPARATOR . trim($path, '/\\')
         );
+
+        if (PHP_OS === 'Linux') $path = DIRECTORY_SEPARATOR . $path;
+
+        return $path;
     }
 
     /**
