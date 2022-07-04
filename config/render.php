@@ -11,6 +11,11 @@
 
 return [
 
-    'views_path' => APP_ROOT_PATH . DIR_SEP . 'views',
+    /**
+     * |-------------------------------------------------
+     * | Path to views folder
+     * | relative to the project root directory
+     */
+    'views' => 'views',
 
 ];
