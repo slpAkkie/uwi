@@ -4,5 +4,5 @@ namespace Uwi\Support\Collection;
 
 class Collection
 {
-    // TODO: Implement
+    // TODO: Implement...
 }
