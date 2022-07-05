@@ -48,10 +48,7 @@ if (!defined('SCAL_PROJECT_ROOT'))
  * |-------------------------------------------------
  */
 
-// Require, set configuration and register autoloader
 require_once(APP_ROOT_PATH . DIR_SEP . 'vendor' . DIR_SEP . 'Scal' . DIR_SEP . 'Scal.php');
-Scal\Loader::$custom_conf_path = SCAL_PROJECT_ROOT . DIR_SEP . 'Scal.json';
-spl_autoload_register('spl_autoload');
 
 
 
