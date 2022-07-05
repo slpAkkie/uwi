@@ -175,12 +175,18 @@ class Loader
         foreach (self::$namespaceMapping as $namespacePart => $v) {
             if (str_starts_with($classNamespace, $namespacePart)) {
                 $path = $v;
-                $remainPath = substr($classNamespace, strlen($namespacePart));
+                $remainPath = Path::unify(substr($classNamespace, strlen($namespacePart)));
             }
         }
 
         // Check if file exists and return it
-        return self::findClassFile($path, $remainPath, $class . '.php');
+        $path = self::findClassFile($path, $remainPath, $class . '.php');
+
+        if ($path === null) {
+            throw new Exception('Class file \'' . Path::glue($path, $remainPath, $class . '.php') . '\' not found');
+        }
+
+        return $path;
     }
 
     /**
@@ -190,9 +196,9 @@ class Loader
      * @param string $remain
      * @param string $file
      * @throws Exception
-     * @return string
+     * @return ?string
      */
-    public static function findClassFile(string|array $path, string $remain, string $file): string
+    public static function findClassFile(string|array $path, string $remain, string $file): ?string
     {
         return match (gettype($path)) {
             // If Path is a string try to find class file here
@@ -209,7 +215,6 @@ class Loader
                     }
                 }
             })(),
-            default => throw new Exception('Class \'' . substr($file, 0, -4) . '\' file not found'),
         };
     }
 
