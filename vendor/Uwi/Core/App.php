@@ -9,6 +9,13 @@ use Uwi\Support\FileSystem\FileSystem;
 class App
 {
     /**
+     * App instancde
+     *
+     * @var App
+     */
+    public static App $instance;
+
+    /**
      * Array of all configuration files
      *
      * @var array
@@ -33,23 +40,45 @@ class App
             $configKey = FileSystem::getFileNameWithoutExtention($configFile);
             $this->config[$configKey] = include_once($configFile);
         }
+
+        // Save it's instance
+        self::$instance = $this;
     }
 
     /**
-     * Get loaded config by specified key
+     * Get loaded config by specified configuration name
      *
-     * @param string $key
+     * @param string $configurationName
+     * @param ?string $key
+     * @param mixed $default
      * @throws FileNotFoundException
-     * @return array
+     * @return mixed
      */
-    public function getConfig(string $key): array
+    public function getConfig(string $configurationName, ?string $key = null, mixed $default = null): mixed
     {
         // Check if config with provided key extists
-        if (!key_exists($key, $this->config)) {
-            throw new NotFoundException('Config key \'' . $key . '\' not found');
+        if (!key_exists($configurationName, $this->config)) {
+            throw new NotFoundException('Config key \'' . $configurationName . '\' not found');
         }
 
-        return $this->config[$key];
+        $config = $this->config[$configurationName];
+
+        // Check if key provided
+        if ($key !== null) {
+            // Check if key exists in the configuration
+            if (!key_exists($key, $config)) {
+                // Check if default value specified
+                if ($default !== null) {
+                    return $default;
+                }
+
+                throw new NotFoundException('Config key \'' . $configurationName . '\' not found');
+            }
+
+            return $config[$key];
+        }
+
+        return $config;
     }
 
     /**
@@ -61,7 +90,7 @@ class App
      */
     public function singleton(string $key, ?string $className = null): mixed
     {
-        // Check if class already booted
+        // Check if class already instantiated
         // and saved to the App instance
         if (key_exists($key, $this->singletons)) {
             return $this->singletons[$key];
@@ -69,10 +98,10 @@ class App
             return null;
         }
 
-        // Check if it already booted
+        // Check if it already instantiated
         // but wasn't saved to the App instance
-        if (property_exists($className, 'booted') && $className::$booted) {
-            throw new Exception('Class \'' . $className . '\' already has been booted');
+        if (property_exists($className, 'isInstantiated') && $className::$isInstantiated) {
+            throw new Exception('Class \'' . $className . '\' already has been instantiated');
         }
 
         // Instantiate class and save it with a key
@@ -95,12 +124,29 @@ class App
     }
 
     /**
+     * Load dependencies according to config
+     *
+     * @return self
+     */
+    public function loadDependencies(): self
+    {
+        foreach ($this->getConfig('app', 'dependencies', []) as $key => $className) {
+            $this->singleton($key, $className);
+        }
+
+        return $this;
+    }
+
+    /**
      * Run the Application
      *
      * @return void
      */
     public function run(): void
     {
-        // TODO: Implement...
+        // Boot dependencies
+        foreach ($this->singletons as $singleton) {
+            $singleton->boot();
+        }
     }
 }
