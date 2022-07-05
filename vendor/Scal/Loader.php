@@ -239,10 +239,5 @@ class Loader
         }
 
         require_once($file_path);
-
-        // Check if class was loaded
-        if (!class_exists($class, false)) {
-            throw new Exception('Class file loaded but there is no class');
-        }
     }
 }
