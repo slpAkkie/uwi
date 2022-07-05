@@ -2,6 +2,7 @@
 
 namespace Uwi\Core;
 
+use ReflectionMethod;
 use Uwi\Exceptions\Exception;
 use Uwi\Exceptions\NotFoundException;
 use Uwi\Http\Request\Request;
@@ -167,6 +168,47 @@ class App
         }
 
         // Identify Route and run the controller
-        $this->singleton('router')->getCurrentRoute();
+        $currentRoute = $this->singleton('router')->getCurrentRoute();
+
+        // Examine method parameters and resolve them
+        $controllerClass = $currentRoute->controllerClass;
+        $controller = new $controllerClass();
+
+        // Run the controller method with collected parameters
+        $controller->{$currentRoute->controllerMethod}(
+            ...$this->resolveControllerMethodParameter($controllerClass, $currentRoute->controllerMethod)
+        );
+    }
+
+    /**
+     * Collect and instantiate controller method parameters
+     *
+     * @param string $controller
+     * @param string $method
+     * @return array
+     */
+    private function resolveControllerMethodParameter(string $controller, string $method): array
+    {
+        $reflectedControllerMethod = new ReflectionMethod($controller, $method);
+        $reflectedMethodParameters = $reflectedControllerMethod->getParameters();
+
+
+        // Collect method parameters
+        // ! Support Request extended class as parameter only
+        $methodArgs = [];
+
+        foreach ($reflectedMethodParameters as $reflectedParameter) {
+            $paramType = $reflectedParameter->getType()->getName();
+
+            if (is_subclass_of($paramType, Request::class)) {
+                $methodArgs[] = app()->create($paramType);
+            } else if ($paramType === Request::class) {
+                $methodArgs[] = app()->request;
+            } else {
+                $methodArgs[] = null;
+            }
+        }
+
+        return $methodArgs;
     }
 }
