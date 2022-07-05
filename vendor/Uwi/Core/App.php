@@ -4,7 +4,9 @@ namespace Uwi\Core;
 
 use Uwi\Exceptions\Exception;
 use Uwi\Exceptions\NotFoundException;
+use Uwi\Http\Request\Request;
 use Uwi\Support\FileSystem\FileSystem;
+use Uwi\Support\Path\Path;
 
 class App
 {
@@ -14,6 +16,13 @@ class App
      * @var App
      */
     public static App $instance;
+
+    /**
+     * Request object
+     *
+     * @var Request
+     */
+    private Request $request;
 
     /**
      * Array of all configuration files
@@ -34,12 +43,20 @@ class App
      */
     public function __construct()
     {
+        // Load functions
+        foreach (FileSystem::getFiles(Path::glue(VENDOR_UWI_PATH, 'Functions')) as $functionsFile) {
+            include_once($functionsFile);
+        }
+
         // Load all configurations
         $configFiles = FileSystem::getFiles(CONFIG_PATH);
         foreach ($configFiles as $configFile) {
             $configKey = FileSystem::getFileNameWithoutExtention($configFile);
             $this->config[$configKey] = include_once($configFile);
         }
+
+        // Create Request
+        $this->request = $this->create(Request::class);
 
         // Save it's instance
         self::$instance = $this;
@@ -148,5 +165,8 @@ class App
         foreach ($this->singletons as $singleton) {
             $singleton->boot();
         }
+
+        // Identify Route and run the controller
+        $this->singleton('router')->getCurrentRoute();
     }
 }
