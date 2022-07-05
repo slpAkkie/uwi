@@ -57,9 +57,9 @@ class Router
     /**
      * App Instance
      *
-     * @var ?App
+     * @var App
      */
-    private static ?App $appInstance = null;
+    private App $appInstance;
 
     /**
      * List of routes
@@ -88,18 +88,18 @@ class Router
     public function __construct(App $appInstance)
     {
         // Save the App instance
-        self::$appInstance = $appInstance;
+        $this->appInstance = $appInstance;
 
 
 
         // Load configuration
-        $this->routesPath = self::$appInstance->getConfig(
+        $this->routesPath = $this->appInstance->getConfig(
             self::CONFIG_KEY,
             'routes_path',
             self::DEFAULT_ROUTES_PATH
         );
 
-        $this->routesFile = self::$appInstance->getConfig(
+        $this->routesFile = $this->appInstance->getConfig(
             self::CONFIG_KEY,
             'routes_file',
             self::DEFAULT_ROUTES_FILE
@@ -169,8 +169,8 @@ class Router
         }
 
         // Create new route with provided arguments
-        $router = self::$appInstance->singleton('router', self::class);
-        $route = $router->routes[] = self::$appInstance->create(Route::class, $method, ...$arguments);
+        $router = app()->singleton('router', self::class);
+        $route = $router->routes[] = app()->create(Route::class, $method, ...$arguments);
 
         // Return create route
         return $route;
