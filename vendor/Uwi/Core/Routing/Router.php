@@ -55,13 +55,6 @@ class Router
     private string $routesFile;
 
     /**
-     * App Instance
-     *
-     * @var App
-     */
-    private App $appInstance;
-
-    /**
      * List of routes
      *
      * @var array
@@ -85,21 +78,16 @@ class Router
     /**
      * Initialize the Router
      */
-    public function __construct(App $appInstance)
+    public function __construct()
     {
-        // Save the App instance
-        $this->appInstance = $appInstance;
-
-
-
         // Load configuration
-        $this->routesPath = $this->appInstance->getConfig(
+        $this->routesPath = app()->getConfig(
             self::CONFIG_KEY,
             'routes_path',
             self::DEFAULT_ROUTES_PATH
         );
 
-        $this->routesFile = $this->appInstance->getConfig(
+        $this->routesFile = app()->getConfig(
             self::CONFIG_KEY,
             'routes_file',
             self::DEFAULT_ROUTES_FILE

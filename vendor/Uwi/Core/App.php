@@ -122,7 +122,7 @@ class App
         }
 
         // Instantiate class and save it with a key
-        return $this->singletons[$key] = new $className($this);
+        return $this->singletons[$key] = new $className();
     }
 
     /**
@@ -135,7 +135,7 @@ class App
      */
     public function create(string $className, ...$arguments): mixed
     {
-        $instance = new $className($this, ...$arguments);
+        $instance = new $className(...$arguments);
 
         return $instance;
     }
