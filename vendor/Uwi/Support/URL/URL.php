@@ -1,8 +1,8 @@
 <?php
 
-namespace Uwi\Support\URI;
+namespace Uwi\Support\URL;
 
-class URI
+class URL
 {
     // TODO: Implement...
 }
