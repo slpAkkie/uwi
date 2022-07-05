@@ -7,13 +7,6 @@ use Uwi\Core\App;
 class Route
 {
     /**
-     * App Instance
-     *
-     * @var App
-     */
-    private App $appInstance;
-
-    /**
      * HTTP method
      *
      * @var string
@@ -51,16 +44,12 @@ class Route
     /**
      * Instantiate new Route
      *
-     * @param App $app
      * @param string $method
      * @param string $url
      * @param array $action
      */
-    public function __construct(App $app, string $method, string $url, array $action)
+    public function __construct(string $method, string $url, array $action)
     {
-        // Save the App instance
-        $this->appInstance = $app;
-
         // Save route data
         $this->method = $method;
         $this->url = $url;
