@@ -1,139 +1,106 @@
 <?php
 
-/*
-|
-|--------------------------------------------------
-| Class for work with paths
-|--------------------------------------------------
-|
-| Support to work with paths.
-| Useful only for Scal
-|
-*/
-
 namespace Scal\Support;
 
 class Path
 {
     /**
-     * Normalize path or array of paths
-     *
-     * @param string|array $path
-     * @return string|array
+     * Directories that should be skipped
+     * 
+     * @var array
      */
-    public static function normalize($path)
+    private const DIRECTORIES_TO_SKIP = [
+        '.', '..',
+    ];
+
+    /**
+     * Get subdirectories
+     *
+     * @param string $path
+     * @return array
+     */
+    public static function getSubdirectories(string $path): array
     {
-        switch (gettype($path)) {
-            case 'string':
-                return self::normalizePath($path);
-            case 'array':
-                foreach ($path as $i => $value) $path[$i] = self::normalize($value);
-                return $path;
-            default:
-                return null;
+        $subdirectories = [
+            $path,
+        ];
+
+        foreach (scandir($path) as $entry) {
+            if (in_array($entry, self::DIRECTORIES_TO_SKIP)) continue;
+            $entry = self::glue($path, $entry);
+            if (is_file($entry)) continue;
+
+            if (is_dir($entry)) {
+                $subdirectories = array_merge(self::getSubdirectories(Path::glue($entry)), $subdirectories);
+            } else {
+                $subdirectories[] = $entry;
+            }
         }
+
+        return $subdirectories;
     }
 
     /**
-     * Normalize path
+     * Unify the path
      *
      * @param string $path
-     * @return string
+     * @return string|array
      */
-    private static function normalizePath(string $path): string
+    public static function unify(string $path): string|array
     {
-        $path = preg_replace(
-            ['/[\/\\\]/', '/^\./'],
-            [DIRECTORY_SEPARATOR, realpath('')],
-            trim($path, '/\\')
-        );
+        $path = preg_replace('/\\\/', DIR_SEP, $path);
 
-        if (PHP_OS === 'Linux') $path = DIRECTORY_SEPARATOR . $path;
+        if (str_ends_with($path, '*')) {
+            $path = self::getSubdirectories(substr($path, 0, -2));
+        }
 
         return $path;
     }
 
     /**
-     * Parse path from \Scal\Loader::$NP
-     * Whether it's a string or an array
+     * Parse array of paths and make it uniformly
      *
-     * @param string|array $path
+     * @param array $arrayOfPath
+     * @return array
+     */
+    public static function parseArray(array $arrayOfPath): array
+    {
+        foreach ($arrayOfPath as $k => $v) {
+            $parsed = self::parse($v);
+
+            if (is_array($parsed)) {
+                $arrayOfPath = array_merge($arrayOfPath, $parsed);
+            } else {
+                $arrayOfPath[$k] = $parsed;
+            }
+        }
+
+        return $arrayOfPath;
+    }
+
+    /**
+     * Parse the path and make it uniformly
+     *
+     * @param string|array $arg
      * @return string|array|null
-     *
-     * @throws \Scal\Exceptions\WrongConfigurationException
      */
-    public static function parse($path)
+    public static function parse(string|array $arg): string|array|null
     {
-        switch (gettype($path)) {
-            case 'array':
-                $path = array_map(function ($p) {
-                    return Path::parsePath($p);
-                }, $path);
-
-                foreach ($path as $i => $el) {
-                    if (gettype($el) === 'array') {
-                        array_splice($path, $i, 1, $el);
-                    }
-                }
-                return $path;
-            case 'string':
-                return self::parsePath($path);
-            default:
-                if (SCAL_EXCEPTION_MODE)
-                    throw new \Scal\Exceptions\WrongConfigurationException();
-                else return null;
-        }
-    }
-
-    /**
-     * Parse path from \Scal\Loader::$NP
-     * Only string
-     *
-     * @param string $path
-     * @return string|array
-     */
-    private static function parsePath(string $path)
-    {
-        if (substr($path, -1) === '*')
-            return array_merge(
-                [substr($path, 0, -2)],
-                Path::subdirs($path) ?? []
-            );
-        else return Path::normalize($path);
-    }
-
-    /**
-     * Recursively get all subdirectories
-     *
-     * @param string $root
-     * @return array|null
-     */
-    public static function subdirs($root): ?array
-    {
-        $root_subs = glob($root, GLOB_ONLYDIR);
-
-        if (count($root_subs) === 0) return null;
-
-        foreach ($root_subs as $child) {
-            array_push(
-                $root_subs,
-                ...(self::subdirs("{$child}\\*") ?? [])
-            );
-        }
-
-
-
-        return $root_subs;
+        return match (gettype($arg)) {
+            'string' => self::unify($arg),
+            'array' => self::parseArray($arg),
+            default => null,
+        };
     }
 
     /**
      * Join parts of path to one string
      *
-     * @param string ...$ Path parts
+     * @param array $args
      * @return string
      */
-    public static function join(...$parts): string
+    public static function glue(...$args): string
     {
-        return join(DIRECTORY_SEPARATOR, self::normalize(array_filter($parts)));
+        return join(DIR_SEP, array_filter($args));
     }
 }
