@@ -3,7 +3,6 @@
 namespace Uwi\Core\Routing;
 
 use App\Exceptions\HttpNotFoundException;
-use Uwi\Core\App;
 use Uwi\Exceptions\Exception;
 use Uwi\Exceptions\MethodNotAllowedException;
 use Uwi\Support\Path\Path;
