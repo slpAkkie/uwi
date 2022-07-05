@@ -2,8 +2,6 @@
 
 namespace Uwi\Core\Routing;
 
-use Uwi\Core\App;
-
 class Route
 {
     /**

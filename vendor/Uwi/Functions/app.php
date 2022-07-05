@@ -1,7 +1,5 @@
 <?php
 
-use Uwi\Core\App;
-
 /**
  * Get the App instance
  *
@@ -9,7 +7,7 @@ use Uwi\Core\App;
  */
 function app()
 {
-    return App::$instance;
+    return Uwi\Core\App::$instance;
 }
 
 /**
