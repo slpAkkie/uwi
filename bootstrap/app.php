@@ -1,18 +1,18 @@
 <?php
 
 use Uwi\Core\App;
-use Uwi\Core\Routing\Router;
-use Uwi\Support\FileSystem\FileSystem;
 use Uwi\Support\Path\Path;
 
-// Load functions
-foreach (FileSystem::getFiles(Path::glue(VENDOR_UWI_PATH, 'Functions')) as $functionsFile) {
-    include_once($functionsFile);
+try {
+    // Create the App
+    (new App())
+        // Load all dependencies from configuration
+        ->loadDependencies()
+        // Run the Application
+        ->run();
+} catch (Exception $e) {
+    // TODO: Replace to return a Response instance
+    ob_start();
+    include_once(Path::glue(VENDOR_UWI_PATH, 'views', 'errors', 'exception.tpl.php'));
+    flush();
 }
-
-// Create the App
-($app = new App())
-    // Load all dependencies from configuration
-    ->loadDependencies()
-    // Run the Application
-    ->run();

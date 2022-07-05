@@ -2,6 +2,7 @@
 
 namespace Uwi\Core\Routing;
 
+use App\Exceptions\HttpNotFoundException;
 use Uwi\Core\App;
 use Uwi\Exceptions\Exception;
 use Uwi\Support\Path\Path;
@@ -133,6 +134,21 @@ class Router
         self::$isBooted = true;
 
         return $this;
+    }
+
+    /**
+     * Get current requested route
+     *
+     * @throws HttpNotFoundException
+     * @return Route
+     */
+    public function getCurrentRoute(): Route
+    {
+        foreach ($this->routes as $route) {
+            // TODO: Find requested route
+        }
+
+        throw new HttpNotFoundException('Requested URL not found');
     }
 
     /**
