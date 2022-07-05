@@ -22,7 +22,7 @@ class App
      *
      * @var Request
      */
-    private Request $request;
+    public readonly Request $request;
 
     /**
      * Array of all configuration files

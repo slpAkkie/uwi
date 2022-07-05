@@ -11,28 +11,28 @@ class Route
      *
      * @var string
      */
-    private string $httpMethod;
+    public readonly string $httpMethod;
 
     /**
-     * URL
+     * URI
      *
      * @var string
      */
-    private string $url;
+    public readonly string $uri;
 
     /**
      * Controller class
      *
      * @var string
      */
-    private string $controllerClass;
+    public readonly string $controllerClass;
 
     /**
      * Controller method
      *
      * @var string
      */
-    private string $controllerMethod;
+    public readonly string $controllerMethod;
 
     /**
      * Route name
@@ -45,14 +45,14 @@ class Route
      * Instantiate new Route
      *
      * @param string $method
-     * @param string $url
+     * @param string $uri
      * @param array $action
      */
-    public function __construct(string $method, string $url, array $action)
+    public function __construct(string $method, string $uri, array $action)
     {
         // Save route data
         $this->method = $method;
-        $this->url = $url;
+        $this->uri = $uri;
 
         $this->controllerClass = $action[0];
         $this->controllerMethod = $action[1];
