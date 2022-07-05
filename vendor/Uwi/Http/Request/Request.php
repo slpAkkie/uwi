@@ -23,14 +23,14 @@ class Request
      *
      * @var string
      */
-    public readonly string $requestMethod;
+    public readonly string $method;
 
     /**
      * Request URI
      *
      * @var string
      */
-    public readonly string $requestURI;
+    public readonly string $uri;
 
     /**
      * Initialize the Request
@@ -39,7 +39,7 @@ class Request
     {
         $this->userAgent = $_SERVER['HTTP_USER_AGENT'];
         $this->httpHost = $_SERVER['HTTP_HOST'];
-        $this->requestMethod = $_SERVER['REQUEST_METHOD'];
-        $this->requestURI = $_SERVER['REQUEST_URI'];
+        $this->method = $_SERVER['REQUEST_METHOD'];
+        $this->uri = $_SERVER['REQUEST_URI'];
     }
 }

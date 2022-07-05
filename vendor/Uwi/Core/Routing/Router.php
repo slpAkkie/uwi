@@ -5,7 +5,9 @@ namespace Uwi\Core\Routing;
 use App\Exceptions\HttpNotFoundException;
 use Uwi\Core\App;
 use Uwi\Exceptions\Exception;
+use Uwi\Exceptions\MethodNotAllowedException;
 use Uwi\Support\Path\Path;
+use Uwi\Support\URL\URL;
 
 class Router
 {
@@ -127,16 +129,22 @@ class Router
     /**
      * Get current requested route
      *
-     * @throws HttpNotFoundException
+     * @throws HttpNotFoundException|MethodNotAllowedException
      * @return Route
      */
     public function getCurrentRoute(): Route
     {
         foreach ($this->routes as $route) {
-            // TODO: Find requested route
+            if (URL::compare($route->uri, app()->request->uri)) {
+                if (!app()->request->method === $route->method) {
+                    throw new MethodNotAllowedException('Method \'' . app()->request->method . '\' not allowed for route \'' . $route->uri . '\'');
+                }
+
+                return $route;
+            }
         }
 
-        throw new HttpNotFoundException('Requested URL not found');
+        throw new HttpNotFoundException('Requested URI \'' . app()->request->uri . '\' not found');
     }
 
     /**
