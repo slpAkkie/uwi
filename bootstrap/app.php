@@ -11,11 +11,8 @@ foreach (FileSystem::getFiles(Path::glue(VENDOR_UWI_PATH, 'Functions')) as $func
 }
 
 // Create the App
-$app = new App();
-
-// Create Router instance and load routes
-$app->singleton('router', Router::class);
-require_once(Path::glue(APP_ROOT_PATH, 'routes', 'web.php'));
-
-// Run the Application
-$app->run();
+($app = new App())
+    // Load all dependencies from configuration
+    ->loadDependencies()
+    // Run the Application
+    ->run();
