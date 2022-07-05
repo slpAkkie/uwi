@@ -13,47 +13,46 @@
 |
 */
 
-// Constants
-if (defined('SCAL_PROJECT_ROOT'))
-  define('SCAL_EXECUTED_IN', SCAL_PROJECT_ROOT);
-else
-  define('SCAL_EXECUTED_IN', realpath('') . DIRECTORY_SEPARATOR);
 
-define('SCAL_REAL_PATH', __DIR__ . DIRECTORY_SEPARATOR);
-define('SCAL_SUPPORT_PATH', SCAL_REAL_PATH . 'Support' . DIRECTORY_SEPARATOR);
-define('SCAL_EXCEPTIONS_PATH', SCAL_REAL_PATH . 'Exceptions' . DIRECTORY_SEPARATOR);
-define('SCAL_KERNEL_PATH', SCAL_REAL_PATH . 'Kernel' . DIRECTORY_SEPARATOR);
 
-!defined('SCAL_EXCEPTION_MODE') && define('SCAL_EXCEPTION_MODE', false);
-!defined('SCAL_DEV_MODE') && define('SCAL_DEV_MODE', false);
+// Define constants that needed to Scal working
+if (!defined('APP_ROOT_PATH')) {
+    define('APP_ROOT_PATH', realpath(''));
+}
+
+if (!defined('NAMESPACE_SEPARATOR')) {
+    define('NAMESPACE_SEPARATOR', '\\');
+}
+
+if (!defined('DIR_SEP')) {
+    define('DIR_SEP', DIRECTORY_SEPARATOR);
+}
+
+if (!defined('SCAL_ROOT_PATH')) {
+    define('SCAL_ROOT_PATH', __DIR__);
+}
+
+if (!defined('SCAL_SUPPORT_PATH')) {
+    define('SCAL_SUPPORT_PATH', SCAL_ROOT_PATH . DIR_SEP . 'Support');
+}
+
+if (!defined('SCAL_TESTS_ENABLED')) {
+    define('SCAL_TESTS_ENABLED', false);
+}
 
 
 
 // Dev mode
-if (SCAL_DEV_MODE) {
-
-  require_once SCAL_SUPPORT_PATH . 'Debug.php';
-  require_once SCAL_SUPPORT_PATH . 'Test.php';
-}
-
-// Exception mode
-if (SCAL_EXCEPTION_MODE) {
-  require_once SCAL_EXCEPTIONS_PATH . 'BaseException.php';
-  require_once SCAL_EXCEPTIONS_PATH . 'ClassNotFoundException.php';
-  require_once SCAL_EXCEPTIONS_PATH . 'ConfigurationNotFoundException.php';
-  require_once SCAL_EXCEPTIONS_PATH . 'FileNotFoundException.php';
-  require_once SCAL_EXCEPTIONS_PATH . 'FolderNotFoundException.php';
+if (SCAL_TESTS_ENABLED) {
+    require_once(SCAL_SUPPORT_PATH . DIR_SEP . 'Test.php');
 }
 
 
 // Support
-require_once SCAL_SUPPORT_PATH . 'Path.php';
-require_once SCAL_SUPPORT_PATH . 'Str.php';
-
-// Kernel
-require_once SCAL_KERNEL_PATH . 'Loader.php';
+require_once SCAL_SUPPORT_PATH . DIR_SEP . 'Path.php';
 
 
 
 // Register Loader
+require_once SCAL_ROOT_PATH . DIR_SEP . 'Loader.php';
 spl_autoload_register('Scal\Loader::load');

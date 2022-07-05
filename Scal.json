@@ -1,5 +1,5 @@
 {
-  "np": {
+  "mapping": {
     "App" : "app",
     "Uwi" : "vendor\\Uwi"
   }

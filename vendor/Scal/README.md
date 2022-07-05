@@ -1,25 +1,29 @@
 # Scal
 
-## Описание
+## Description
 
-Автолоадер классов для PHP
+Simple class autoloader
 
-## Установка
+## Installation
 
-Подключите `Scal.php` в ваш проект. От места подключения зависит, откуда будут искаться классы
+Include `Scal.php` in your project.
+Use APP_ROOT_PATH to specify root directory to find classes
 
-## Использование
+## Use
 
-После подключения вы помжете настроить пространства имен. Для этого создайте файл Scal.json в корне проекта (Там где был подключен Scal.php)
-Пример Scal.json
+To specify namespace mapping use JSON file `Scal.json`
+
+## Configuration (Scal.json)
+
+You should end both namespace and path with backslash
 
 ```json
 {
-  "np": {
-    "Direct": "Direct",
-    "Complex\\Direct": "ComplexDirect\\Complex",
-    "Recursion": "Recursion\\*",
-    "Many": [
+  "mapping" {
+    "Direct\\": "Direct\\",
+    "Complex\\Direct\\": "ComplexDirect\\Complex\\",
+    "Recursion\\": "Recursion\\*",
+    "Many\\": [
       "Many\\Many1\\",
       "Many\\Many2\\*"
     ]
@@ -27,16 +31,10 @@
 }
 ```
 
-## Конфигурация (Scal.json)
-
-Нет необходимости заканчивать пространство имен обратным слешем `\`
-Вы можете использовать как обычный путь, так и массив с возможными директориями
-Вы так же можете указать рекурсивный поиск по дочерним каталогам
-
-## Автор
+## Author
 
 Alexandr Shamanin (@slpAkkie)
 
-## Версия
+## Version
 
-2.1.0
+2.2.0
