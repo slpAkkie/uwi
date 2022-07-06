@@ -3,6 +3,8 @@
 use Uwi\Filesystem\Path;
 use Uwi\Foundation\Application;
 
+// TODO: Use set_error_handler
+
 try {
     // Create the App
     (new Application())
