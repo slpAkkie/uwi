@@ -8,6 +8,6 @@ class Controller extends BaseController
 {
     public function welcome()
     {
-        // TODO: Implement...
+        return response('Hello world! I wrote a PHP MVC Framework');
     }
 }

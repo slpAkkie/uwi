@@ -6,7 +6,9 @@ use Closure;
 use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionParameter;
+use Uwi\Contracts\Http\Response\ResponseContract;
 use Uwi\Contracts\Http\Routing\RouterContract;
+use Uwi\Contracts\Sessions\SessionContract;
 use Uwi\Contracts\SingletonContract;
 use Uwi\Exceptions\NotFoundException;
 use Uwi\Filesystem\Filesystem;
@@ -165,10 +167,35 @@ class Application extends Container
         $currentRoute = $this->singleton(RouterContract::class)->getCurrentRoute();
 
         // Run the controller method with parameters injecting
-        tap([
+        $response = tap([
             $currentRoute->controllerClass,
             $currentRoute->controllerMethod
         ]);
+
+        $this->sendResponse($response);
+    }
+
+    /**
+     * Send response to the client
+     *
+     * @param ResponseContract $response
+     * @return void
+     */
+    public function sendResponse(ResponseContract $response): void
+    {
+        $response->send();
+
+        $this->destroy();
+    }
+
+    /**
+     * Destory Applicetion before end
+     *
+     * @return void
+     */
+    public function destroy(): void
+    {
+        //
     }
 
     /**
