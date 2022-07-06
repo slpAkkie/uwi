@@ -6,11 +6,9 @@ use Uwi\Foundation\Application;
 try {
     // Create the App
     (new Application())
-        // Load all dependencies from configuration
-        ->loadDependencies()
         // Run the Application
         ->run();
-} catch (Exception $e) {
+} catch (Throwable $e) {
     // TODO: Replace to return a Response instance
     ob_start();
     (function () use ($e) {

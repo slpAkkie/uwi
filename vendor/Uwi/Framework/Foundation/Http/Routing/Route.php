@@ -2,14 +2,17 @@
 
 namespace Uwi\Foundation\Http\Routing;
 
-class Route
+use Uwi\Contracts\Http\Routing\RouteContract;
+use Uwi\Contracts\SingletonContract;
+
+class Route implements RouteContract, SingletonContract
 {
     /**
      * HTTP method
      *
      * @var string
      */
-    public readonly string $httpMethod;
+    public readonly string $method;
 
     /**
      * URI
@@ -54,6 +57,16 @@ class Route
 
         $this->controllerClass = $action[0];
         $this->controllerMethod = $action[1];
+    }
+
+    /**
+     * Calls when singleton has been instantiated and saved
+     *
+     * @return void
+     */
+    public function boot(): void
+    {
+        //
     }
 
     /**

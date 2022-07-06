@@ -11,9 +11,10 @@ function d(...$args): void
     echo '<pre>';
     foreach ($args as $arg) {
         var_dump($arg);
-        echo '<br><br>';
+        echo '<br>';
     }
     echo '</pre>';
+    echo '<br><br>';
 }
 
 /**
@@ -26,5 +27,5 @@ function dd(...$args): void
 {
     d(...$args);
 
-    exit;
+    exit(1);
 }
