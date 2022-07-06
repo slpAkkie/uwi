@@ -2,7 +2,9 @@
 
 namespace Uwi\Foundation\Http\Request;
 
-class Request
+use Uwi\Contracts\SingletonContract;
+
+class Request implements SingletonContract
 {
     /**
      * User agent
@@ -33,7 +35,7 @@ class Request
     public readonly string $uri;
 
     /**
-     * Initialize the Request
+     * Instantiate new Request
      */
     public function __construct()
     {
@@ -41,5 +43,15 @@ class Request
         $this->httpHost = $_SERVER['HTTP_HOST'];
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->uri = $_SERVER['REQUEST_URI'];
+    }
+
+    /**
+     * Calls when singleton has been instantiated and saved
+     *
+     * @return void
+     */
+    public function boot(): void
+    {
+        //
     }
 }

@@ -2,13 +2,15 @@
 
 namespace Uwi\Foundation\Http\Routing;
 
+use Uwi\Contracts\Http\Routing\RouteContract;
+use Uwi\Contracts\Http\Routing\RouterContract;
 use Uwi\Exceptions\Exception;
 use Uwi\Filesystem\Path;
 use Uwi\Foundation\Http\Exceptions\HttpNotFoundException;
 use Uwi\Foundation\Http\Exceptions\MethodNotAllowedException;
 use Uwi\Foundation\Http\Routing\URL;
 
-class Router
+class Router implements RouterContract
 {
     /**
      * HTTP methods in upper case that allowed to be binded
@@ -63,23 +65,18 @@ class Router
     private array $routes = [];
 
     /**
-     * Indicate if class has instantiated
+     * Calls when singleton has been instantiated and saved
      *
-     * @var boolean
+     * @return void
      */
-    public static bool $isInstantiated = false;
+    public function boot(): void
+    {
+        $this
+            ->loadConfiguration()
+            ->loadRoutes();
+    }
 
-    /**
-     * Indicate if class has booted
-     *
-     * @var boolean
-     */
-    public static bool $isBooted = false;
-
-    /**
-     * Initialize the Router
-     */
-    public function __construct()
+    private function loadConfiguration(): static
     {
         // Load configuration
         $this->routesPath = app()->getConfig(
@@ -94,33 +91,16 @@ class Router
             self::DEFAULT_ROUTES_FILE
         );
 
-
-
-        // Indicate that class has been instantiated
-        self::$isInstantiated = true;
+        return $this;
     }
 
-    /**
-     * Method that will be invoked after all dependencies has been instantiated
-     *
-     * @return self
-     */
-    public function boot(): self
+    private function loadRoutes(): static
     {
-        // Exit if class has been booted already
-        if (self::$isBooted) return $this;
-
-        // Include routes file with routes definition
         include_once(Path::glue(
             APP_BASE_PATH,
             $this->routesPath,
             $this->routesFile
         ));
-
-
-
-        // Indicate that class has been booted
-        self::$isBooted = true;
 
         return $this;
     }
@@ -137,14 +117,14 @@ class Router
         foreach ($this->routes as $route) {
             if (URL::compare($route->uri, app()->request->uri)) {
                 if (!app()->request->method === $route->method) {
-                    throw new MethodNotAllowedException('Method \'' . app()->request->method . '\' not allowed for route \'' . $route->uri . '\'');
+                    throw new MethodNotAllowedException('Method [' . app()->request->method . '] not allowed for route [' . $route->uri . ']');
                 }
 
                 return $route;
             }
         }
 
-        throw new HttpNotFoundException('Requested URI \'' . app()->request->uri . '\' not found');
+        throw new HttpNotFoundException('Requested URI [' . app()->request->uri . '] not found');
     }
 
     /**
@@ -161,12 +141,12 @@ class Router
         // and check if such method in allowed list
         $method = strtoupper($name);
         if (!in_array(strtoupper($method), self::HTTP_METHODS)) {
-            throw new Exception('Method \'' . $name . '\' not allowed in the App');
+            throw new Exception('Method [' . $name . '] not allowed in the App');
         }
 
         // Create new route with provided arguments
-        $router = app()->singleton('router', self::class);
-        $route = $router->routes[] = app()->create(Route::class, $method, ...$arguments);
+        $router = app()->singleton(RouterContract::class);
+        $route = $router->routes[] = app()->instantiate(RouteContract::class, $method, ...$arguments);
 
         // Return create route
         return $route;
