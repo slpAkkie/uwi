@@ -23,20 +23,6 @@ if (!defined('DIR_SEP'))
 if (!defined('APP_BASE_PATH'))
     define('APP_BASE_PATH', realpath(__DIR__ . DIR_SEP . '..'));
 
-/**
- * |-------------------------------------------------
- * | Define Scal constants
- * |-------------------------------------------------
- * | Those constants needed for correct work
- * | of Scal autoloader
- * |-------------------------------------------------
- */
-if (!defined('SCAL_EXCEPTION_MODE'))
-    define('SCAL_EXCEPTION_MODE', true);
-
-if (!defined('SCAL_PROJECT_ROOT'))
-    define('SCAL_PROJECT_ROOT', APP_BASE_PATH);
-
 
 
 /**
