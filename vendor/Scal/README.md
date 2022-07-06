@@ -7,7 +7,7 @@ Simple class autoloader
 ## Installation
 
 Include `Scal.php` in your project.
-Use APP_ROOT_PATH to specify root directory to find classes
+Use APP_BASE_PATH to specify root directory to find classes
 
 ## Use
 

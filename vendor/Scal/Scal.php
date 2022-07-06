@@ -16,8 +16,8 @@
 
 
 // Define constants that needed to Scal working
-if (!defined('APP_ROOT_PATH')) {
-    define('APP_ROOT_PATH', realpath(''));
+if (!defined('APP_BASE_PATH')) {
+    define('APP_BASE_PATH', realpath(''));
 }
 
 if (!defined('NAMESPACE_SEPARATOR')) {
