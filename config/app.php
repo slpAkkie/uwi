@@ -11,9 +11,9 @@
 
 return [
 
-    // Dependencies that should be loaded on Application startup
-    'dependencies' => [
-        'router' => Uwi\Foundation\Http\Routing\Router::class,
+    'providers' => [
+        Uwi\Foundation\AppServiceProvider::class,
+        Uwi\Foundation\Http\Routing\Providers\RouterServiceProvider::class,
     ],
 
 ];

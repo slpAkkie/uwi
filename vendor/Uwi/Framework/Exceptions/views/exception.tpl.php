@@ -13,7 +13,9 @@
     <p><?= $description ?></p>
 
     <p>
-        <b>Message:</b> <?= $e->getMessage() ?>
+        <b>Message:</b> <?= $e->getMessage() ?> <br>
+        <b>In File:</b> <?= $e->getFile() ?> <br>
+        <b>On Line:</b> <?= $e->getLine() ?> <br>
     </p>
 
     <h2>Trace</h2>
