@@ -12,7 +12,7 @@ use Uwi\Foundation\Http\Request\Request;
 class Application
 {
     /**
-     * App instancde
+     * App instance
      *
      * @var Application
      */
