@@ -2,6 +2,8 @@
 
 namespace Uwi\Foundation;
 
+use ReflectionMethod;
+
 class Container
 {
     /**

@@ -4,14 +4,13 @@ namespace Uwi\Foundation\Http\Routing;
 
 use Uwi\Contracts\Http\Routing\RouteContract;
 use Uwi\Contracts\Http\Routing\RouterContract;
-use Uwi\Contracts\SingletonContract;
 use Uwi\Exceptions\Exception;
 use Uwi\Filesystem\Path;
 use Uwi\Foundation\Http\Exceptions\HttpNotFoundException;
 use Uwi\Foundation\Http\Exceptions\MethodNotAllowedException;
 use Uwi\Foundation\Http\Routing\URL;
 
-class Router implements RouterContract, SingletonContract
+class Router implements RouterContract
 {
     /**
      * HTTP methods in upper case that allowed to be binded
@@ -118,14 +117,14 @@ class Router implements RouterContract, SingletonContract
         foreach ($this->routes as $route) {
             if (URL::compare($route->uri, app()->request->uri)) {
                 if (!app()->request->method === $route->method) {
-                    throw new MethodNotAllowedException('Method \'' . app()->request->method . '\' not allowed for route \'' . $route->uri . '\'');
+                    throw new MethodNotAllowedException('Method [' . app()->request->method . '] not allowed for route [' . $route->uri . ']');
                 }
 
                 return $route;
             }
         }
 
-        throw new HttpNotFoundException('Requested URI \'' . app()->request->uri . '\' not found');
+        throw new HttpNotFoundException('Requested URI [' . app()->request->uri . '] not found');
     }
 
     /**
@@ -142,7 +141,7 @@ class Router implements RouterContract, SingletonContract
         // and check if such method in allowed list
         $method = strtoupper($name);
         if (!in_array(strtoupper($method), self::HTTP_METHODS)) {
-            throw new Exception('Method \'' . $name . '\' not allowed in the App');
+            throw new Exception('Method [' . $name . '] not allowed in the App');
         }
 
         // Create new route with provided arguments
