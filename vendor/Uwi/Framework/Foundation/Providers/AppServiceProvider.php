@@ -1,6 +1,6 @@
 <?php
 
-namespace Uwi\Foundation;
+namespace Uwi\Foundation\Providers;
 
 use Uwi\Foundation\Providers\ServiceProvider;
 

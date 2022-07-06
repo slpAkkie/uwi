@@ -10,5 +10,7 @@ class Controller extends BaseController
     public function welcome(Request $request)
     {
         // TODO: Implement...
+
+        dd($request);
     }
 }

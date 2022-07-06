@@ -35,15 +35,23 @@ class Request implements SingletonContract
     public readonly string $uri;
 
     /**
+     * Instantiate new Request
+     */
+    public function __construct()
+    {
+        $this->userAgent = $_SERVER['HTTP_USER_AGENT'];
+        $this->httpHost = $_SERVER['HTTP_HOST'];
+        $this->method = $_SERVER['REQUEST_METHOD'];
+        $this->uri = $_SERVER['REQUEST_URI'];
+    }
+
+    /**
      * Calls when singleton has been instantiated and saved
      *
      * @return void
      */
     public function boot(): void
     {
-        $this->userAgent = $_SERVER['HTTP_USER_AGENT'];
-        $this->httpHost = $_SERVER['HTTP_HOST'];
-        $this->method = $_SERVER['REQUEST_METHOD'];
-        $this->uri = $_SERVER['REQUEST_URI'];
+        //
     }
 }

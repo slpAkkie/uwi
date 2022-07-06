@@ -12,7 +12,7 @@
 return [
 
     'providers' => [
-        Uwi\Foundation\AppServiceProvider::class,
+        Uwi\Foundation\Providers\AppServiceProvider::class,
         Uwi\Foundation\Http\Routing\Providers\RouterServiceProvider::class,
     ],
 
