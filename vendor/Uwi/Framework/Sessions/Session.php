@@ -2,10 +2,18 @@
 
 namespace Uwi\Sessions;
 
+use ArrayAccess;
 use Uwi\Contracts\Sessions\SessionContract;
 
-class Session implements SessionContract
+class Session implements SessionContract, ArrayAccess
 {
+    /**
+     * Session storage
+     *
+     * @var array
+     */
+    private array $store;
+
     /**
      * Calls when singleton has been instantiated and saved
      *
@@ -14,6 +22,7 @@ class Session implements SessionContract
     public function boot(): void
     {
         $this->start();
+        $this->store = $_SESSION;
     }
 
     /**
@@ -24,7 +33,7 @@ class Session implements SessionContract
      */
     public function setMany(array $vars = []): static
     {
-        $_SESSION = array_merge($_SESSION, $vars);
+        $this->store = array_merge($this->store, $vars);
 
         return $this;
     }
@@ -38,7 +47,7 @@ class Session implements SessionContract
      */
     public function set(string $key, mixed $val): mixed
     {
-        return $_SESSION[$key] = $val;
+        return $this->store[$key] = $val;
     }
 
     /**
@@ -50,7 +59,29 @@ class Session implements SessionContract
      */
     public function get(string $key, mixed $default = null): mixed
     {
-        return key_exists($key, $_SESSION) ? $_SESSION[$key] : $default;
+        return $this->has($key) ? $this->store[$key] : $default;
+    }
+
+    /**
+     * Unset the value
+     *
+     * @param string $key
+     * @return void
+     */
+    public function unset(string $key)
+    {
+        unset($this->store[$key]);
+    }
+
+    /**
+     * Check wheter the key exists
+     *
+     * @param string $key
+     * @return boolean
+     */
+    public function has(string $key): bool
+    {
+        return key_exists($key, $this->store);
     }
 
     /**
@@ -88,5 +119,52 @@ class Session implements SessionContract
         $this->start();
 
         return $this;
+    }
+
+
+
+    /**
+     * Implementation of ArrayAccess
+     *
+     * @param int|string $key
+     * @param mixed $value
+     * @return void
+     */
+    public function offsetSet($key, $value): void
+    {
+        $this->set($key, $value);
+    }
+
+    /**
+     * Implementation of ArrayAccess
+     *
+     * @param int|string $key
+     * @return boolean
+     */
+    public function offsetExists($key): bool
+    {
+        return $this->has($key);
+    }
+
+    /**
+     * Implementation of ArrayAccess
+     *
+     * @param int|string $key
+     * @return void
+     */
+    public function offsetUnset($key): void
+    {
+        $this->unset($key);
+    }
+
+    /**
+     * Implementation of ArrayAccess
+     *
+     * @param int|string $key
+     * @return mixed
+     */
+    public function offsetGet($key): mixed
+    {
+        return $this->get($key);
     }
 }
