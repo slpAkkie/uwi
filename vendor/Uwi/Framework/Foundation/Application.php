@@ -2,14 +2,19 @@
 
 namespace Uwi\Foundation;
 
+use Closure;
+use ReflectionFunction;
 use ReflectionMethod;
-use Uwi\Exceptions\Exception;
+use ReflectionParameter;
+use Uwi\Contracts\Http\Routing\RouterContract;
+use Uwi\Contracts\SingletonContract;
 use Uwi\Exceptions\NotFoundException;
 use Uwi\Filesystem\Filesystem;
 use Uwi\Filesystem\Path;
 use Uwi\Foundation\Http\Request\Request;
+use Uwi\Foundation\Providers\ServiceProvider;
 
-class Application
+class Application extends Container
 {
     /**
      * App instance
@@ -26,41 +31,87 @@ class Application
     public readonly Request $request;
 
     /**
-     * Array of all configuration files
-     *
-     * @var array
-     */
-    private array $config = [];
-
-    /**
-     * List of singleton classes
-     *
-     * @var array
-     */
-    private array $singletons = [];
-
-    /**
      * Initialize the App
      */
     public function __construct()
     {
-        // Load helpers
+        (self::$instance = $this)
+            ->loadHelpers()
+            ->loadConfiguration()
+
+            ->registerServiceProviders();
+    }
+
+    /**
+     * Load helpers
+     *
+     * @return static
+     */
+    private function loadHelpers(): static
+    {
         foreach (Filesystem::getFiles(Path::glue(UWI_FRAMEWORK_PATH, 'Foundation', 'Helpers')) as $helpersFile) {
             include_once($helpersFile);
         }
 
-        // Load all configurations
+        return $this;
+    }
+
+    /**
+     * Load configurations
+     *
+     * @return static
+     */
+    private function loadConfiguration(): static
+    {
         $configFiles = FileSystem::getFiles(CONFIG_PATH);
         foreach ($configFiles as $configFile) {
             $configKey = FileSystem::getFileNameWithoutExtention($configFile);
             $this->config[$configKey] = include_once($configFile);
         }
 
-        // Create Request
-        $this->request = $this->create(Request::class);
+        return $this;
+    }
 
-        // Save it's instance
-        self::$instance = $this;
+    /**
+     * Register service providers specified in configuration
+     *
+     * @return static
+     */
+    private function registerServiceProviders(): static
+    {
+        /** @var ServiceProvider[] */
+        $serviceProviders = [];
+        foreach ($this->getConfig('app', 'providers', []) as $serviceProvider) {
+            $serviceProviders[] = $this->registerServiceProvider($serviceProvider);
+        }
+
+        foreach ($serviceProviders as $serviceProvider) {
+            $serviceProvider->boot();
+            $serviceProvider->booted = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Register the service provider
+     *
+     * @param string $serviceProviderClass
+     * @return ServiceProvider
+     */
+    public function registerServiceProvider(string $serviceProviderClass): ServiceProvider
+    {
+        /** @var ServiceProvider */
+        $serviceProvider = $this->instantiate($serviceProviderClass);
+
+        foreach ($serviceProvider->bindings as $abstract => $concrete) {
+            $this->bind($abstract, $concrete);
+        }
+
+        $serviceProvider->register();
+        $serviceProvider->registered = true;
+
+        return $serviceProvider;
     }
 
     /**
@@ -77,7 +128,7 @@ class Application
     {
         // Check if config with provided key extists
         if (!key_exists($configurationName, $this->config)) {
-            throw new NotFoundException('Config key \'' . $configurationName . '\' not found');
+            throw new NotFoundException('Config key [' . $configurationName . '] not found');
         }
 
         $config = $this->config[$configurationName];
@@ -91,7 +142,7 @@ class Application
                     return $default;
                 }
 
-                throw new NotFoundException('Config key \'' . $configurationName . '\' not found');
+                throw new NotFoundException('Config key [' . $configurationName . '] not found');
             }
 
             return $config[$key];
@@ -101,84 +152,49 @@ class Application
     }
 
     /**
-     * Instantiate new singleton class
-     *
-     * @param string $className
-     * @param string $key
-     * @return mixed
-     */
-    public function singleton(string $key, ?string $className = null): mixed
-    {
-        // Check if class already instantiated
-        // and saved to the App instance
-        if (key_exists($key, $this->singletons)) {
-            return $this->singletons[$key];
-        } else if (!$className) {
-            return null;
-        }
-
-        // Check if it already instantiated
-        // but wasn't saved to the App instance
-        if (property_exists($className, 'isInstantiated') && $className::$isInstantiated) {
-            throw new Exception('Class \'' . $className . '\' already has been instantiated');
-        }
-
-        // Instantiate class and save it with a key
-        return $this->singletons[$key] = new $className();
-    }
-
-    /**
-     * 
-     * Create new instance and inject App instance into it
-     *
-     * @param string $className
-     * @param array $arguments
-     * @return mixed
-     */
-    public function create(string $className, ...$arguments): mixed
-    {
-        $instance = new $className(...$arguments);
-
-        return $instance;
-    }
-
-    /**
-     * Load dependencies according to config
-     *
-     * @return self
-     */
-    public function loadDependencies(): self
-    {
-        foreach ($this->getConfig('app', 'dependencies', []) as $key => $className) {
-            $this->singleton($key, $className);
-        }
-
-        return $this;
-    }
-
-    /**
      * Run the Application
      *
      * @return void
      */
     public function run(): void
     {
-        // Boot dependencies
-        foreach ($this->singletons as $singleton) {
-            $singleton->boot();
-        }
+        // Initialize a Request object
+        $this->request = $this->singleton(Request::class);
 
         // Identify Route and run the controller
-        $currentRoute = $this->singleton('router')->getCurrentRoute();
+        $currentRoute = $this->singleton(RouterContract::class)->getCurrentRoute();
 
-        // Examine method parameters and resolve them
-        $controllerClass = $currentRoute->controllerClass;
-        $controller = new $controllerClass();
+        // Run the controller method with parameters injecting
+        tap([
+            $currentRoute->controllerClass,
+            $currentRoute->controllerMethod
+        ]);
+    }
 
-        // Run the controller method with collected parameters
-        $controller->{$currentRoute->controllerMethod}(
-            ...$this->resolveControllerMethodParameter($controllerClass, $currentRoute->controllerMethod)
-        );
+    /**
+     * Resolve parameters
+     *
+     * @param ReflectionParameter[] $parameters
+     * @return array
+     */
+    private function resolveParameters(array $parameters): array
+    {
+        $methodArgs = [];
+
+        foreach ($parameters as $reflectedParameter) {
+            $paramType = $reflectedParameter->getType()->getName();
+
+            if (is_subclass_of($paramType, SingletonContract::class)) {
+                $methodArgs[] = $this->singleton($paramType);
+            } else if (\class_exists($paramType)) {
+                $methodArgs[] = $this->instantiate($paramType);
+            } else {
+                // TODO: It's not a solve a problem
+                $methodArgs[] = null;
+            }
+        }
+
+        return $methodArgs;
     }
 
     /**
@@ -188,28 +204,23 @@ class Application
      * @param string $method
      * @return array
      */
-    private function resolveControllerMethodParameter(string $controller, string $method): array
+    public function resolveMethodParameter(string $controller, string $method): array
     {
         $reflectedControllerMethod = new ReflectionMethod($controller, $method);
-        $reflectedMethodParameters = $reflectedControllerMethod->getParameters();
 
+        return $this->resolveParameters($reflectedControllerMethod->getParameters());
+    }
 
-        // Collect method parameters
-        // ! Support Request extended class as parameter only
-        $methodArgs = [];
+    /**
+     * Collect and instantiate Closure method parameters
+     *
+     * @param Closure $closure
+     * @return array
+     */
+    public function resolveClosureParameter(Closure $closure): array
+    {
+        $reflectedClosure = new ReflectionFunction($closure);
 
-        foreach ($reflectedMethodParameters as $reflectedParameter) {
-            $paramType = $reflectedParameter->getType()->getName();
-
-            if (is_subclass_of($paramType, Request::class)) {
-                $methodArgs[] = app()->create($paramType);
-            } else if ($paramType === Request::class) {
-                $methodArgs[] = app()->request;
-            } else {
-                $methodArgs[] = null;
-            }
-        }
-
-        return $methodArgs;
+        return $this->resolveParameters($reflectedClosure->getParameters());
     }
 }
