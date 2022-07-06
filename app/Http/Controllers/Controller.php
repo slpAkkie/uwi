@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Request;
-use Uwi\Http\Controllers\Controller as BaseController;
+use Uwi\Foundation\Http\Controllers\Controller as BaseController;
 
 class Controller extends BaseController
 {

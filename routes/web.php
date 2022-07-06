@@ -8,6 +8,6 @@
  * |-------------------------------------------------
  */
 
-use Uwi\Core\Routing\Router;
+use Uwi\Foundation\Http\Routing\Router;
 
 Router::get('/', [App\Http\Controllers\Controller::class, 'welcome'])->name('welcome');
