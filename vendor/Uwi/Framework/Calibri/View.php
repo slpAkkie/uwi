@@ -11,7 +11,7 @@ class View
      * 
      * @var string
      */
-    private const VIEW_EXTENSION = '.tpl.php';
+    private const VIEW_EXTENSION = '.clbr.php';
 
     /**
      * View name
