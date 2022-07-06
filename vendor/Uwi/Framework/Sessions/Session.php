@@ -2,31 +2,8 @@
 
 namespace Uwi\Sessions;
 
-use Exception;
-
 class Session
 {
-    /** 
-     * Uwi session
-     * 
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * Indicate if class has instantiated
-     *
-     * @var boolean
-     */
-    public static bool $isInstantiated = false;
-
-    /**
-     * Indicate if class has booted
-     *
-     * @var boolean
-     */
-    public static bool $isBooted = false;
-
     /**
      * Initialize the session
      *
@@ -34,64 +11,80 @@ class Session
      */
     public function __construct()
     {
-        session_start();
-        
-        // Indicate that class has been instantiated
-        self::$isInstantiated = true;
+        $this->start();
     }
 
-    public function boot(): self {
-        
-        // Exit if class has been booted already
-        if (self::$isBooted) return $this;
-
-        // Indicate that class has been booted
-        self::$isBooted = true;
+    /**
+     * Set many values
+     *
+     * @param array $vars
+     * @return static
+     */
+    public function setMany(array $vars = []): static
+    {
+        $_SESSION = array_merge($_SESSION, $vars);
 
         return $this;
     }
 
     /**
-     * Store multiply values
-     *
-     * @param array $params
-     * @return void
-     */
-    public function store(array $params = []): void {
-        foreach($params as $k => $v) {
-            $_SESSION[$k] = $v;
-        }
-    }
-
-    /**
      * Set single value
      *
-     * @param string|int $k
-     * @param mixed $v
-     * @return void
+     * @param string|int $key
+     * @param mixed $val
+     * @return mixed
      */
-    public function set(string $k, $v): void {
-        $_SESSION[$k] = $v;
+    public function set(string $key, mixed $val): mixed
+    {
+        return $_SESSION[$key] = $val;
     }
 
     /**
      * Get single value
      *
-     * @param string $param
+     * @param string $key
      * @param mixed $default
      * @return mixed
      */
-    public function get(string $param, mixed $default = null): mixed {
-        return empty($_SESSION[$param])?$default:$_SESSION[$param];
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return key_exists($key, $_SESSION) ? $_SESSION[$key] : $default;
     }
 
     /**
-     * Clear session
+     * Start session
      *
-     * @return void
+     * @return static
      */
-    public function destroy(): void {
-        session_destroy();
+    public function start(): static
+    {
         session_start();
+
+        return $this;
+    }
+
+    /**
+     * Destory session
+     *
+     * @return static
+     */
+    public function destory(): static
+    {
+        session_destroy();
+
+        return $this;
+    }
+
+    /**
+     * Destroy and start new session
+     *
+     * @return static
+     */
+    public function regenerate(): static
+    {
+        $this->destory();
+        $this->start();
+
+        return $this;
     }
 }
