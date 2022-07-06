@@ -16,7 +16,7 @@ class Filesystem
      */
     public static function getFiles(string $path): array
     {
-        if (!file_exists($path)) throw new NotFoundException('Directory for \'' . $path . '\' not found');
+        if (!file_exists($path)) throw new NotFoundException('Directory for [' . $path . '] not found');
 
         return array_reduce(scandir($path), function (array $files, string $entry) use ($path) {
             if (!is_dir($entry)) $files[] = Path::glue($path, $entry);
@@ -35,7 +35,7 @@ class Filesystem
      */
     public static function getFileName(string $file): string
     {
-        if (!is_file($file)) throw new NotFoundException('File \'' . $file . '\' not found');
+        if (!is_file($file)) throw new NotFoundException('File [' . $file . '] not found');
 
         $fileName = array_slice(explode(DIRECTORY_SEPARATOR, $file), -1, 1)[0];
 

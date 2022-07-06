@@ -2,7 +2,9 @@
 
 namespace Uwi\Contracts\Http\Routing;
 
-interface RouteContract
+use Uwi\Contracts\SingletonContract;
+
+interface RouteContract extends SingletonContract
 {
     // TODO: Implement...
 }

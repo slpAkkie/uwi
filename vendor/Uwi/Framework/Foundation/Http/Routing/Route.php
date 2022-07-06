@@ -3,9 +3,8 @@
 namespace Uwi\Foundation\Http\Routing;
 
 use Uwi\Contracts\Http\Routing\RouteContract;
-use Uwi\Contracts\SingletonContract;
 
-class Route implements RouteContract, SingletonContract
+class Route implements RouteContract
 {
     /**
      * HTTP method
