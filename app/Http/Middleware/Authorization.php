@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use Uwi\Http\Middleware\Middleware;
+use Uwi\Foundation\Http\Middleware\Middleware;
 
 class Authorization extends Middleware
 {

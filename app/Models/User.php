@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Uwi\Core\ORM\Model as Model;
+use Uwi\Database\Lion\Model as Model;
 
 class User extends Model
 {

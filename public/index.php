@@ -1,6 +1,6 @@
 <?php
 
-use Uwi\Support\Path\Path;
+use Uwi\Filesystem\Path;
 
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', true);
@@ -20,8 +20,8 @@ ini_set('display_startup_errors', true);
 if (!defined('DIR_SEP'))
     define('DIR_SEP', DIRECTORY_SEPARATOR);
 
-if (!defined('APP_ROOT_PATH'))
-    define('APP_ROOT_PATH', realpath(__DIR__ . DIR_SEP . '..'));
+if (!defined('APP_BASE_PATH'))
+    define('APP_BASE_PATH', realpath(__DIR__ . DIR_SEP . '..'));
 
 /**
  * |-------------------------------------------------
@@ -35,7 +35,7 @@ if (!defined('SCAL_EXCEPTION_MODE'))
     define('SCAL_EXCEPTION_MODE', true);
 
 if (!defined('SCAL_PROJECT_ROOT'))
-    define('SCAL_PROJECT_ROOT', APP_ROOT_PATH);
+    define('SCAL_PROJECT_ROOT', APP_BASE_PATH);
 
 
 
@@ -48,7 +48,7 @@ if (!defined('SCAL_PROJECT_ROOT'))
  * |-------------------------------------------------
  */
 
-require_once(APP_ROOT_PATH . DIR_SEP . 'vendor' . DIR_SEP . 'Scal' . DIR_SEP . 'Scal.php');
+require_once(APP_BASE_PATH . DIR_SEP . 'vendor' . DIR_SEP . 'Scal' . DIR_SEP . 'Scal.php');
 
 
 
@@ -65,13 +65,13 @@ require_once(APP_ROOT_PATH . DIR_SEP . 'vendor' . DIR_SEP . 'Scal' . DIR_SEP . '
  */
 
 if (!defined('CONFIG_PATH'))
-    define('CONFIG_PATH', Path::glue(APP_ROOT_PATH, 'config'));
+    define('CONFIG_PATH', Path::glue(APP_BASE_PATH, 'config'));
 
 if (!defined('VENDOR_PATH'))
-    define('VENDOR_PATH', Path::glue(APP_ROOT_PATH, 'vendor'));
+    define('VENDOR_PATH', Path::glue(APP_BASE_PATH, 'vendor'));
 
-if (!defined('VENDOR_UWI_PATH'))
-    define('VENDOR_UWI_PATH', Path::glue(VENDOR_PATH, 'Uwi'));
+if (!defined('UWI_FRAMEWORK_PATH'))
+    define('UWI_FRAMEWORK_PATH', Path::glue(VENDOR_PATH, 'Uwi', 'Framework'));
 
 
 
@@ -84,4 +84,4 @@ if (!defined('VENDOR_UWI_PATH'))
  * |-------------------------------------------------
  */
 
-require_once(Path::glue(APP_ROOT_PATH, 'bootstrap', 'app.php'));
+require_once(Path::glue(APP_BASE_PATH, 'bootstrap', 'app.php'));

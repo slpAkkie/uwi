@@ -1,11 +1,11 @@
 <?php
 
-use Uwi\Core\App;
-use Uwi\Support\Path\Path;
+use Uwi\Filesystem\Path;
+use Uwi\Foundation\Application;
 
 try {
     // Create the App
-    (new App())
+    (new Application())
         // Load all dependencies from configuration
         ->loadDependencies()
         // Run the Application
@@ -13,6 +13,8 @@ try {
 } catch (Exception $e) {
     // TODO: Replace to return a Response instance
     ob_start();
-    include_once(Path::glue(VENDOR_UWI_PATH, 'views', 'errors', 'exception.tpl.php'));
+    (function () use ($e) {
+        include_once(Path::glue(UWI_FRAMEWORK_PATH, 'Exceptions', 'views', '500.tpl.php'));
+    })();
     flush();
 }
