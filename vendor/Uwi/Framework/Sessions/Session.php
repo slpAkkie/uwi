@@ -2,14 +2,16 @@
 
 namespace Uwi\Sessions;
 
-class Session
+use Uwi\Contracts\Sessions\SessionContract;
+
+class Session implements SessionContract
 {
     /**
-     * Initialize the session
+     * Calls when singleton has been instantiated and saved
      *
-     * @param array $params
+     * @return void
      */
-    public function __construct()
+    public function boot(): void
     {
         $this->start();
     }
