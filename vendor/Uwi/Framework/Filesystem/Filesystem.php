@@ -57,4 +57,15 @@ class Filesystem
 
         return $fileName;
     }
+
+    /**
+     * Returns content of the file
+     *
+     * @param string[] ...$path
+     * @return string|false
+     */
+    public static function getFileContent(...$path): string|false
+    {
+        return file_get_contents(Path::glue(...$path));
+    }
 }

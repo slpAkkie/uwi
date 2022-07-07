@@ -1,5 +1,6 @@
 <?php
 
+use Uwi\Dotenv\Dotenv;
 use Uwi\Foundation\Application;
 
 /**
@@ -7,23 +8,35 @@ use Uwi\Foundation\Application;
  *
  * @return Application
  */
-function app()
+function app(): Application
 {
     return Application::$instance;
 }
 
 /**
- * Get loaded config by specified configuration name
+ * Returns an envar
  *
- * @param string $configurationName
- * @param ?string $key
- * @param mixed $default
- * @throws FileNotFoundException
- * @return mixed
+ * @param string $key
+ * @param string|null $default
+ * @return string|null
  */
-function config(string $configurationName, ?string $key = null, mixed $default = null): mixed
+function env(string $key, ?string $default = null): ?string
 {
-    return app()->getConfig($configurationName, $key, $default);
+    return app()->singleton(Dotenv::class)->get($key, $default);
+}
+
+/**
+ * Get loaded config by specified key
+ *
+ * @param string $key
+ * @param mixed $default
+ * @return mixed
+ * 
+ * @throws NotFoundException
+ */
+function config(string $key, mixed $default = null): mixed
+{
+    return app()->getConfig($key, $default);
 }
 
 /**

@@ -11,6 +11,8 @@
 
 return [
 
+    'name' => env('APP_NAME', 'Uwi'),
+
     'providers' => [
         Uwi\Sessions\SessionServiceProvider::class,
         Uwi\Foundation\Http\Routing\Providers\RouterServiceProvider::class,

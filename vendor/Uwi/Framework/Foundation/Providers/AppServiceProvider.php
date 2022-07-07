@@ -4,6 +4,7 @@ namespace Uwi\Foundation\Providers;
 
 use Uwi\Contracts\Http\Response\ResponseContract;
 use Uwi\Contracts\Sessions\SessionContract;
+use Uwi\Dotenv\Dotenv;
 use Uwi\Foundation\Http\Response\Response;
 use Uwi\Foundation\Providers\ServiceProvider;
 
@@ -26,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        app()->singleton(Dotenv::class);
         app()->singleton(SessionContract::class);
     }
 }
