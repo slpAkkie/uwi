@@ -17,6 +17,7 @@ return [
 
     'providers' => [
         Uwi\Sessions\SessionServiceProvider::class,
+        Uwi\Database\Lion\LionServiceProvider::class,
         Uwi\Foundation\Http\Routing\Providers\RouterServiceProvider::class,
         Uwi\Foundation\Providers\AppServiceProvider::class,
     ],
