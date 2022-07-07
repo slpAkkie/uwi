@@ -1,6 +1,6 @@
 # Uwi Framework
 
-Simple php framework based on MVC pattern
+Legacy php framework based on MVC pattern
 
 ## Author
 
