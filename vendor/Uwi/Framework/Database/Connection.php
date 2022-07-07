@@ -3,8 +3,53 @@
 namespace Uwi\Database;
 
 use PDO;
+use Uwi\Contracts\SingletonContract;
 
-class DatabaseConnection extends PDO
+class Connection implements SingletonContract
 {
-    // TODO: Implement...
+    /**
+     * PDO connection object
+     *
+     * @var PDO
+     */
+    private PDO $connection;
+
+    /**
+     * Calls when singleton has been instantiated and saved
+     *
+     * @return void
+     */
+    public function boot(): void
+    {
+        $this->connection = new PDO(
+            'mysql:host=' . config('database.connection.host') .
+                ';dbname=' . config('database.connection.dbname'),
+            config('database.connection.user'),
+            config('database.connection.password')
+        );
+    }
+
+    /**
+     * Get the PDO connection
+     *
+     * @return PDO
+     */
+    public function getConnection(): PDO
+    {
+        return $this->connection;
+    }
+
+    /**
+     * Exec a query
+     *
+     * @return array
+     */
+    public function exec(string $query, array $args = []): array
+    {
+        $st = $this->connection->prepare($query);
+        $st->execute($args);
+        $result = $st->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $result;
+    }
 }
