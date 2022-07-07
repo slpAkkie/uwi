@@ -8,13 +8,11 @@
  */
 function d(...$args): void
 {
-    echo '<pre>';
     foreach ($args as $arg) {
+        echo '<pre style="margin: 10px; padding: 25px; background: #0d0d0e; color: #00cf2d; font-size: .8em; font-family: \'Fira Code\'">';
         var_dump($arg);
-        echo '<br>';
+        echo '</pre>';
     }
-    echo '</pre>';
-    echo '<br><br>';
 }
 
 /**
