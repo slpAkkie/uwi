@@ -22,13 +22,6 @@ class Router implements RouterContract
     ];
 
     /**
-     * Configuration key
-     * 
-     * @var string
-     */
-    private const CONFIG_KEY = 'router';
-
-    /**
      * Default routes path
      *
      * @var string
@@ -80,14 +73,12 @@ class Router implements RouterContract
     {
         // Load configuration
         $this->routesPath = app()->getConfig(
-            self::CONFIG_KEY,
-            'routes_path',
+            'router.routes_path',
             self::DEFAULT_ROUTES_PATH
         );
 
         $this->routesFile = app()->getConfig(
-            self::CONFIG_KEY,
-            'routes_file',
+            'router.routes_file',
             self::DEFAULT_ROUTES_FILE
         );
 

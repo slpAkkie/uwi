@@ -8,7 +8,6 @@ use ReflectionMethod;
 use ReflectionParameter;
 use Uwi\Contracts\Http\Response\ResponseContract;
 use Uwi\Contracts\Http\Routing\RouterContract;
-use Uwi\Contracts\Sessions\SessionContract;
 use Uwi\Contracts\SingletonContract;
 use Uwi\Exceptions\NotFoundException;
 use Uwi\Filesystem\Filesystem;
@@ -31,6 +30,13 @@ class Application extends Container
      * @var Request
      */
     public readonly Request $request;
+
+    /**
+     * Application configuration
+     *
+     * @var array
+     */
+    private array $config = [];
 
     /**
      * Initialize the App
@@ -83,7 +89,7 @@ class Application extends Container
     {
         /** @var ServiceProvider[] */
         $serviceProviders = [];
-        foreach ($this->getConfig('app', 'providers', []) as $serviceProvider) {
+        foreach ($this->getConfig('app.providers', []) as $serviceProvider) {
             $serviceProviders[] = $this->registerServiceProvider($serviceProvider);
         }
 
@@ -117,40 +123,34 @@ class Application extends Container
     }
 
     /**
-     * Get loaded config by specified configuration name
+     * Get loaded config by specified key
      *
-     * @param string $configurationName
-     * @param ?string $key
+     * @param string $key
      * @param mixed $default
      * @return mixed
      * 
      * @throws NotFoundException
      */
-    public function getConfig(string $configurationName, ?string $key = null, mixed $default = null): mixed
+    public function getConfig(string $key, mixed $default = null): mixed
     {
-        // Check if config with provided key extists
-        if (!key_exists($configurationName, $this->config)) {
-            throw new NotFoundException('Config key [' . $configurationName . '] not found');
-        }
+        $keys = explode('.', $key);
+        $targetKey = join('.', array_slice($keys, -1, 1));
+        $prevKeys = join('.', array_slice($keys, 0, -1));
 
-        $config = $this->config[$configurationName];
-
-        // Check if key provided
-        if ($key !== null) {
-            // Check if key exists in the configuration
-            if (!key_exists($key, $config)) {
-                // Check if default value specified
-                if ($default !== null) {
-                    return $default;
-                }
-
-                throw new NotFoundException('Config key [' . $configurationName . '] not found');
+        if (!strlen($prevKeys)) {
+            if (!key_exists($targetKey, $this->config)) {
+                throw new NotFoundException('Config key [' . $key . '] not found');
             }
 
-            return $config[$key];
-        }
+            return $this->config[$targetKey];
+        } else {
+            $prevConfig = $this->getConfig($prevKeys);
+            if ($prevConfig === null || !key_exists($targetKey, $prevConfig)) {
+                return $default;
+            }
 
-        return $config;
+            return $prevConfig[$targetKey];
+        }
     }
 
     /**
