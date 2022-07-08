@@ -3,16 +3,10 @@
 namespace Uwi\Support;
 
 use Closure;
+use Uwi\Support\Arrays\ArrayWrapper;
 
-class Collection
+class Collection extends ArrayWrapper
 {
-    /**
-     * Collection items
-     *
-     * @var array
-     */
-    private array $items = [];
-
     /**
      * Make new Collection from value
      *
@@ -24,9 +18,9 @@ class Collection
         $instance = new static();
 
         if (is_array($val)) {
-            $instance->items = $val;
+            $instance->store = $val;
         } else {
-            $instance->items[] = $val;
+            $instance->store[] = $val;
         }
 
         return $instance;
@@ -40,6 +34,6 @@ class Collection
      */
     public function map(Closure $callback): static
     {
-        return static::make(array_map($callback, $this->items));
+        return static::make(array_map($callback, $this->store));
     }
 }
