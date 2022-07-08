@@ -15,22 +15,19 @@ class Builder
     private Query $query;
 
     /**
-     * Model class to get
-     *
-     * @var string
-     */
-    private string $modelClass;
-
-    /**
      * Instantiate Builder
      *
-     * @param string $modelClass
+     * @param string $table
+     * @param string $primaryKey
+     * @param string|null $model
      */
-    public function __construct(string $modelClass)
+    public function __construct(string $table, string $primaryKey, ?string $model = null)
     {
-        $this->modelClass = $modelClass;
+        if ($model === null) {
+            $model = Model::class;
+        }
 
-        $this->query = new Query($modelClass);
+        $this->query = new Query($table, $primaryKey, $model);
     }
 
     /**
@@ -41,7 +38,7 @@ class Builder
      */
     public function find(int|string $val): Model
     {
-        return $this->query->addWhere($this->modelClass::getPrimaryKey(), '=', $val)->get();
+        return $this->query->addWherePrimary('=', $val)->get()[0];
     }
 
     /**
@@ -50,17 +47,43 @@ class Builder
      * @param string $columnName
      * @param string|null $operator
      * @param string|null $value
+     * @param string $type
      * @return static
      */
-    public function where(string $columnName, ?string $operator = null, ?string $value = null): static
+    public function where(string $columnName, ?string $operator = null, ?string $value = null, string $type = 'and'): static
     {
-        $this->query->addWhere($columnName, $operator, $value);
+        $this->query->addWhere($columnName, $operator, $value, $type);
 
         return $this;
     }
 
     /**
-     * Undocumented function
+     * Add where condition to the query type as OR
+     *
+     * @param string $columnName
+     * @param string|null $operator
+     * @param string|null $value
+     * @return static
+     */
+    public function orWhere(string $columnName, ?string $operator = null, ?string $value = null): static
+    {
+        return $this->where($columnName, $operator, $value, 'or');
+    }
+
+    /**
+     * Exec raw sql query with parameters
+     *
+     * @param string $sql
+     * @param array $args
+     * @return void
+     */
+    public function raw(string $sql, array $args = [])
+    {
+        return $this->query->execRaw($sql, $args);
+    }
+
+    /**
+     * Exec query and get result
      *
      * @return Collection|Model|null
      */

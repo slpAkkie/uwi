@@ -4,7 +4,6 @@ namespace Uwi\Database\Lion;
 
 use ReflectionClass;
 use Uwi\Database\Lion\Query\Builder;
-use Uwi\Exceptions\NotFoundException;
 use Uwi\Support\Str;
 
 class Model
@@ -14,14 +13,14 @@ class Model
      *
      * @var string|null
      */
-    protected static ?string $table = null;
+    protected ?string $table = null;
 
     /**
      * Model's primary key
      *
      * @var string
      */
-    protected static string $primaryKey = 'id';
+    protected string $primaryKey = 'id';
 
     /**
      * Array of columns
@@ -51,23 +50,13 @@ class Model
     }
 
     /**
-     * Get model's primary key
-     *
-     * @return string
-     */
-    public static function getPrimaryKey(): string
-    {
-        return static::$primaryKey;
-    }
-
-    /**
      * Get model's table name
      *
      * @return string
      */
-    public static function getTableName(): string
+    public function getTableName(): string
     {
-        return static::$table ?? static::getQualifiedTableName();
+        return $this->table ?? $this->getQualifiedTableName();
     }
 
     /**
@@ -75,7 +64,7 @@ class Model
      *
      * @return string
      */
-    public static function getQualifiedTableName(): string
+    public function getQualifiedTableName(): string
     {
         return Str::lower(
             Str::plural(
@@ -85,20 +74,36 @@ class Model
     }
 
     /**
+     * Instantiate new builder object
+     *
+     * @return Builder
+     */
+    public function newQuery(): Builder
+    {
+        return new Builder($this->getTableName(), $this->primaryKey, static::class);
+    }
+
+    /**
      * Call Buidler methods
      *
-     * @param [type] $name
-     * @param [type] $arguments
-     * @return void
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
      */
-    public static function __callStatic($name, $arguments)
+    public function __call(string $name, array $arguments): mixed
     {
-        if (!method_exists(Builder::class, $name)) {
-            throw new NotFoundException('Method [' . $name . '] not found on Builder');
-        }
+        return $this->newQuery()->{$name}(...$arguments);
+    }
 
-        $builder = new Builder(static::class);
-
-        return $builder->{$name}(...$arguments);
+    /**
+     * Handle static calls
+     *
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
+    public static function __callStatic(string $name, array $arguments): mixed
+    {
+        return (new static())->{$name}(...$arguments);
     }
 }

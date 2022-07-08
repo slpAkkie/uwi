@@ -3,11 +3,38 @@
 namespace Uwi\Database\Lion\Query;
 
 use Uwi\Database\Connection;
-use Uwi\Database\Lion\Model;
 use Uwi\Database\Lion\Support\Collection;
 
 class Query
 {
+    /**
+     * Connection to execute query on
+     *
+     * @var Connection
+     */
+    private Connection $connection;
+
+    /**
+     * Table t oexecute query at
+     *
+     * @var string
+     */
+    private string $table;
+
+    /**
+     * Model that returns as Query result
+     *
+     * @var string
+     */
+    private string $model;
+
+    /**
+     * Table primary key
+     *
+     * @var string
+     */
+    private string $primaryKey;
+
     /**
      * Which command shoud be executed
      * Such as SELECT or something else
@@ -31,34 +58,14 @@ class Query
     private array $wheres = [];
 
     /**
-     * Connection to execute query on
-     *
-     * @var Connection
-     */
-    private Connection $connection;
-
-    /**
-     * Table t oexecute query at
-     *
-     * @var string
-     */
-    private string $table;
-
-    /**
-     * Model that returns as Query result
-     *
-     * @var string
-     */
-    private string $modelClass;
-
-    /**
      * Instantiate query
      */
-    public function __construct(string $modelClass)
+    public function __construct(string $table, string $primaryKey, string $model)
     {
         $this->connection = app()->singleton(Connection::class);
-        $this->modelClass = $modelClass;
-        $this->table = $modelClass::getTableName();
+        $this->model = $model;
+        $this->table = $table;
+        $this->primaryKey = $primaryKey;
     }
 
     /**
@@ -105,6 +112,18 @@ class Query
         ];
 
         return $this;
+    }
+
+    /**
+     * Add where clause at primary key
+     *
+     * @param string $operator
+     * @param string $val
+     * @return static
+     */
+    public function addWherePrimary(string $operator, string $val): static
+    {
+        return $this->addWhere($this->primaryKey, $operator, $val);
     }
 
     /**
@@ -162,20 +181,41 @@ class Query
     }
 
     /**
+     * Exec raw sql query
+     *
+     * @param string $sql
+     * @param array $parameters
+     * @return Collection
+     */
+    public function execRaw(string $sql, array $parameters = []): Collection
+    {
+        $result = $this->connection->exec($sql, $parameters);
+
+        return $this->wrapResult($result);
+    }
+
+    /**
+     * Wrap result into models in collection
+     *
+     * @param array $result
+     * @return Collection
+     */
+    private function wrapResult(array $result = []): Collection
+    {
+        return Collection::make($result)->map(function ($el) {
+            return new $this->model($el);
+        });
+    }
+
+    /**
      * Exec query and get the result
      *
-     * @return Collection|Model|null
+     * @return Collection
      */
-    public function get(): Collection|Model|null
+    public function get(): Collection
     {
         $result = $this->exec();
 
-        return match (count($result)) {
-            0 => null,
-            1 => new $this->modelClass($result[0]),
-            default => Collection::make($result)->map(function ($el) {
-                return new $this->modelClass($el);
-            })
-        };
+        return $this->wrapResult($result);
     }
 }
