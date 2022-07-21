@@ -89,9 +89,10 @@ class Query
      * @param string $columnName
      * @param ?string $operator
      * @param ?string $value
+     * @param string $type
      * @return static
      */
-    public function addWhere(string $columnName, ?string $operator = null, ?string $value = null): static
+    public function addWhere(string $columnName, ?string $operator = null, ?string $value = null, string $type = 'and'): static
     {
         $this->setCommand('select');
 
@@ -109,6 +110,7 @@ class Query
             $columnName,
             $operator,
             $value,
+            $type,
         ];
 
         return $this;
@@ -149,7 +151,7 @@ class Query
             if ($i === 0) {
                 $sql .= " where {$this->wheres[$i][0]} {$this->wheres[$i][1]} ?";
             } else {
-                $sql .= " and {$this->wheres[$i][0]} {$this->wheres[$i][1]} ?";
+                $sql .= " {$this->wheres[$i][3]} {$this->wheres[$i][0]} {$this->wheres[$i][1]} ?";
             }
         }
 

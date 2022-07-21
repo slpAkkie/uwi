@@ -19,4 +19,15 @@ class RouterServiceProvider extends ServiceProvider
         RouterContract::class => Router::class,
         RouteContract::class => Route::class,
     ];
+
+    /**
+     * Boot server provider
+     * Calls when all other service provider are registered
+     *
+     * @return void
+     */
+    public function boot(): void
+    {
+        //
+    }
 }

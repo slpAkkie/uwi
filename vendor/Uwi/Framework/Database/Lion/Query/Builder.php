@@ -34,11 +34,11 @@ class Builder
      * Returns record by the primary key value
      *
      * @param integer|string $val
-     * @return Model
+     * @return Model|null
      */
-    public function find(int|string $val): Model
+    public function find(int|string $val): Model|null
     {
-        return $this->query->addWherePrimary('=', $val)->get()[0];
+        return $this->query->addWherePrimary('=', $val)->get()->first();
     }
 
     /**
@@ -100,5 +100,15 @@ class Builder
     public function toSql(): string
     {
         return $this->query->getQueryString();
+    }
+
+    /**
+     * Dump a sql string and die
+     *
+     * @return void
+     */
+    public function dd(): void
+    {
+        dd($this->query->getQueryString(), $this->query->getParameters());
     }
 }

@@ -189,7 +189,7 @@ class Application extends Container
     }
 
     /**
-     * Destory Applicetion before end
+     * Destory Application before end
      *
      * @return void
      */

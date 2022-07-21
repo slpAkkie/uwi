@@ -85,6 +85,11 @@ class Router implements RouterContract
         return $this;
     }
 
+    /**
+     * Load routes from path specified in config
+     *
+     * @return static
+     */
     private function loadRoutes(): static
     {
         include_once(Path::glue(

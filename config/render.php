@@ -15,7 +15,7 @@ return [
      * |-------------------------------------------------
      * | Path to views folder
      * | relative to the project root directory
-     */
+     * | */
     'views' => 'views',
 
 ];
