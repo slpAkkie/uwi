@@ -2,9 +2,16 @@
 
 namespace App\Models;
 
-use Uwi\Database\Lion\Model as Model;
+use Uwi\Database\Lion\Model;
 
 class User extends Model
 {
-    // TODO: Implement...
+    /**
+     * Column allowed for mass-assignment
+     *
+     * @var array
+     */
+    protected array $fillable = [
+        'name',
+    ];
 }

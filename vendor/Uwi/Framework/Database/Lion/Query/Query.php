@@ -3,6 +3,7 @@
 namespace Uwi\Database\Lion\Query;
 
 use Uwi\Database\Connection;
+use Uwi\Database\Lion\Grammar\Grammar;
 use Uwi\Database\Lion\Support\Collection;
 
 class Query
@@ -12,55 +13,62 @@ class Query
      *
      * @var Connection
      */
-    private Connection $connection;
+    public Connection $connection;
 
     /**
      * Table t oexecute query at
      *
      * @var string
      */
-    private string $table;
+    public string $table;
 
     /**
      * Model that returns as Query result
      *
-     * @var string
+     * @var ?string
      */
-    private string $model;
+    public ?string $model;
 
     /**
      * Table primary key
      *
      * @var string
      */
-    private string $primaryKey;
+    public string $primaryKey;
 
     /**
-     * Which command shoud be executed
+     * Which type shoud be executed
      * Such as SELECT or something else
      *
      * @var string
      */
-    private string $command;
+    public string $type;
 
     /**
      * Array of columns
      *
      * @var array
      */
-    private array $columns = ['*'];
+    public array $columns = ['*'];
 
     /**
      * Array of where conditions
      *
      * @var array
      */
-    private array $wheres = [];
+    public array $params = [];
+
+    /**
+     * Props for grammar processor
+     *
+     * @var array
+     */
+    public array $grammarProps = [];
 
     /**
      * Instantiate query
      */
-    public function __construct(string $table, string $primaryKey, string $model)
+    public function __construct(string $table, string $primaryKey, ?string $model = null)
     {
         $this->connection = app()->singleton(Connection::class);
         $this->model = $model;
@@ -69,18 +77,87 @@ class Query
     }
 
     /**
-     * Set command for the query
+     * Set type for the query
      *
-     * @param string $command
+     * @param string $type
      * @return static
      */
-    public function setCommand(string $command): static
+    public function setType(string $type): static
     {
-        if (!isset($this->command)) {
-            $this->command = $command;
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Set type for the query only if it hasn't been setted yet
+     *
+     * @param string $type
+     * @return void
+     */
+    public function setTypeIfNot(string $type)
+    {
+        if (!isset($this->type)) {
+            $this->setType($type);
         }
 
         return $this;
+    }
+
+    /**
+     * Set new select statement
+     *
+     * @param array|null $columns
+     * @return static
+     */
+    public function select(?array $columns = null): static
+    {
+        if ($columns && count($columns)) {
+            $this->columns = $columns;
+        }
+
+        $this->setType('select');
+
+        return $this;
+    }
+
+    /**
+     * Returns if record with provided primary key exists
+     *
+     * @param string $primaryKey
+     * @return boolean
+     */
+    public function exists(string $primaryKey): bool
+    {
+        return !!$this->addWherePrimary('=', $primaryKey)->count('1');
+    }
+
+    /**
+     * Count records by column name
+     * Default by entire row
+     *
+     * @param string $columnName
+     * @return integer
+     */
+    public function count(string $columnName = '*'): int
+    {
+        return $this->getNude(["COUNT({$columnName}) as aggregate"])[0]['aggregate'];
+    }
+
+    /**
+     * Insert new record into the table
+     *
+     * @param array $attributes
+     * @return ?int
+     */
+    public function insert(array $attributes): ?int
+    {
+        $this->setType('insert');
+        $this->grammarProps = $attributes;
+
+        $this->exec();
+
+        return $this->connection->lastInsertedID();
     }
 
     /**
@@ -94,7 +171,7 @@ class Query
      */
     public function addWhere(string $columnName, ?string $operator = null, ?string $value = null, string $type = 'and'): static
     {
-        $this->setCommand('select');
+        $this->setTypeIfNot('select');
 
         if ($operator === null && $value !== null) {
             $operator = '=';
@@ -106,7 +183,7 @@ class Query
             $value = 'NULL';
         }
 
-        $this->wheres[] = [
+        $this->params[] = [
             $columnName,
             $operator,
             $value,
@@ -133,43 +210,21 @@ class Query
      *
      * @return string
      */
-    private function getColumns(): string
+    public function getColumns(): string
     {
         return join($this->columns);
     }
 
     /**
-     * Returns a sql string
-     *
-     * @return string
-     */
-    public function getQueryString(): string
-    {
-        $sql = "{$this->command} {$this->getColumns()} from {$this->table}";
-
-        for ($i = 0; $i < count($this->wheres); $i++) {
-            if ($i === 0) {
-                $sql .= " where {$this->wheres[$i][0]} {$this->wheres[$i][1]} ?";
-            } else {
-                $sql .= " {$this->wheres[$i][3]} {$this->wheres[$i][0]} {$this->wheres[$i][1]} ?";
-            }
-        }
-
-        return $sql;
-    }
-
-    /**
-     * Returns an array of parameters for conditions
+     * Returns data for execution
      *
      * @return array
      */
-    public function getParameters(): array
+    public function getDataToExec(): array
     {
-        return array_reduce($this->wheres, function ($carry, $item) {
-            $carry[] = $item[2];
-
-            return $carry;
-        }, []);
+        /** @var Grammar */
+        $grammar = new ('\\Uwi\\Database\\Lion\\Grammar\\' . \Uwi\Support\Str::upperFirst($this->type) . 'Grammar')($this, $this->grammarProps);
+        return $grammar->get();
     }
 
     /**
@@ -179,7 +234,7 @@ class Query
      */
     private function exec(): array
     {
-        return $this->connection->exec($this->getQueryString(), $this->getParameters());
+        return $this->connection->exec(...$this->getDataToExec());
     }
 
     /**
@@ -204,20 +259,42 @@ class Query
      */
     private function wrapResult(array $result = []): Collection
     {
-        return Collection::make($result)->map(function ($el) {
-            return new $this->model($el);
-        });
+        $collection = Collection::make($result);
+
+        return $this->model ? $collection->map(function ($el) {
+            return new $this->model($el, true);
+        }) : $collection;
     }
 
     /**
      * Exec query and get the result
      *
+     * @param ?array $columns
      * @return Collection
      */
-    public function get(): Collection
+    public function get(?array $columns = null): Collection
     {
+        if ($columns) {
+            $this->columns = $columns;
+        }
+
         $result = $this->exec();
 
         return $this->wrapResult($result);
+    }
+
+    /**
+     * Exec query and get the result without wrapping into Collection and model
+     *
+     * @param array|null $columns
+     * @return array
+     */
+    public function getNude(?array $columns = null): array
+    {
+        if ($columns) {
+            $this->columns = $columns;
+        }
+
+        return $this->connection->exec(...$this->getDataToExec());
     }
 }

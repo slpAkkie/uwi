@@ -118,4 +118,14 @@ abstract class ArrayWrapper implements ArrayAccess
     {
         return $this->get($key);
     }
+
+    /**
+     * Convert collection to array
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return $this->store;
+    }
 }
