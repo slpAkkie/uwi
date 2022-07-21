@@ -15,19 +15,23 @@ class Builder
     private Query $query;
 
     /**
+     * Model Builder created for
+     *
+     * @var ?Model
+     */
+    private ?Model $model;
+
+    /**
      * Instantiate Builder
      *
      * @param string $table
      * @param string $primaryKey
-     * @param string|null $model
+     * @param string|Model $model
      */
-    public function __construct(string $table, string $primaryKey, ?string $model = null)
+    public function __construct(string $table, string $primaryKey = 'id', string|Model|null $model = null)
     {
-        if ($model === null) {
-            $model = Model::class;
-        }
-
-        $this->query = new Query($table, $primaryKey, $model);
+        $this->model = isset($model) ? (gettype($model) === 'string' ? new $model() : $model) : null;
+        $this->query = new Query($table, $primaryKey, $this->model ? $this->model::class : null);
     }
 
     /**
@@ -71,6 +75,58 @@ class Builder
     }
 
     /**
+     * Check whether the record with provided primaryKey exists
+     *
+     * @param string|null $primaryKey
+     * @return boolean
+     */
+    public function exists(?string $primaryKey = null): bool
+    {
+        return $this->query->exists($primaryKey);
+    }
+
+    /**
+     * Save model to the database or update if it's already exists
+     *
+     * @return boolean
+     */
+    public function save(): bool
+    {
+        $id = $this->query->insert($this->model->getDirty());
+
+        return $id;
+    }
+
+    /**
+     * Synchronize model data with database
+     * TODO: Implement...
+     *
+     * @return boolean
+     */
+    public function update(): bool
+    {
+        if (!$this->model->isDirty()) {
+            return false;
+        }
+
+        $this->query->update($this->model->primaryKey, $this->model->{$this->model->primaryKey}, $this->model->getDirty());
+
+        return true;
+    }
+
+    /**
+     * Delete record about model from the databse
+     *
+     * @return boolean
+     */
+    public function delete(): bool
+    {
+        $this->query->delete();
+
+        return true;
+    }
+
+    /**
      * Exec raw sql query with parameters
      *
      * @param string $sql
@@ -85,11 +141,12 @@ class Builder
     /**
      * Exec query and get result
      *
+     * @param ?array $columns
      * @return Collection|Model|null
      */
-    public function get(): Collection|Model|null
+    public function get(?array $columns = null): Collection|Model|null
     {
-        return $this->query->get();
+        return $this->query->get($columns);
     }
 
     /**
@@ -99,7 +156,7 @@ class Builder
      */
     public function toSql(): string
     {
-        return $this->query->getQueryString();
+        return $this->query->getDataToExec()[0];
     }
 
     /**
@@ -109,6 +166,6 @@ class Builder
      */
     public function dd(): void
     {
-        dd($this->query->getQueryString(), $this->query->getParameters());
+        dd(...$this->query->getDataToExec());
     }
 }
