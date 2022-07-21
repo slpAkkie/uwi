@@ -9,11 +9,13 @@ class Controller extends BaseController
 {
     public function welcome()
     {
-        $user = new User([
-            'name' => 'John Doe',
-        ]);
+        $user = User::find(1);
+        $user->name = 'asdasdasd';
 
-        $user->save();
+        // $user->save();
+        $user->update([
+            'name' => 'Martin Madraso'
+        ]);
 
         return view('welcome');
     }

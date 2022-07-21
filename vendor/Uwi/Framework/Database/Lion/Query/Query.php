@@ -161,6 +161,27 @@ class Query
     }
 
     /**
+     * Update row by primary key with dirty fields
+     *
+     * @param string $primaryKey
+     * @param array $attributes
+     * @return boolean
+     */
+    public function update(string $primaryKeyName, string $primaryKey, array $attributes): bool
+    {
+        $this->setType('update');
+        $this->grammarProps = [
+            'primaryKeyName' => $primaryKeyName,
+            'primaryKey' => $primaryKey,
+            'props' => $attributes
+        ];
+
+        $this->exec();
+
+        return true;
+    }
+
+    /**
      * Add where condition to the query
      *
      * @param string $columnName

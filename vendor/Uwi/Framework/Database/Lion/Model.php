@@ -165,8 +165,17 @@ class Model
         return new Builder($this->getTableName(), $this->primaryKey, $this);
     }
 
-    public function save()
+    /**
+     * Save model to the database
+     *
+     * @return boolean
+     */
+    public function save(): bool
     {
+        if ($this->exists) {
+            return $this->newQuery()->update();
+        }
+
         $this->newQuery()->save();
         $id = tap(fn (Connection $connection) => $connection->lastInsertedID());
         if (!$id) {
@@ -179,6 +188,23 @@ class Model
         $this->exists = true;
 
         return true;
+    }
+
+    /**
+     * Update model with provided data
+     *
+     * @param array|null $attributes
+     * @return boolean
+     */
+    public function update(?array $attributes = []): bool
+    {
+        if (!$this->exists) {
+            return false;
+        }
+
+        $this->dirty = $attributes;
+
+        return count($this->dirty) ? $this->newQuery()->update() : false;
     }
 
     /**
