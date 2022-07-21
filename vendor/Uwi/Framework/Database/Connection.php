@@ -40,6 +40,16 @@ class Connection implements SingletonContract
     }
 
     /**
+     * Returns id of last insterted row
+     *
+     * @return integer|null
+     */
+    public function lastInsertedID(): ?int
+    {
+        return $this->connection->lastInsertId();
+    }
+
+    /**
      * Exec a query
      *
      * @return array

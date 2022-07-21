@@ -17,6 +17,17 @@ class Str
     }
 
     /**
+     * Make a string's first character uppercase
+     *
+     * @param string $str
+     * @return string
+     */
+    public static function upperFirst(string $str): string
+    {
+        return ucfirst($str);
+    }
+
+    /**
      * Convert strong to lower case
      *
      * @param string $str

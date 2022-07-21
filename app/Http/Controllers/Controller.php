@@ -9,7 +9,12 @@ class Controller extends BaseController
 {
     public function welcome()
     {
-        dd(User::where('id', 1)->orWhere('id', '>', 2)->dd());
+        $user = User::find(2);
+
+        $user->delete();
+
+        dd($user);
+
         return view('welcome');
     }
 }
