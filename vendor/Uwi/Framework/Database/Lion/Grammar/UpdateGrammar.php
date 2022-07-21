@@ -11,7 +11,15 @@ class UpdateGrammar extends Grammar
      */
     public function get(): array
     {
-        // TODO: Implement...
-        return ['', []];
+        $values = [];
+        $statements = [];
+        foreach ($this->props['props'] as $column => $value) {
+            $statements[] = "{$column}=?";
+            $values[] = $value;
+        }
+
+        $statements = join(',', $statements);
+        $values[] = $this->props['primaryKey'];
+        return ["update {$this->query->table} set {$statements} where {$this->props['primaryKeyName']} = ?", $values];
     }
 }

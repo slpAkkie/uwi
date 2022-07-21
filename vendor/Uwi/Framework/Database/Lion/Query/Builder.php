@@ -92,10 +92,6 @@ class Builder
      */
     public function save(): bool
     {
-        if ($this->model->exists && $this->model->isDirty()) {
-            return $this->model->update();
-        }
-
         $id = $this->query->insert($this->model->getDirty());
 
         return $id;
@@ -105,11 +101,17 @@ class Builder
      * Synchronize model data with database
      * TODO: Implement...
      *
-     * @return Model
+     * @return boolean
      */
-    public function update(): Model
+    public function update(): bool
     {
-        return $this->model;
+        if (!$this->model->isDirty()) {
+            return false;
+        }
+
+        $this->query->update($this->model->primaryKey, $this->model->{$this->model->primaryKey}, $this->model->getDirty());
+
+        return true;
     }
 
     /**
