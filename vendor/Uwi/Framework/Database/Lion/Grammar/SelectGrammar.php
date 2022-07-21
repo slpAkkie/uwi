@@ -11,17 +11,19 @@ class SelectGrammar extends Grammar
      */
     public function get(): array
     {
-        $sql = "select {$this->query->getColumns()} from {$this->query->table}";
+        $wheres = $this->query->wheres;
+        $conditions = [];
 
-        for ($i = 0; $i < count($this->query->params); $i++) {
+        foreach ($wheres as $i => $where) {
             if ($i === 0) {
-                $sql .= " where {$this->query->params[$i][0]} {$this->query->params[$i][1]} ?";
+                $conditions[] = "{$where[0]} {$where[1]} ?";
             } else {
-                $sql .= " {$this->query->params[$i][3]} {$this->query->params[$i][0]} {$this->query->params[$i][1]} ?";
+                $conditions[] = "{$where[3]} {$where[0]} {$where[1]} ?";
             }
         }
 
-        return [$sql, array_reduce($this->query->params, function ($carry, $item) {
+        $conditions = count($conditions) ? 'where ' . join(' ', $conditions) : '';
+        return ["select {$this->query->getColumns()} from {$this->query->table} {$conditions}", array_reduce($wheres, function ($carry, $item) {
             $carry[] = $item[2];
 
             return $carry;

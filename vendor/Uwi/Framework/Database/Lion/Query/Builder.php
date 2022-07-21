@@ -115,6 +115,18 @@ class Builder
     }
 
     /**
+     * Delete record about model from the databse
+     *
+     * @return boolean
+     */
+    public function delete(): bool
+    {
+        $this->query->delete();
+
+        return true;
+    }
+
+    /**
      * Exec raw sql query with parameters
      *
      * @param string $sql

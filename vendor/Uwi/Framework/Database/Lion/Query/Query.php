@@ -56,7 +56,7 @@ class Query
      *
      * @var array
      */
-    public array $params = [];
+    public array $wheres = [];
 
     /**
      * Props for grammar processor
@@ -181,6 +181,15 @@ class Query
         return true;
     }
 
+    public function delete()
+    {
+        $this->setType('delete');
+
+        $this->exec();
+
+        return true;
+    }
+
     /**
      * Add where condition to the query
      *
@@ -204,7 +213,7 @@ class Query
             $value = 'NULL';
         }
 
-        $this->params[] = [
+        $this->wheres[] = [
             $columnName,
             $operator,
             $value,
