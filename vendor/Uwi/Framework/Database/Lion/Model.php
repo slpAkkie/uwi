@@ -208,6 +208,22 @@ class Model
     }
 
     /**
+     * Delete model from database
+     *
+     * @return boolean
+     */
+    public function delete(): bool
+    {
+        static::where($this->primaryKey, $this->originals[$this->primaryKey])->delete();
+
+        $this->dirty = array_merge($this->originals, $this->dirty);
+        $this->originals = [];
+        $this->exists = false;
+
+        return true;
+    }
+
+    /**
      * Get the model column value
      *
      * @param $key
