@@ -11,6 +11,11 @@
 
 return [
 
+    /**
+     * |-------------------------------------------------
+     * | Database connection cridentials
+     * | to connect db host
+     * | */
     'connection' => [
         'host' => env('DATABASE_HOST', 'localhost'),
         'port' => env('DATABASE_PORT', '3306'),

@@ -20,6 +20,13 @@ function response(mixed $data = null, int $code = 200): ResponseContract
     return $response;
 }
 
+/**
+ * Get response as View instance
+ *
+ * @param string $viewName
+ * @param array $args
+ * @return ResponseContract
+ */
 function view(string $viewName, array $args = []): ResponseContract
 {
     $response = app()->instantiate(ResponseContract::class);

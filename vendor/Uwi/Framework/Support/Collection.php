@@ -36,4 +36,14 @@ class Collection extends ArrayWrapper
     {
         return static::make(array_map($callback, $this->store));
     }
+
+    /**
+     * Get first item from collection
+     *
+     * @return mixed
+     */
+    public function first(): mixed
+    {
+        return key_exists(0, $this->store) ? $this->store[0] : null;
+    }
 }
