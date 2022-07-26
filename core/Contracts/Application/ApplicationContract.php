@@ -22,6 +22,14 @@ interface ApplicationContract extends ContainerContract
     public function registerApplication(): void;
 
     /**
+     * Register provided ServiceLoaders
+     *
+     * @param array<ServiceLoaderContract> $serviceLoaders
+     * @return void
+     */
+    public function registerServices(array $serviceLoaders = []): void;
+
+    /**
      * Register provided Service by it's ServiceLoader.
      * Runs register method.
      *

@@ -1,8 +1,9 @@
 <?php
 
 use Uwi\Foundation\Application;
+use Uwi\Services\Application\ApplicationServiceLoader;
 use Uwi\Services\Dotenv\DotenvServiceLoader;
-use Uwi\Services\ApplicationServiceLoader;
+use Uwi\Services\Http\HttpKernelServiceLoader;
 
 /**
  * |-------------------------------------------------
@@ -29,7 +30,11 @@ set_exception_handler('ddException');
  */
 
 $app = Application::create([
+    // Application dependencies.
     DotenvServiceLoader::class,
+
+    // Application Base.
+    HttpKernelServiceLoader::class,
     ApplicationServiceLoader::class,
 ]);
 

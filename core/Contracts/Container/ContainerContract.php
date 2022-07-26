@@ -26,6 +26,16 @@ interface ContainerContract
     public function make(string $abstract, mixed ...$args): object;
 
     /**
+     * Resolve parameters for \Callable function or class method.
+     * Collects array of args to call this.
+     *
+     * @param \Closure|string|array $action
+     * @param array<mixed> ...$passedArgs
+     * @return array<mixed>
+     */
+    public function resolveArgs(\Closure|string|array $action, array ...$passedArgs): array;
+
+    /**
      * Share instance into the Container linked to its abstract and itself.
      *
      * @param string|object $abstract
@@ -57,5 +67,5 @@ interface ContainerContract
      * @param bool $shared
      * @return object|null
      */
-    public function resolve(string $abstract, array $args, bool $shared = true): object|null;
+    public function resolve(string $abstract, array $args = [], bool $shared = true): object|null;
 }

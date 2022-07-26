@@ -27,10 +27,7 @@ class Application extends Container implements ApplicationContract
         $app = new static();
 
         $app->registerApplication();
-
-        foreach ($serviceLoaders as $loader) {
-            $app->registerService($loader);
-        }
+        $app->registerServices($serviceLoaders);
 
         return $app;
     }
@@ -44,6 +41,19 @@ class Application extends Container implements ApplicationContract
     {
         $this->bind(ApplicationContract::class, static::class, true);
         $this->share(ApplicationContract::class, $this);
+    }
+
+    /**
+     * Register provided ServiceLoaders
+     *
+     * @param array<ServiceLoaderContract> $serviceLoaders
+     * @return void
+     */
+    public function registerServices(array $serviceLoaders = []): void
+    {
+        foreach ($serviceLoaders as $loader) {
+            $this->registerService($loader);
+        }
     }
 
     /**

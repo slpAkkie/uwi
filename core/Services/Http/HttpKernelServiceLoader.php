@@ -1,12 +1,15 @@
 <?php
 
-namespace Uwi\Services;
+namespace Uwi\Services\Http;
 
 use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\Application\KernelContract;
 use Uwi\Foundation\Kernel\HttpKernel;
+use Uwi\Services\Http\Request\RequestServiceLoader;
+use Uwi\Services\Http\Routing\RoutingServiceLoader;
+use Uwi\Services\ServiceLoader;
 
-class ApplicationServiceLoader extends ServiceLoader
+class HttpKernelServiceLoader extends ServiceLoader
 {
     /**
      * Register necessary components for Serive.
@@ -16,6 +19,13 @@ class ApplicationServiceLoader extends ServiceLoader
      */
     public function register(ApplicationContract $app): void
     {
+        // Register Kernel dependencies.
+        $app->registerServices([
+            RoutingServiceLoader::class,
+            RequestServiceLoader::class,
+        ]);
+
+        // Register kernel.
         $app->bind(KernelContract::class, HttpKernel::class);
     }
 

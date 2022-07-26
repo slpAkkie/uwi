@@ -4,11 +4,15 @@ namespace Uwi\Foundation\Kernel;
 
 use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\Application\KernelContract;
+use Uwi\Contracts\Http\Request\RequestContract;
+use Uwi\Contracts\Http\Routing\RouterContract;
 
 class HttpKernel implements KernelContract
 {
     public function __construct(
-        public ApplicationContract $app
+        protected ApplicationContract $app,
+        protected RouterContract $router,
+        protected RequestContract $request,
     ) {
         //
     }
@@ -20,6 +24,6 @@ class HttpKernel implements KernelContract
      */
     public function start(): void
     {
-        //
+        dd('Http Kernel has been started', $this);
     }
 }

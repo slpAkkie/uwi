@@ -3,6 +3,7 @@
 namespace Uwi\Container;
 
 use Exception;
+use Throwable;
 use Uwi\Contracts\Container\ContainerContract;
 use Uwi\Contracts\Container\SingletonContract;
 
@@ -110,7 +111,7 @@ class Container implements ContainerContract
      * @param array<mixed> ...$passedArgs
      * @return array<mixed>
      */
-    protected function resolveArgs(\Closure|string|array $action, array ...$passedArgs): array
+    public function resolveArgs(\Closure|string|array $action, array ...$passedArgs): array
     {
         // Get a list of parameters of a function or
         // method of a class that should be injected into it
@@ -209,7 +210,7 @@ class Container implements ContainerContract
             throw new Exception("Class [$abstract] doesn't implement SingletonContract");
         }
 
-        // If singleton should be shared add it to the Container's shared list
+        // If singleton should be shared add it to the Container's shared list.
         if ($concrete[1] === true) {
             $this->share($abstract, $this->singletons[$abstract]);
         }
