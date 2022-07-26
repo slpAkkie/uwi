@@ -1,6 +1,6 @@
 <?php
 
-namespace Uwi\Container\Contracts;
+namespace Uwi\Contracts\Container;
 
 interface ContainerContract
 {
@@ -20,7 +20,7 @@ interface ContainerContract
      * will be added for sharing into the Container.
      *
      * @param string $abstract
-     * @param mixed ...$args
+     * @param array<mixed> ...$args
      * @return object
      */
     public function make(string $abstract, mixed ...$args): object;
@@ -40,7 +40,7 @@ interface ContainerContract
      * for the abstract.
      *
      * @param string $abstract
-     * @param mixed ...$args
+     * @param array<mixed> ...$args
      * @return object
      */
     public function singleton(string $abstract, mixed ...$args): object;

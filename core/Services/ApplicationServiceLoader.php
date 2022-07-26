@@ -1,6 +1,6 @@
 <?php
 
-namespace Uwi\Foundation;
+namespace Uwi\Services;
 
 class ApplicationServiceLoader extends ServiceLoader
 {

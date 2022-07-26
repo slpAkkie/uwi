@@ -1,21 +1,22 @@
 <?php
 
-namespace Uwi\Services;
+namespace Uwi\Services\Dotenv;
 
 use Uwi\Contracts\ApplicationContract;
-use Uwi\Contracts\ServiceLoaderContract;
+use Uwi\Contracts\DotenvContract;
+use Uwi\Services\ServiceLoader;
 
-abstract class ServiceLoader implements ServiceLoaderContract
+class DotenvServiceLoader extends ServiceLoader
 {
     /**
      * Register necessary components for Serive.
      *
-     * @param ApplicationContract $app
      * @return void
      */
     public function register(ApplicationContract $app): void
     {
-        //
+        $app->bind(DotenvContract::class, Dotenv::class);
+        $app->singleton(DotenvContract::class)->loadEnvars();
     }
 
     /**

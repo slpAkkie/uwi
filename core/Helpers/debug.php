@@ -6,44 +6,35 @@
  * @param array<mixed> $args
  * @return void
  */
-function d(...$args): void
+function d(mixed ...$args): void
 {
     static $cssInjected = false;
 
-    foreach ($args as $arg) {
-        $css = $cssInjected === true ? '' : <<<HTML
-            <style>
-                * { box-sizing: border-box; }
-                body { margin: 0;
-                    min-height: 100%;
-                    color: white;
-                    background: #0d0d0e; }
-                pre.dump-pre {
-                    margin: 0;
-                    padding: 25px;
-                    color: #00cf2d;
-                    font-size: .8em;
-                    font-family: 'Fira Code';
-                    white-space: pre-wrap; }
-                hr.dump-hr {
-                    border: 2px dashed #00cf2d; }
-            </style>
-        HTML;
-        $hr = $cssInjected ? <<<HTML
-            <hr class="dump-hr" />
-        HTML : '';
-        $text = str_replace('    ', '  ', print_r($arg, true));
-
-        if ($cssInjected === false) {
-            $cssInjected = true;
-        }
-
+    if ($cssInjected === false) {
         echo <<<HTML
-            $css
-            $hr
-            <pre class="dump-pre">$text</pre>
+        <style>
+            * { box-sizing: border-box; }
+            pre.dump-pre {
+                margin: 0 0 10px 0;
+                padding: 25px;
+                color: #00cf2d;
+                font-size: .8em;
+                font-family: 'Fira Code';
+                white-space: pre-wrap;
+                background: #0d0d0e; }
+        </style>
         HTML;
     }
+
+    echo '<pre class="dump-pre">';
+    foreach ($args as $arg) {
+        echo '>>> ';
+        var_dump($arg);
+        echo '<br />';
+    }
+    echo '</pre>';
+
+    $cssInjected = true;
 }
 
 /**
@@ -52,7 +43,7 @@ function d(...$args): void
  * @param array<mixed> $args
  * @return void
  */
-function dd(...$args): void
+function dd(mixed ...$args): void
 {
     d(...$args);
 
@@ -68,22 +59,32 @@ function dd(...$args): void
  */
 function ddException(Throwable $e): void
 {
-    dd(<<<HTML
-    Message: {$e->getMessage()}
-    Exit code: {$e->getCode()}
-    HTML, [
-        array_merge([
-            "{$e->getFile()}({$e->getLine()})"
-        ], array_map(function ($el) {
+    $stackTraceDepth = 0;
+
+    dd(
+        join('<br />', array_merge([
+            <<<HTML
+            Message: {$e->getMessage()}
+            Exit code: {$e->getCode()}
+            HTML, '', '', '',
+
+
+            'Stack Trace:', '',
+
+            "#$stackTraceDepth {$e->getFile()}({$e->getLine()})"
+        ], array_map(function ($el) use (&$stackTraceDepth) {
             extract($el);
+            $el = '#' . ++$stackTraceDepth . ' ';
 
-            $el = "$file($line): ";
-            $args = isset($args) ? join(', ', $args) : '';
-            $args = strlen($args) > 16 ? '...' : $args;
+            $el .= isset($file, $line) ? "$file($line): " : "[Internal code]: ";
 
-            $el .= isset($class) ? "$class$type($args)" : "$function(...)";
+            $args = isset($args)
+                ? ($args = strlen($args = join(', ', $args)) > 16 ? '...' : $args)
+                : '';
+
+            $el .= isset($class) ? "$class$type$function($args)" : "$function(...)";
 
             return $el;
-        }, $e->getTrace())),
-    ]);
+        }, $e->getTrace())))
+    );
 }

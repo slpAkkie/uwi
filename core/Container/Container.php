@@ -2,8 +2,9 @@
 
 namespace Uwi\Container;
 
-use Uwi\Container\Contracts\ContainerContract;
-use Uwi\Container\Contracts\SingletonContract;
+use Exception;
+use Uwi\Contracts\Container\ContainerContract;
+use Uwi\Contracts\Container\SingletonContract;
 
 class Container implements ContainerContract
 {
@@ -71,7 +72,7 @@ class Container implements ContainerContract
      * will be added for sharing into the Container.
      *
      * @param string $abstract
-     * @param mixed ...$args
+     * @param array<mixed> ...$args
      * @return object
      */
     public function make(string $abstract, mixed ...$args): object
@@ -89,7 +90,7 @@ class Container implements ContainerContract
 
         // Create new instance of concrete for the abstract.
         $instance = method_exists($concrete[0], '__construct')
-            ? new $concrete[0](...$this->resolveArgs([$concrete[0], '__construct'], $args))
+            ? new $concrete[0](...$this->resolveArgs([$concrete[0], '__construct'], ...$args))
             : new $concrete[0]();
 
         // Check if abstract should be shared.
@@ -105,11 +106,11 @@ class Container implements ContainerContract
      * Resolve parameters for \Callable function or class method.
      * Collects array of args to call this.
      *
-     * @param \Closure|array $action
-     * @param array<mixed> $passedArgs
+     * @param \Closure|string|array $action
+     * @param array<mixed> ...$passedArgs
      * @return array<mixed>
      */
-    protected function resolveArgs(\Closure|array $action, array $passedArgs): array
+    protected function resolveArgs(\Closure|string|array $action, array ...$passedArgs): array
     {
         // Get a list of parameters of a function or
         // method of a class that should be injected into it
@@ -118,7 +119,7 @@ class Container implements ContainerContract
 
         if (is_array($action)) {
             $argsToResolve = (new \ReflectionMethod($action[0], $action[1]))->getParameters();
-        } else if ($action instanceof \Closure) {
+        } else {
             $argsToResolve = (new \ReflectionFunction($action))->getParameters();
         }
 
@@ -131,26 +132,7 @@ class Container implements ContainerContract
         foreach ($argsToResolve as $type) {
             $type = $type->getType()?->getName();
 
-            // If searching class is already instantiated and shared
-            // get it and add to the args for \Callable.
-            if ($this->isShared($type)) {
-                $args[] = $this->getShared($type);
-            }
-            // Else check if it is a singleton class
-            // and if so put it into the args.
-            else if ($this->isSingleton($type)) {
-                $args[] = $this->singleton($type);
-            }
-            // Else if it is a class then instantiate it and put.
-            else if (\class_exists($type, false)) {
-                $args[] = $this->make($type);
-            }
-            // Else if it not in the container and not a class
-            // that can be instantiate then take arg from
-            // passed parameters
-            else {
-                $args[] = array_shift($passedArgs);
-            }
+            $args[] = $type ? $this->resolve($type) : array_shift($passedArgs);
         }
 
         // Return list of collected args.
@@ -203,7 +185,7 @@ class Container implements ContainerContract
      * for the abstract.
      *
      * @param string $abstract
-     * @param mixed ...$args
+     * @param array<mixed> ...$args
      * @return object
      */
     public function singleton(string $abstract, mixed ...$args): object
@@ -216,8 +198,11 @@ class Container implements ContainerContract
         ];
 
         // Create a new singleton instance if it hasn't already been done.
-        if ($this->isSingletonInstantiated($abstract) === false) {
+        $isInstantiated = $this->isSingletonInstantiated($abstract);
+        if ($isInstantiated === false) {
             $this->singletons[$abstract] = $this->make($concrete[0], ...$args);
+        } else if (is_null($isInstantiated)) {
+            throw new Exception("Class [$abstract] doesn't implement SingletonContract");
         }
 
         // Return found singleton instance.
@@ -236,7 +221,7 @@ class Container implements ContainerContract
             return false;
         }
 
-        return class_exists($abstract, false)
+        return class_exists($abstract) || interface_exists($abstract)
             ? is_subclass_of($abstract, SingletonContract::class)
             : false;
     }
@@ -245,10 +230,38 @@ class Container implements ContainerContract
      * Returns true if singleton has been instantiated.
      *
      * @param string $abstract
-     * @return boolean
+     * @return boolean|null
      */
-    protected function isSingletonInstantiated(string $abstract): bool
+    protected function isSingletonInstantiated(string $abstract): bool|null
     {
-        return key_exists($abstract, $this->singletons);
+        return $this->isSingleton($abstract) ? key_exists($abstract, $this->singletons) : null;
+    }
+
+    /**
+     * Resolve provided abstract.
+     * Check wheter it is a Singletone, find in the container
+     * or create new instance.
+     *
+     * @param string $abstract
+     * @param array<mixed> ...$args
+     * @return object|null
+     */
+    public function resolve(string $abstract, mixed ...$args): object|null
+    {
+        // If searching class is already instantiated and shared.
+        if ($this->isShared($abstract)) {
+            return $this->getShared($abstract);
+        }
+        // Else check if it is a singleton class.
+        else if ($this->isSingleton($abstract)) {
+            return $this->singleton($abstract, ...$args);
+        }
+        // Else if it is a class then instantiate it.
+        else if (class_exists($abstract)) {
+            return $this->make($abstract, ...$args);
+        }
+
+        // Return null by default
+        return null;
     }
 }

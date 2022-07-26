@@ -1,6 +1,8 @@
 <?php
 
 use Uwi\Foundation\Application;
+use Uwi\Services\Dotenv\DotenvServiceLoader;
+use Uwi\Services\ApplicationServiceLoader;
 
 /**
  * |-------------------------------------------------
@@ -26,6 +28,9 @@ set_exception_handler('ddException');
  * |
  */
 
-$app = Application::create();
+$app = Application::create([
+    DotenvServiceLoader::class,
+    ApplicationServiceLoader::class,
+]);
 
 dd($app);
