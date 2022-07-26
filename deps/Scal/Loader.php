@@ -4,6 +4,7 @@ namespace Scal;
 
 use Exception;
 use Scal\Support\Path;
+use Throwable;
 
 class Loader
 {
@@ -236,10 +237,16 @@ class Loader
             self::boot();
         }
 
-        // Get file for class
-        $file_path = self::getClassFile(...self::explodeClassName($class));
-        if (!file_exists($file_path)) {
-            throw new Exception('Class not found');
+        $file_path = '';
+
+        try {
+            // Get file for class
+            $file_path = self::getClassFile(...self::explodeClassName($class));
+            if (!file_exists($file_path)) {
+                throw new Exception('Class not found');
+            }
+        } catch (Throwable $e) {
+            return;
         }
 
         require_once($file_path);
