@@ -8,11 +8,17 @@ use Uwi\Foundation\Contracts\ApplicationContract;
 class Application extends Container implements ApplicationContract
 {
     /**
-     * Instantiate Application and bind it to the Container
+     * Instantiate new Application instance.
+     *
+     * @return static
      */
-    public function __construct()
+    public static function create(): static
     {
-        $this->bind(ApplicationContract::class, static::class, true);
-        $this->share(ApplicationContract::class, $this);
+        $app = new static();
+
+        $app->bind(ApplicationContract::class, static::class, true);
+        $app->share(ApplicationContract::class, $app);
+
+        return $app;
     }
 }

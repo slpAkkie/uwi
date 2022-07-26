@@ -24,7 +24,7 @@ function d(...$args): void
                     color: #00cf2d;
                     font-size: .8em;
                     font-family: 'Fira Code';
-                    word-wrap: break-word; }
+                    white-space: pre-wrap; }
                 hr.dump-hr {
                     border: 2px dashed #00cf2d; }
             </style>
@@ -57,4 +57,33 @@ function dd(...$args): void
     d(...$args);
 
     exit(1);
+}
+
+/**
+ * Primary exception handler.
+ * Just print info from Exception object
+ *
+ * @param Throwable $e
+ * @return void
+ */
+function ddException(Throwable $e): void
+{
+    dd(<<<HTML
+    Message: {$e->getMessage()}
+    Exit code: {$e->getCode()}
+    HTML, [
+        array_merge([
+            "{$e->getFile()}({$e->getLine()})"
+        ], array_map(function ($el) {
+            extract($el);
+
+            $el = "$file($line): ";
+            $args = isset($args) ? join(', ', $args) : '';
+            $args = strlen($args) > 16 ? '...' : $args;
+
+            $el .= isset($class) ? "$class$type($args)" : "$function(...)";
+
+            return $el;
+        }, $e->getTrace())),
+    ]);
 }

@@ -2,7 +2,14 @@
 
 namespace Uwi\Foundation\Contracts;
 
-interface ApplicationContract
+use Uwi\Container\Contracts\ContainerContract;
+
+interface ApplicationContract extends ContainerContract
 {
-    //
+    /**
+     * Instantiate new Application instance.
+     *
+     * @return static
+     */
+    public static function create(): static;
 }

@@ -4,12 +4,28 @@ use Uwi\Foundation\Application;
 
 /**
  * |-------------------------------------------------
- * | Instantiate an Application.
+ * | Global Exception Handler.
  * |-------------------------------------------------
- * | Create new instance of Application.
+ * | Set primary global handler for all exceptions
+ * | that may occur in the operation of the application.
+ * | After the Application loaded another handler
+ * | will be registered.
  * |
  */
 
-$app = new Application();
+set_exception_handler('ddException');
+
+
+
+/**
+ * |-------------------------------------------------
+ * | Instantiate an Application.
+ * |-------------------------------------------------
+ * | Create new instance of Application and load
+ * | Services that specified.
+ * |
+ */
+
+$app = Application::create();
 
 dd($app);
