@@ -1,6 +1,8 @@
 <?php
 
-namespace Uwi\Contracts;
+namespace Uwi\Contracts\Application;
+
+use Uwi\Contracts\Application\ApplicationContract;
 
 interface ServiceLoaderContract
 {

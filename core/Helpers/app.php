@@ -1,6 +1,6 @@
 <?php
 
-use Uwi\Contracts\ApplicationContract;
+use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\DotenvContract;
 
 /**

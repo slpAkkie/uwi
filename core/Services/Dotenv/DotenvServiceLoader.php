@@ -2,7 +2,7 @@
 
 namespace Uwi\Services\Dotenv;
 
-use Uwi\Contracts\ApplicationContract;
+use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\DotenvContract;
 use Uwi\Services\ServiceLoader;
 

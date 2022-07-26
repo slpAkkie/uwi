@@ -3,8 +3,8 @@
 namespace Uwi\Foundation;
 
 use Uwi\Container\Container;
-use Uwi\Contracts\ApplicationContract;
-use Uwi\Contracts\ServiceLoaderContract;
+use Uwi\Contracts\Application\ApplicationContract;
+use Uwi\Contracts\Application\ServiceLoaderContract;
 
 class Application extends Container implements ApplicationContract
 {

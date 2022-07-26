@@ -2,8 +2,8 @@
 
 namespace Uwi\Services;
 
-use Uwi\Contracts\ApplicationContract;
-use Uwi\Contracts\ServiceLoaderContract;
+use Uwi\Contracts\Application\ApplicationContract;
+use Uwi\Contracts\Application\ServiceLoaderContract;
 
 abstract class ServiceLoader implements ServiceLoaderContract
 {
