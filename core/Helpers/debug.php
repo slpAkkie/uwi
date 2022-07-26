@@ -16,6 +16,7 @@ function d(...$args): void
                 * { box-sizing: border-box; }
                 body { margin: 0;
                     min-height: 100%;
+                    color: white;
                     background: #0d0d0e; }
                 pre.dump-pre {
                     margin: 0;

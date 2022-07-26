@@ -1,9 +1,9 @@
 <?php
 
-namespace Uwi\Foundation;
+namespace Uwi\Container;
 
-use Uwi\Contracts\ContainerContract;
-use Uwi\Contracts\SingletonContract;
+use Uwi\Container\Contracts\ContainerContract;
+use Uwi\Container\Contracts\SingletonContract;
 
 class Container implements ContainerContract
 {
@@ -129,7 +129,7 @@ class Container implements ContainerContract
         $args = [];
 
         foreach ($argsToResolve as $type) {
-            $type = $type->getType()->getName();
+            $type = $type->getType()?->getName();
 
             // If searching class is already instantiated and shared
             // get it and add to the args for \Callable.
@@ -176,12 +176,12 @@ class Container implements ContainerContract
     /**
      * Returns true if abstract has been shared into the Container.
      *
-     * @param string $abstract
+     * @param string|null $abstract
      * @return boolean
      */
-    protected function isShared(string $abstract): bool
+    protected function isShared(string|null $abstract): bool
     {
-        return key_exists($abstract, $this->shared);
+        return $abstract ? key_exists($abstract, $this->shared) : false;
     }
 
     /**
@@ -227,11 +227,15 @@ class Container implements ContainerContract
     /**
      * Returns true if the abstract implements a singleton contract.
      *
-     * @param string $abstract
+     * @param string|null $abstract
      * @return boolean
      */
-    protected function isSingleton(string $abstract): bool
+    protected function isSingleton(string|null $abstract): bool
     {
+        if (is_null($abstract)) {
+            return false;
+        }
+
         return class_exists($abstract, false)
             ? is_subclass_of($abstract, SingletonContract::class)
             : false;

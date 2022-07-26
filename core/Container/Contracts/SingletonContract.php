@@ -1,6 +1,6 @@
 <?
 
-namespace Uwi\Contracts;
+namespace Uwi\Container\Contracts;
 
 class SingletonContract
 {

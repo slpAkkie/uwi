@@ -2,7 +2,8 @@
 
 namespace Uwi\Foundation;
 
-use Uwi\Contracts\ApplicationContract;
+use Uwi\Container\Container;
+use Uwi\Foundation\Contracts\ApplicationContract;
 
 class Application extends Container implements ApplicationContract
 {

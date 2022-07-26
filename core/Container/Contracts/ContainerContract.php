@@ -1,6 +1,6 @@
 <?php
 
-namespace Uwi\Contracts;
+namespace Uwi\Container\Contracts;
 
 interface ContainerContract
 {
