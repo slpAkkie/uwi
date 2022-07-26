@@ -2,17 +2,15 @@
 
 namespace Uwi\Contracts\Application;
 
-use Uwi\Contracts\Application\ApplicationContract;
 
 interface ServiceLoaderContract
 {
     /**
      * Register necessary components for Serive.
      *
-     * @param ApplicationContract $app
      * @return void
      */
-    public function register(ApplicationContract $app): void;
+    public function register(): void;
 
     /**
      * Runs when all ServiceLoader has been registered.

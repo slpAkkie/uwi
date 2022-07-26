@@ -2,7 +2,6 @@
 
 namespace Uwi\Services\Dotenv;
 
-use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\DotenvContract;
 use Uwi\Services\ServiceLoader;
 
@@ -13,10 +12,10 @@ class DotenvServiceLoader extends ServiceLoader
      *
      * @return void
      */
-    public function register(ApplicationContract $app): void
+    public function register(): void
     {
-        $app->bind(DotenvContract::class, Dotenv::class);
-        $app->singleton(DotenvContract::class)->loadEnvars();
+        $this->app->bind(DotenvContract::class, Dotenv::class);
+        $this->app->singleton(DotenvContract::class)->loadEnvars();
     }
 
     /**

@@ -24,6 +24,6 @@ class HttpKernel implements KernelContract
      */
     public function start(): void
     {
-        dd('Http Kernel has been started', $this);
+        $this->app->tap($this->router->current()->action());
     }
 }

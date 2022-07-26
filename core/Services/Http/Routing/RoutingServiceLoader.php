@@ -2,7 +2,6 @@
 
 namespace Uwi\Services\Http\Routing;
 
-use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\Http\Routing\RouteContract;
 use Uwi\Contracts\Http\Routing\RouterContract;
 use Uwi\Services\ServiceLoader;
@@ -10,15 +9,26 @@ use Uwi\Services\ServiceLoader;
 class RoutingServiceLoader extends ServiceLoader
 {
     /**
+     * Default folder with routes files.
+     */
+    protected const ROUTES_FOLDER = 'routes';
+
+    /**
+     * Files with routes
+     */
+    protected const ROUTES_FILES = [
+        'web.php',
+    ];
+
+    /**
      * Register necessary components for Serive.
      *
-     * @param ApplicationContract $app
      * @return void
      */
-    public function register(ApplicationContract $app): void
+    public function register(): void
     {
-        $app->bind(RouterContract::class, Router::class, true);
-        $app->bind(RouteContract::class, Route::class);
+        $this->app->bind(RouterContract::class, Router::class, true);
+        $this->app->bind(RouteContract::class, Route::class);
     }
 
     /**
@@ -28,6 +38,10 @@ class RoutingServiceLoader extends ServiceLoader
      */
     public function boot(): void
     {
-        //
+        $this->app->singleton(RouterContract::class);
+
+        foreach (static::ROUTES_FILES as $routesFile) {
+            include_once APP_BASE_PATH . DIRECTORY_SEPARATOR . static::ROUTES_FOLDER . DIRECTORY_SEPARATOR . $routesFile;
+        }
     }
 }

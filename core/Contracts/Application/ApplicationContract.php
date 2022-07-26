@@ -31,12 +31,26 @@ interface ApplicationContract extends ContainerContract
 
     /**
      * Register provided Service by it's ServiceLoader.
-     * Runs register method.
      *
      * @param string $loader - Implementation of ServiceLoaderContract
      * @return void
      */
     public function registerService(string $loader): void;
+
+    /**
+     * Boot registered ServiceLoaders
+     *
+     * @return void
+     */
+    public function bootServices(): void;
+
+    /**
+     * Boot ServiceLoader
+     *
+     * @param ServiceLoaderContract $loader
+     * @return void
+     */
+    public function bootService(ServiceLoaderContract $loader): void;
 
     /**
      * Tap the function or class method.

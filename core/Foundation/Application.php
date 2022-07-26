@@ -12,7 +12,7 @@ class Application extends Container implements ApplicationContract
     /**
      * List of registered service loaders
      *
-     * @var array<string>
+     * @var array<string, ServiceLoaderContract>
      */
     protected array $registeredServiceLoaders = [];
 
@@ -58,15 +58,39 @@ class Application extends Container implements ApplicationContract
 
     /**
      * Register provided Service by it's ServiceLoader.
-     * Runs register method.
      *
      * @param string $loader - Implementation of ServiceLoaderContract
      * @return void
      */
     public function registerService(string $loader): void
     {
+        $loader = $this->make($loader);
         $this->tap([$loader, 'register']);
-        $this->registeredServiceLoaders[] = $loader;
+
+        $this->registeredServiceLoaders[$loader::class] = $loader;
+    }
+
+    /**
+     * Boot registered ServiceLoaders
+     *
+     * @return void
+     */
+    public function bootServices(): void
+    {
+        foreach ($this->registeredServiceLoaders as $loader) {
+            $this->bootService($loader);
+        }
+    }
+
+    /**
+     * Boot ServiceLoader
+     *
+     * @param ServiceLoaderContract $loader
+     * @return void
+     */
+    public function bootService(ServiceLoaderContract $loader): void
+    {
+        $loader->boot();
     }
 
     /**
@@ -107,6 +131,7 @@ class Application extends Container implements ApplicationContract
      */
     public function start(): void
     {
+        $this->bootServices();
         $this->tap([KernelContract::class, 'start']);
     }
 }

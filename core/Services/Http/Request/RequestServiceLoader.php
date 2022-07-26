@@ -2,7 +2,6 @@
 
 namespace Uwi\Services\Http\Request;
 
-use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\Http\Request\RequestContract;
 use Uwi\Services\ServiceLoader;
 
@@ -11,12 +10,11 @@ class RequestServiceLoader extends ServiceLoader
     /**
      * Register necessary components for Serive.
      *
-     * @param ApplicationContract $app
      * @return void
      */
-    public function register(ApplicationContract $app): void
+    public function register(): void
     {
-        $app->bind(RequestContract::class, Request::class, true);
+        $this->app->bind(RequestContract::class, Request::class, true);
     }
 
     /**

@@ -65,19 +65,19 @@ interface RequestContract extends SingletonContract
 
 
     /**
-     * Returns requested uri as is.
+     * Returns requested url as is.
      *
      * @return string
      */
-    public function fullUri(): string;
+    public function fullurl(): string;
 
 
     /**
-     * Returns requested uri string without GET parameters.
+     * Returns requested url string without GET parameters.
      *
      * @return string
      */
-    public function uri(): string;
+    public function url(): string;
 
 
     /**

@@ -83,23 +83,23 @@ class Request implements RequestContract
     }
 
     /**
-     * Returns requested uri as is.
+     * Returns requested url as is.
      *
      * @return string
      */
-    public function fullUri(): string
+    public function fullurl(): string
     {
         return $_SERVER['REQUEST_URI'];
     }
 
     /**
-     * Returns requested uri string without GET parameters.
+     * Returns requested url string without GET parameters.
      *
      * @return string
      */
-    public function uri(): string
+    public function url(): string
     {
-        return explode('?', $this->fullUri(), 2)[0];
+        return explode('?', $this->fullurl(), 2)[0];
     }
 
     /**

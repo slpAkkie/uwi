@@ -2,7 +2,6 @@
 
 namespace Uwi\Services\Http;
 
-use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\Application\KernelContract;
 use Uwi\Foundation\Kernel\HttpKernel;
 use Uwi\Services\Http\Request\RequestServiceLoader;
@@ -14,19 +13,18 @@ class HttpKernelServiceLoader extends ServiceLoader
     /**
      * Register necessary components for Serive.
      *
-     * @param ApplicationContract $app
      * @return void
      */
-    public function register(ApplicationContract $app): void
+    public function register(): void
     {
         // Register Kernel dependencies.
-        $app->registerServices([
+        $this->app->registerServices([
             RoutingServiceLoader::class,
             RequestServiceLoader::class,
         ]);
 
         // Register kernel.
-        $app->bind(KernelContract::class, HttpKernel::class);
+        $this->app->bind(KernelContract::class, HttpKernel::class);
     }
 
     /**
