@@ -1,7 +1,13 @@
 <?php
 
-use Uwi\Filesystem\Path;
-
+/**
+ * |-------------------------------------------------
+ * | Show all errors during execution.
+ * |-------------------------------------------------
+ * | Enable php error reports to show all errors
+ * | that will be issued anywhere in the application.
+ * |
+ */
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', true);
 ini_set('display_startup_errors', true);
@@ -10,64 +16,71 @@ ini_set('display_startup_errors', true);
 
 /**
  * |-------------------------------------------------
- * | Define root path constant
+ * | Define app base path.
  * |-------------------------------------------------
- * | ! Constant that define a path doesn't have
- * | a trailing backslash
- * |-------------------------------------------------
+ * | This path doesn't have a trailing backslash.
+ * |
  */
 
-if (!defined('DIR_SEP'))
-    define('DIR_SEP', DIRECTORY_SEPARATOR);
-
-if (!defined('APP_BASE_PATH'))
-    define('APP_BASE_PATH', realpath(__DIR__ . DIR_SEP . '..'));
+if (!defined('APP_BASE_PATH')) {
+    define('APP_BASE_PATH', realpath(__DIR__ . DIRECTORY_SEPARATOR . '..'));
+}
 
 
 
 /**
  * |-------------------------------------------------
- * | Register class autoloader
+ * | Register class autoloader.
  * |-------------------------------------------------
- * | Here is used Scal autoloader
- * | Written by me
- * |-------------------------------------------------
+ * | Include class autoloader - Scal.
+ * |
  */
 
-require_once(APP_BASE_PATH . DIR_SEP . 'vendor' . DIR_SEP . 'Scal' . DIR_SEP . 'Scal.php');
+require_once(APP_BASE_PATH . DIRECTORY_SEPARATOR . 'deps' . DIRECTORY_SEPARATOR . 'Scal' . DIRECTORY_SEPARATOR . 'Scal.php');
 
 
 
 /**
  * |-------------------------------------------------
- * | Define Uwi constants
+ * | Define Uwi constants.
  * |-------------------------------------------------
  * | Those constants may be used in configuration
- * | files and some classes
+ * | files and some classes.
  * |
- * | ! Constant that define a path doesn't have
- * | a trailing backslash
- * |-------------------------------------------------
+ * | ! Constants that define a path doesn't have
+ * | a trailing backslash.
+ * |
  */
 
-if (!defined('CONFIG_PATH'))
-    define('CONFIG_PATH', Path::glue(APP_BASE_PATH, 'config'));
+if (!defined('CONFIG_PATH')) {
+    define('CONFIG_PATH', APP_BASE_PATH . DIRECTORY_SEPARATOR . 'config');
+}
 
-if (!defined('VENDOR_PATH'))
-    define('VENDOR_PATH', Path::glue(APP_BASE_PATH, 'vendor'));
-
-if (!defined('UWI_FRAMEWORK_PATH'))
-    define('UWI_FRAMEWORK_PATH', Path::glue(VENDOR_PATH, 'Uwi', 'Framework'));
+if (!defined('CORE_PATH')) {
+    define('CORE_PATH', APP_BASE_PATH . DIRECTORY_SEPARATOR . 'core');
+}
 
 
 
 /**
  * |-------------------------------------------------
- * | Run bootstrapper
+ * | Load Helpers.
  * |-------------------------------------------------
- * | Bootstrapper disassemble the request
- * | and run the App container
- * |-------------------------------------------------
+ * | Load support functions that make it easy to use
+ * | some of application features.
+ * |
  */
 
-require_once(Path::glue(APP_BASE_PATH, 'bootstrap', 'app.php'));
+include_once(CORE_PATH . DIRECTORY_SEPARATOR . 'Helpers' . DIRECTORY_SEPARATOR . 'debug.php');
+
+
+
+/**
+ * |-------------------------------------------------
+ * | Run bootstrapper.
+ * |-------------------------------------------------
+ * | To initialize and run the Application.
+ * |
+ */
+
+require_once(APP_BASE_PATH . DIRECTORY_SEPARATOR . 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php');

@@ -1,6 +1,7 @@
 {
   "mapping": {
     "App\\" : "app\\",
-    "Uwi\\" : "vendor\\Uwi\\Framework\\"
+    "Uwi\\" : "core\\",
+    "Tests\\" : "tests\\"
   }
 }
