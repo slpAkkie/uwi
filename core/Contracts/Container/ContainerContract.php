@@ -22,6 +22,8 @@ interface ContainerContract
      * @param string $abstract
      * @param array<mixed> ...$args
      * @return object
+     * 
+     * @throws Exception
      */
     public function make(string $abstract, mixed ...$args): object;
 
@@ -33,7 +35,7 @@ interface ContainerContract
      * @param array<mixed> ...$passedArgs
      * @return array<mixed>
      */
-    public function resolveArgs(\Closure|string|array $action, array ...$passedArgs): array;
+    public function resolveArgs(\Closure|string|array $action, mixed ...$passedArgs): array;
 
     /**
      * Share instance into the Container linked to its abstract and itself.

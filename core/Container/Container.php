@@ -3,7 +3,6 @@
 namespace Uwi\Container;
 
 use Exception;
-use Throwable;
 use Uwi\Contracts\Container\ContainerContract;
 use Uwi\Contracts\Container\SingletonContract;
 
@@ -75,6 +74,8 @@ class Container implements ContainerContract
      * @param string $abstract
      * @param array<mixed> ...$args
      * @return object
+     * 
+     * @throws Exception
      */
     public function make(string $abstract, mixed ...$args): object
     {
@@ -111,7 +112,7 @@ class Container implements ContainerContract
      * @param array<mixed> ...$passedArgs
      * @return array<mixed>
      */
-    public function resolveArgs(\Closure|string|array $action, array ...$passedArgs): array
+    public function resolveArgs(\Closure|string|array $action, mixed ...$passedArgs): array
     {
         // Get a list of parameters of a function or
         // method of a class that should be injected into it
@@ -133,7 +134,9 @@ class Container implements ContainerContract
         foreach ($argsToResolve as $type) {
             $type = $type->getType()?->getName();
 
-            $args[] = $type ? $this->resolve($type) : array_shift($passedArgs);
+            $args[] = $type
+                ? $this->resolve($type) ?? array_shift($passedArgs)
+                : array_shift($passedArgs);
         }
 
         // Return list of collected args.
@@ -266,7 +269,7 @@ class Container implements ContainerContract
             $resolved = $this->singleton($abstract, ...$args);
         }
         // Else if it is a class then instantiate it.
-        else if (class_exists($abstract)) {
+        else if (class_exists($abstract) || interface_exists($abstract)) {
             $resolved = $this->make($abstract, ...$args);
         }
 
