@@ -71,7 +71,12 @@ if (!defined('CORE_PATH')) {
  * |
  */
 
-include_once(CORE_PATH . DIRECTORY_SEPARATOR . 'Helpers' . DIRECTORY_SEPARATOR . 'debug.php');
+if (!defined('HELPERS_PATH')) {
+    define('HELPERS_PATH', CORE_PATH . DIRECTORY_SEPARATOR . 'Helpers');
+}
+
+include_once(HELPERS_PATH . DIRECTORY_SEPARATOR . 'app.php');
+include_once(HELPERS_PATH . DIRECTORY_SEPARATOR . 'debug.php');
 
 
 
