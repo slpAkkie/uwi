@@ -28,11 +28,11 @@ interface ContainerContract
     /**
      * Share instance into the Container linked to its abstract and itself.
      *
-     * @param string $abstract
-     * @param object $concrete
+     * @param string|object $abstract
+     * @param object|null $concrete
      * @return void
      */
-    public function share(string $abstract, object $concrete): void;
+    public function share(string|object $abstract, object|null $concrete = null): void;
 
     /**
      * Returns a singleton instance of abstract.
@@ -42,6 +42,20 @@ interface ContainerContract
      * @param string $abstract
      * @param array<mixed> ...$args
      * @return object
+     * 
+     * @throws Exception
      */
     public function singleton(string $abstract, mixed ...$args): object;
+
+    /**
+     * Resolve provided abstract.
+     * Check wheter it is a Singletone, find in the container
+     * or create new instance.
+     *
+     * @param string $abstract
+     * @param array<mixed> $args
+     * @param bool $shared
+     * @return object|null
+     */
+    public function resolve(string $abstract, array $args, bool $shared = true): object|null;
 }

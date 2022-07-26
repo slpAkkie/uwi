@@ -60,7 +60,7 @@ class Application extends Container implements ApplicationContract
 
     /**
      * Tap the function or class method.
-     * Runs it and inject params
+     * Runs it and inject params.
      *
      * @param \Closure|string|array $action
      * @param mixed ...$args
@@ -68,16 +68,19 @@ class Application extends Container implements ApplicationContract
      */
     public function tap(\Closure|string|array $action, mixed ...$args): mixed
     {
+        // Resolve class if it's provided by class name.
         if (is_array($action) && is_string($action[0])) {
             $action[0] = $this->resolve($action[0]);
         }
 
+        // If action provided as array then call class method.
         if (is_array($action)) {
             return $action[0]->{$action[1]}(
                 ...$this->resolveArgs([$action[0]::class, $action[1]], ...$args)
             );
         }
 
+        // Otherwise, call it as a function.
         return $action(
             ...$this->resolveArgs($action, ...$args)
         );

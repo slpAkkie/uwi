@@ -85,7 +85,7 @@ class Container implements ContainerContract
 
         // If concrete isn't instantiable throw an exception.
         if ((class_exists($concrete[0]) && (new \ReflectionClass($concrete[0]))->isInstantiable()) === false) {
-            throw new \Exception("Class [$concrete[0]] isn't instantiable");
+            throw new Exception("Class [$concrete[0]] isn't instantiable");
         }
 
         // Create new instance of concrete for the abstract.
@@ -142,17 +142,19 @@ class Container implements ContainerContract
     /**
      * Share instance into the Container linked to its abstract and itself.
      *
-     * @param string $abstract
-     * @param object $concrete
+     * @param string|object $abstract
+     * @param object|null $concrete
      * @return void
      */
-    public function share(string $abstract, object $concrete): void
+    public function share(string|object $abstract, object|null $concrete = null): void
     {
-        $this->shared[$abstract] = $concrete ?? $abstract;
-
-        if ($concrete !== $abstract) {
-            $this->shared[$concrete::class] = $concrete;
+        if (is_null($concrete)) {
+            $concrete = $abstract;
+            $abstract = $abstract::class;
         }
+
+        $this->shared[$abstract] = $concrete;
+        $this->shared[$concrete::class] = $concrete;
     }
 
     /**
@@ -187,6 +189,8 @@ class Container implements ContainerContract
      * @param string $abstract
      * @param array<mixed> ...$args
      * @return object
+     * 
+     * @throws Exception
      */
     public function singleton(string $abstract, mixed ...$args): object
     {
@@ -205,6 +209,11 @@ class Container implements ContainerContract
             throw new Exception("Class [$abstract] doesn't implement SingletonContract");
         }
 
+        // If singleton should be shared add it to the Container's shared list
+        if ($concrete[1] === true) {
+            $this->share($abstract, $this->singletons[$abstract]);
+        }
+
         // Return found singleton instance.
         return $this->singletons[$abstract];
     }
@@ -217,11 +226,7 @@ class Container implements ContainerContract
      */
     protected function isSingleton(string|null $abstract): bool
     {
-        if (is_null($abstract)) {
-            return false;
-        }
-
-        return class_exists($abstract) || interface_exists($abstract)
+        return !is_null($abstract) && (class_exists($abstract) || interface_exists($abstract))
             ? is_subclass_of($abstract, SingletonContract::class)
             : false;
     }
@@ -243,25 +248,40 @@ class Container implements ContainerContract
      * or create new instance.
      *
      * @param string $abstract
-     * @param array<mixed> ...$args
+     * @param array<mixed> $args
+     * @param bool $shared
      * @return object|null
      */
-    public function resolve(string $abstract, mixed ...$args): object|null
+    public function resolve(string $abstract, array $args = [], bool $shared = true): object|null
     {
+        $resolved = null;
+
         // If searching class is already instantiated and shared.
         if ($this->isShared($abstract)) {
             return $this->getShared($abstract);
         }
         // Else check if it is a singleton class.
         else if ($this->isSingleton($abstract)) {
-            return $this->singleton($abstract, ...$args);
+            $resolved = $this->singleton($abstract, ...$args);
         }
         // Else if it is a class then instantiate it.
         else if (class_exists($abstract)) {
-            return $this->make($abstract, ...$args);
+            $resolved = $this->make($abstract, ...$args);
         }
 
-        // Return null by default
-        return null;
+        // If $shared true
+        // then check if binding allow abstract to be shared
+        // only if abstract was binded.
+        if (
+            !is_null($resolved)
+            && $shared
+            && ($binded = $this->getBinded($abstract))
+            && !$binded[1]
+        ) {
+            $resolved = null;
+        }
+
+        // Return null by default.
+        return $resolved;
     }
 }
