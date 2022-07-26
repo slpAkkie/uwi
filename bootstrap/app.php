@@ -33,4 +33,4 @@ $app = Application::create([
     ApplicationServiceLoader::class,
 ]);
 
-dd($app);
+$app->start();

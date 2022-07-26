@@ -4,6 +4,7 @@ namespace Uwi\Foundation;
 
 use Uwi\Container\Container;
 use Uwi\Contracts\Application\ApplicationContract;
+use Uwi\Contracts\Application\KernelContract;
 use Uwi\Contracts\Application\ServiceLoaderContract;
 
 class Application extends Container implements ApplicationContract
@@ -70,7 +71,10 @@ class Application extends Container implements ApplicationContract
     {
         // Resolve class if it's provided by class name.
         if (is_array($action) && is_string($action[0])) {
-            $action[0] = $this->resolve($action[0]);
+            $action[0] = $this->resolve(
+                abstract: $action[0],
+                shared: false
+            );
         }
 
         // If action provided as array then call class method.
@@ -84,5 +88,15 @@ class Application extends Container implements ApplicationContract
         return $action(
             ...$this->resolveArgs($action, ...$args)
         );
+    }
+
+    /**
+     * Launches the application.
+     *
+     * @return void
+     */
+    public function start(): void
+    {
+        $this->tap([KernelContract::class, 'start']);
     }
 }

@@ -39,4 +39,11 @@ interface ApplicationContract extends ContainerContract
      * @return mixed
      */
     public function tap(\Closure|string|array $action, mixed ...$args): mixed;
+
+    /**
+     * Launches the application.
+     *
+     * @return void
+     */
+    public function start(): void;
 }
