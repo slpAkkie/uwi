@@ -100,11 +100,7 @@ class Dotenv implements DotenvContract
         $envars = array_filter(explode("\n", file_get_contents(APP_BASE_PATH . DIRECTORY_SEPARATOR . $envFile)));
 
         foreach ($envars as $envar) {
-            $envar = explode('=', $envar);
-            $key = $envar[0];
-            $val = join('=', array_slice($envar, 1));
-
-            $this->set($key, $val);
+            $this->set(...explode('=', $envar, 2));
         }
     }
 }
