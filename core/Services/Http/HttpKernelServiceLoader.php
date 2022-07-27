@@ -31,7 +31,7 @@ class HttpKernelServiceLoader extends ServiceLoader
 
         // Register Optional services.
         $this->app->registerServices([
-            LionServiceLoader::class,
+            // LionServiceLoader::class,
             CalibriServiceLoader::class,
         ]);
 
