@@ -32,9 +32,8 @@ $app = Application::create([
     // Application dependencies.
     DotenvServiceLoader::class,
 
-    // Application Base.
+    // Application Kernel.
     HttpKernelServiceLoader::class,
-    ApplicationServiceLoader::class,
 ]);
 
 $app->start();
