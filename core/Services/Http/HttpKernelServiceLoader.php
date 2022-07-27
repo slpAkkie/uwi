@@ -5,6 +5,7 @@ namespace Uwi\Services\Http;
 use Uwi\Contracts\Application\KernelContract;
 use Uwi\Foundation\Kernel\HttpKernel;
 use Uwi\Services\Http\Request\RequestServiceLoader;
+use Uwi\Services\Http\Response\ResponseServiceLoader;
 use Uwi\Services\Http\Routing\RoutingServiceLoader;
 use Uwi\Services\Http\Session\SessionServiceLoader;
 use Uwi\Services\ServiceLoader;
@@ -23,6 +24,7 @@ class HttpKernelServiceLoader extends ServiceLoader
             RoutingServiceLoader::class,
             RequestServiceLoader::class,
             SessionServiceLoader::class,
+            ResponseServiceLoader::class,
         ]);
 
         // Register kernel.

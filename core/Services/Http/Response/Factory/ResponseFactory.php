@@ -4,7 +4,6 @@ namespace Uwi\Services\Http\Response\Factory;
 
 use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\Application\ResponseContract;
-use Uwi\Services\Http\Response\Response;
 
 class ResponseFactory
 {
@@ -32,6 +31,6 @@ class ResponseFactory
             return $response;
         }
 
-        return $this->app->make(Response::class, $response, $responseCode);
+        return $this->app->make(ResponseContract::class, $response, $responseCode);
     }
 }

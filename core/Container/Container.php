@@ -33,11 +33,11 @@ class Container implements ContainerContract
      * Bindings abstract to concrete implementation.
      *
      * @param string $abstract
-     * @param string $concrete
+     * @param string|null $concrete
      * @param boolean $shared
      * @return void
      */
-    public function bind(string $abstract, string $concrete, bool $shared = false): void
+    public function bind(string $abstract, string|null $concrete = null, bool $shared = false): void
     {
         $this->bindings[$abstract] = [$concrete ?? $abstract, $shared];
     }
