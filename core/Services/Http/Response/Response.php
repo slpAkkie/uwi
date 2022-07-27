@@ -2,7 +2,7 @@
 
 namespace Uwi\Services\Http\Response;
 
-use Uwi\Contracts\Application\ResponseContract;
+use Uwi\Contracts\Http\Response\ResponseContract;
 
 class Response implements ResponseContract
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Uwi\Contracts\Application;
+namespace Uwi\Contracts\Http\Response;
 
 interface ResponseContract
 {

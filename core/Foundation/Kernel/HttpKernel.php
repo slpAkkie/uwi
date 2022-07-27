@@ -4,7 +4,7 @@ namespace Uwi\Foundation\Kernel;
 
 use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\Application\KernelContract;
-use Uwi\Contracts\Application\ResponseContract;
+use Uwi\Contracts\Http\Response\ResponseContract;
 use Uwi\Contracts\Http\Request\RequestContract;
 use Uwi\Contracts\Http\Routing\RouterContract;
 use Uwi\Services\Http\Response\Facades\Response;

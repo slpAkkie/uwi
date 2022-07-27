@@ -3,7 +3,7 @@
 namespace Uwi\Services\Http\Response\Factory;
 
 use Uwi\Contracts\Application\ApplicationContract;
-use Uwi\Contracts\Application\ResponseContract;
+use Uwi\Contracts\Http\Response\ResponseContract;
 
 class ResponseFactory
 {

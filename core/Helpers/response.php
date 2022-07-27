@@ -1,6 +1,6 @@
 <?php
 
-use Uwi\Contracts\Application\ResponseContract;
+use Uwi\Contracts\Http\Response\ResponseContract;
 use Uwi\Services\Http\Response\Facades\Response;
 
 /**
