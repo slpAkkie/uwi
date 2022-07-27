@@ -2,6 +2,8 @@
 
 namespace Uwi\Services\Http\Response;
 
+use Uwi\Contracts\Http\Request\RequestContract;
+use Uwi\Contracts\Http\Response\ResponsableContract;
 use Uwi\Contracts\Http\Response\ResponseContract;
 
 class Response implements ResponseContract
@@ -24,6 +26,7 @@ class Response implements ResponseContract
      * @param mixed $data
      */
     public function __construct(
+        protected RequestContract $request,
         protected mixed $data,
         protected int $responseCode = self::DEFAULT_RESPONSE_CODE,
     ) {
@@ -34,15 +37,15 @@ class Response implements ResponseContract
      * Get or set response status code.
      *
      * @param integer|null $statusCode
-     * @return integer
+     * @return static
      */
-    public function statusCode(int|null $statusCode = null): int
+    public function statusCode(int|null $statusCode = null): static
     {
         if (!is_null($statusCode)) {
             $this->responseCode = $statusCode;
         }
 
-        return $this->responseCode;
+        return $this;
     }
 
     /**
@@ -114,6 +117,13 @@ class Response implements ResponseContract
         return $this;
     }
 
+    protected function getResponseData(): mixed
+    {
+        return is_subclass_of($this->data, ResponsableContract::class)
+            ? $this->data->toResponse($this->request)
+            : $this->data;
+    }
+
     /**
      * Send response to the client.
      *
@@ -122,23 +132,25 @@ class Response implements ResponseContract
     public function send(): void
     {
         $this->setHeaders();
+        $response = $this->getResponseData();
 
-        if (is_string($this->data)) {
-            $this->html($this->data);
+        if (is_string($response)) {
+            $this->html($response);
         } else {
-            $this->json($this->data);
+            $this->json($response);
         }
 
-        $this->print();
+        $this->print($response);
     }
 
     /**
      * Print response content on a page.
      *
+     * @param string $response
      * @return void
      */
-    protected function print(): void
+    protected function print(string $response): void
     {
-        echo $this->data;
+        echo $response;
     }
 }

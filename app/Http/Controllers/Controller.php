@@ -10,7 +10,8 @@ class Controller extends HttpController
 {
     public function welcome(ApplicationContract $app, Request $request)
     {
-        dd($app);
-        return response('Hiiii. It\'s Uwi. Page only for testing in in dev mode', 404);
+        return view('welcome', [
+            'version' => '2.x-alpha',
+        ])->statusCode(404);
     }
 }

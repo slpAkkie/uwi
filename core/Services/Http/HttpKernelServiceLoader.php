@@ -4,6 +4,7 @@ namespace Uwi\Services\Http;
 
 use Uwi\Contracts\Application\KernelContract;
 use Uwi\Foundation\Kernel\HttpKernel;
+use Uwi\Services\Calibri\CalibriServiceLoader;
 use Uwi\Services\Http\Request\RequestServiceLoader;
 use Uwi\Services\Http\Response\ResponseServiceLoader;
 use Uwi\Services\Http\Routing\RoutingServiceLoader;
@@ -21,10 +22,15 @@ class HttpKernelServiceLoader extends ServiceLoader
     {
         // Register Kernel dependencies.
         $this->app->registerServices([
-            RoutingServiceLoader::class,
-            RequestServiceLoader::class,
             SessionServiceLoader::class,
+            RequestServiceLoader::class,
             ResponseServiceLoader::class,
+            RoutingServiceLoader::class,
+        ]);
+
+        // Register Optional services.
+        $this->app->registerServices([
+            CalibriServiceLoader::class,
         ]);
 
         // Register kernel.

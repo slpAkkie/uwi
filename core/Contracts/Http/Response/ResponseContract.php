@@ -8,9 +8,9 @@ interface ResponseContract
      * Get or set response status code.
      *
      * @param integer|null $statusCode
-     * @return integer
+     * @return static
      */
-    public function statusCode(int|null $statusCode = null): int;
+    public function statusCode(int|null $statusCode = null): static;
 
     /**
      * Set response header to send a JSON.
