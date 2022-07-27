@@ -76,9 +76,25 @@ if (!defined('HELPERS_PATH')) {
     define('HELPERS_PATH', CORE_PATH . DIRECTORY_SEPARATOR . 'Helpers');
 }
 
-include_once(HELPERS_PATH . DIRECTORY_SEPARATOR . 'app.php');
-include_once(HELPERS_PATH . DIRECTORY_SEPARATOR . 'response.php');
-include_once(HELPERS_PATH . DIRECTORY_SEPARATOR . 'debug.php');
+// Load all helpers from Helpers path in /core and /app
+{
+    $helpersPath = [
+        APP_BASE_PATH . '/core/Helpers',
+        APP_BASE_PATH . '/app/Helpers',
+    ];
+
+    foreach ($helpersPath as $path) {
+        if (!file_exists($path)) {
+            continue;
+        }
+
+        foreach (scandir($path) as $entry) {
+            if (!is_dir("$path/$entry")) {
+                include_once("$path/$entry");
+            }
+        }
+    }
+}
 
 
 
