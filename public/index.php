@@ -24,7 +24,7 @@ ini_set('html_errors', true);
  */
 
 if (!defined('APP_BASE_PATH')) {
-    define('APP_BASE_PATH', realpath(__DIR__ . DIRECTORY_SEPARATOR . '..'));
+    define('APP_BASE_PATH', realpath(__DIR__ . '/..'));
 }
 
 
@@ -37,7 +37,7 @@ if (!defined('APP_BASE_PATH')) {
  * |
  */
 
-require_once(APP_BASE_PATH . DIRECTORY_SEPARATOR . 'deps' . DIRECTORY_SEPARATOR . 'Scal' . DIRECTORY_SEPARATOR . 'Scal.php');
+require_once sprintf("%s/deps/Scal/Scal.php", APP_BASE_PATH);
 
 
 
@@ -54,11 +54,11 @@ require_once(APP_BASE_PATH . DIRECTORY_SEPARATOR . 'deps' . DIRECTORY_SEPARATOR 
  */
 
 if (!defined('CONFIG_PATH')) {
-    define('CONFIG_PATH', APP_BASE_PATH . DIRECTORY_SEPARATOR . 'config');
+    define('CONFIG_PATH', sprintf("%s/config", APP_BASE_PATH));
 }
 
 if (!defined('CORE_PATH')) {
-    define('CORE_PATH', APP_BASE_PATH . DIRECTORY_SEPARATOR . 'core');
+    define('CORE_PATH', sprintf("%s/core", APP_BASE_PATH));
 }
 
 
@@ -73,7 +73,7 @@ if (!defined('CORE_PATH')) {
  */
 
 if (!defined('HELPERS_PATH')) {
-    define('HELPERS_PATH', CORE_PATH . DIRECTORY_SEPARATOR . 'Helpers');
+    define('HELPERS_PATH', sprintf("%s/Helpers", CORE_PATH));
 }
 
 // Load all helpers from Helpers path in /core and /app
@@ -90,7 +90,7 @@ if (!defined('HELPERS_PATH')) {
 
         foreach (scandir($path) as $entry) {
             if (!is_dir("$path/$entry")) {
-                include_once("$path/$entry");
+                include_once "$path/$entry";
             }
         }
     }
@@ -106,4 +106,4 @@ if (!defined('HELPERS_PATH')) {
  * |
  */
 
-require_once(APP_BASE_PATH . DIRECTORY_SEPARATOR . 'bootstrap' . DIRECTORY_SEPARATOR . 'app.php');
+require_once sprintf("%s/bootstrap/app.php", APP_BASE_PATH);

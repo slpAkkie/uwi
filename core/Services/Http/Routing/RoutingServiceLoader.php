@@ -41,7 +41,7 @@ class RoutingServiceLoader extends ServiceLoader
         $this->app->singleton(RouterContract::class);
 
         foreach (static::ROUTES_FILES as $routesFile) {
-            include_once APP_BASE_PATH . DIRECTORY_SEPARATOR . static::ROUTES_FOLDER . DIRECTORY_SEPARATOR . $routesFile;
+            include_once sprintf("%s/%s/$routesFile", APP_BASE_PATH, self::ROUTES_FOLDER);
         }
     }
 }
