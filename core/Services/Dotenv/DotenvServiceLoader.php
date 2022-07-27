@@ -8,7 +8,7 @@ use Uwi\Services\ServiceLoader;
 class DotenvServiceLoader extends ServiceLoader
 {
     /**
-     * Register necessary components for Serive.
+     * Register necessary components for Serivce.
      *
      * @return void
      */

@@ -6,7 +6,7 @@ namespace Uwi\Contracts\Application;
 interface ServiceLoaderContract
 {
     /**
-     * Register necessary components for Serive.
+     * Register necessary components for Serivce.
      *
      * @return void
      */

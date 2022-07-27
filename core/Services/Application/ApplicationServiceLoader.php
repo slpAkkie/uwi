@@ -7,7 +7,7 @@ use Uwi\Services\ServiceLoader;
 class ApplicationServiceLoader extends ServiceLoader
 {
     /**
-     * Register necessary components for Serive.
+     * Register necessary components for Serivce.
      *
      * @return void
      */

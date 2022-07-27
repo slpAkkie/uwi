@@ -19,7 +19,7 @@ abstract class ServiceLoader implements ServiceLoaderContract
     }
 
     /**
-     * Register necessary components for Serive.
+     * Register necessary components for Serivce.
      *
      * @return void
      */
