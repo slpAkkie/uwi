@@ -132,6 +132,8 @@ class Application extends Container implements ApplicationContract
     public function start(): void
     {
         $this->bootServices();
-        $this->tap([KernelContract::class, 'start']);
+        $response = $this->tap([KernelContract::class, 'start']);
+
+        dd('Application response:', $response);
     }
 }

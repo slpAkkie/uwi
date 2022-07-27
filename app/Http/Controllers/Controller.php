@@ -9,6 +9,6 @@ class Controller extends HttpController
 {
     public function welcome(Request $request)
     {
-        dd($request->url());
+        //
     }
 }

@@ -9,7 +9,7 @@ interface KernelContract extends SingletonContract
     /**
      * Starts the kernel and pass control to it.
      *
-     * @return void
+     * @return ResponseContract
      */
-    public function start(): void;
+    public function start(): ResponseContract;
 }

@@ -4,8 +4,10 @@ namespace Uwi\Foundation\Kernel;
 
 use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\Application\KernelContract;
+use Uwi\Contracts\Application\ResponseContract;
 use Uwi\Contracts\Http\Request\RequestContract;
 use Uwi\Contracts\Http\Routing\RouterContract;
+use Uwi\Services\Http\Response\Facades\Response;
 
 class HttpKernel implements KernelContract
 {
@@ -20,10 +22,12 @@ class HttpKernel implements KernelContract
     /**
      * Starts the kernel and pass control to it.
      *
-     * @return void
+     * @return ResponseContract
      */
-    public function start(): void
+    public function start(): ResponseContract
     {
-        $this->app->tap($this->router->current()->action());
+        $controllerResponse = $this->app->tap($this->router->current()->action()) ?? null;
+
+        return Response::make($controllerResponse);
     }
 }
