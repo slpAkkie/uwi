@@ -9,6 +9,6 @@ class Controller extends HttpController
 {
     public function welcome(Request $request)
     {
-        //
+        return response('Hiiii. It\'s Uwi. Page only for testing in in dev mode', 404);
     }
 }

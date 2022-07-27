@@ -132,11 +132,17 @@ class Container implements ContainerContract
         $args = [];
 
         foreach ($argsToResolve as $type) {
+            $argName = $type->name;
             $type = $type->getType()?->getName();
+            $arg = $type ? $this->resolve($type) : null;
 
-            $args[] = $type
-                ? $this->resolve($type) ?? array_shift($passedArgs)
-                : array_shift($passedArgs);
+            if (is_null($arg)) {
+                if (count($passedArgs)) {
+                    $args[$argName] = array_shift($passedArgs);
+                }
+            } else {
+                $args[$argName] = $arg;
+            }
         }
 
         // Return list of collected args.

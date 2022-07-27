@@ -62,7 +62,7 @@ function ddException(Throwable $e): void
     $stackTraceDepth = 0;
 
     dd(
-        join('<br />', array_merge([
+        implode('<br />', array_merge([
             <<<HTML
             Message: {$e->getMessage()}
             Exit code: {$e->getCode()}
@@ -79,7 +79,7 @@ function ddException(Throwable $e): void
             $el .= isset($file, $line) ? "$file($line): " : "[Internal code]: ";
 
             $args = isset($args)
-                ? ($args = strlen($args = join(', ', $args)) > 16 ? '...' : $args)
+                ? ($args = strlen($args = implode(', ', $args)) > 16 ? '...' : $args)
                 : '';
 
             $el .= isset($class) ? "$class$type$function($args)" : "$function(...)";

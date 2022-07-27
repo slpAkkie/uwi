@@ -11,6 +11,7 @@
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', true);
 ini_set('display_startup_errors', true);
+ini_set('html_errors', true);
 
 
 
@@ -76,6 +77,7 @@ if (!defined('HELPERS_PATH')) {
 }
 
 include_once(HELPERS_PATH . DIRECTORY_SEPARATOR . 'app.php');
+include_once(HELPERS_PATH . DIRECTORY_SEPARATOR . 'response.php');
 include_once(HELPERS_PATH . DIRECTORY_SEPARATOR . 'debug.php');
 
 

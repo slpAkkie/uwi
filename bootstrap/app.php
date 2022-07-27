@@ -19,7 +19,6 @@ use Uwi\Services\Http\HttpKernelServiceLoader;
 set_exception_handler('ddException');
 
 
-
 /**
  * |-------------------------------------------------
  * | Instantiate an Application.
