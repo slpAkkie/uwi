@@ -41,7 +41,27 @@ class Compiler implements CompilerContract
     }
 
     /**
-     * Reads view file and returns its content.
+     * Read view file and returns it's content.
+     *
+     * @return string
+     */
+    protected function read(): string
+    {
+        ob_start();
+        (function (string $__FILE, array $__PARAMS) {
+            extract($__PARAMS);
+
+            return include $__FILE;
+        })($this->viewPath, $this->params);
+        $this->content = htmlspecialchars(ob_get_clean());
+
+        $this->parseDirectives();
+
+        return $this->content;
+    }
+
+    /**
+     * Returns view content.
      *
      * @return string
      */
@@ -51,14 +71,7 @@ class Compiler implements CompilerContract
             return $this->content;
         }
 
-        ob_start();
-        (function (string $__FILE, array $__PARAMS) {
-            extract($__PARAMS);
-
-            return include $__FILE;
-        })($this->viewPath, $this->params);
-
-        return $this->content = ob_get_clean();
+        return $this->read();
     }
 
     /**
@@ -121,6 +134,10 @@ class Compiler implements CompilerContract
      */
     public function compile(): string
     {
-        return $this->getContent();
+        $content = $this->getContent();
+
+        dd($this);
+
+        return $content;
     }
 }
