@@ -2,7 +2,12 @@
 
 namespace Uwi\Services\Calibri;
 
+use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Services\Calibri\Contracts\CompilerContract;
+use Uwi\Services\Calibri\Contracts\DirectiveContract;
+use Uwi\Services\Calibri\Directives\ExtendsDirective;
+use Uwi\Services\Calibri\Directives\SectionDirective;
+use Uwi\Services\Calibri\Directives\YieldDirective;
 
 class Compiler implements CompilerContract
 {
@@ -14,26 +19,39 @@ class Compiler implements CompilerContract
     protected const DIRECTIVE_SYMBOL = '#';
 
     /**
-     * View content.
+     * Array of processors for the directives
      *
-     * @var string|null
+     * @var array<string, string>
      */
-    protected string|null $content = null;
+    protected static array $directiveHandlers = [
+        'extends' => ExtendsDirective::class,
+        'section' => SectionDirective::class,
+        'yield' => YieldDirective::class,
+    ];
 
     /**
-     * View directives.
+     * Shared data allowed for directived.
      *
-     * @var array<int, array<string, mixed>>
+     * @var array
      */
-    protected array $directives = [];
+    protected array $shared = [];
+
+    /**
+     * FileStream for view file.
+     *
+     * @var resource
+     */
+    protected $fileStream = null;
 
     /**
      * Instantiate new Compiler instance.
      *
+     * @param ApplicationContract $app
      * @param string $viewPath
      * @param array $params
      */
     public function __construct(
+        protected ApplicationContract $app,
         protected string $viewPath,
         protected array $params = [],
     ) {
@@ -41,37 +59,26 @@ class Compiler implements CompilerContract
     }
 
     /**
-     * Read view file and returns it's content.
+     * Share something into Compiler.
      *
-     * @return string
+     * @param string $key
+     * @param mixed $val
+     * @return void
      */
-    protected function read(): string
+    public function share(string $key, mixed $val): void
     {
-        ob_start();
-        (function (string $__FILE, array $__PARAMS) {
-            extract($__PARAMS);
-
-            return include $__FILE;
-        })($this->viewPath, $this->params);
-        $this->content = htmlspecialchars(ob_get_clean());
-
-        $this->parseDirectives();
-
-        return $this->content;
+        $this->shared[$key] = $val;
     }
 
     /**
-     * Returns view content.
+     * Resturns shared data.
      *
-     * @return string
+     * @param string $key
+     * @return mixed
      */
-    protected function getContent(): string
+    public function get(string $key): mixed
     {
-        if ($this->content) {
-            return $this->content;
-        }
-
-        return $this->read();
+        return key_exists($key, $this->shared) ? $this->shared[$key] : null;
     }
 
     /**
@@ -87,44 +94,71 @@ class Compiler implements CompilerContract
     }
 
     /**
-     * Parse read content for the directives.
+     * Returns handler for the directive or null.
      *
-     * @return array
+     * @param string $directiveName
+     * @return string|null
      */
-    protected function parseDirectives(): array
+    protected function getDirectiveHandler(string $directiveName): string|null
     {
-        // Find all directives start with single symbol #
-        // then parse directives args.
-        $matches = [];
-        preg_match_all($this->getDirectiveRegexp(), $this->getContent(), $matches, PREG_OFFSET_CAPTURE);
-        $matches[2] = $this->parseArgs($matches[2]);
-
-        // Collect all matches into one array with found directives.
-        $directives = [];
-        foreach ($matches[1] as $i => $directiveData) {
-            $directives[] = [
-                'name' => $directiveData[0],
-                'offset' => $directiveData[1],
-                'args' => $matches[2][$i],
-            ];
-        }
-
-        return $this->directives = $directives;
+        return key_exists($directiveName, self::$directiveHandlers) ? self::$directiveHandlers[$directiveName] : null;
     }
 
     /**
      * Parse array of args for each directive.
      *
-     * @param array<string> $directivesArgs
-     * @return array<array<string>>
+     * @param string $directivesArgs
+     * @return array<string>
      */
-    protected function parseArgs(array $directivesArgs = []): array
+    protected function parseArgs(string $directivesArgs = ''): array
     {
-        return array_map(function (array $args) {
-            $args = explode(',', trim_once($args[0], '()'));
+        $directivesArgs = explode(',', trim_once($directivesArgs, '()'));
 
-            return array_filter(array_map(fn (string $arg) => ($arg = trim($arg)) ? $arg : null, $args));
-        }, $directivesArgs);
+        return array_filter(array_map(fn (string $arg) => ($arg = trim($arg)) ? $arg : null, $directivesArgs));
+    }
+
+    /**
+     * Read next line of view file.
+     *
+     * @return string|false
+     */
+    protected function readNext(): string|false
+    {
+        if (is_null($this->fileStream)) {
+            $this->fileStream = fopen($this->viewPath, 'r');
+        }
+
+        $line = fgets($this->fileStream);
+
+        $directive = [];
+        preg_match($this->getDirectiveRegexp(), $line, $directive, PREG_OFFSET_CAPTURE);
+        if (count($directive)) {
+            $directiveName = $directive[1][0];
+            $directiveHandler = $this->getDirectiveHandler($directiveName);
+            if ($directiveHandler) {
+                /** @var DirectiveContract */
+                $directiveHandler = $this->app->make($directiveHandler, ...$this->parseArgs($directive[2][0]));
+                d($directiveHandler->compile());
+            }
+        }
+
+        return $line;
+    }
+
+    /**
+     * Read all view file and return compiled content.
+     *
+     * @return string
+     */
+    protected function read(): string
+    {
+        $content = '';
+
+        while (($buffer = $this->readNext()) !== false) {
+            $content .= $buffer;
+        }
+
+        return $content;
     }
 
     /**
@@ -134,10 +168,9 @@ class Compiler implements CompilerContract
      */
     public function compile(): string
     {
-        $content = $this->getContent();
+        $viewContent = $this->read();
+        d($this);
 
-        dd($this);
-
-        return $content;
+        return $viewContent;
     }
 }
