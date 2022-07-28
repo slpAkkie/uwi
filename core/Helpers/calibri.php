@@ -16,3 +16,17 @@ function view(string $view, array $params = []): ResponseContract
 
     return response($view);
 }
+
+/**
+ * Work like regular trim but removes
+ * only one character from the start and the end.
+ *
+ * @param string $string
+ * @param string $characters
+ * @return string
+ */
+function trim_once(string $string, string $characters): string
+{
+    $characters = preg_quote($characters);
+    return preg_replace("#^([$characters])?(.*?)([$characters])?$#", '$2', $string);
+}

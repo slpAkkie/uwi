@@ -15,13 +15,6 @@ interface CompilerContract extends SingletonContract
     public function __construct(string $viewPath, array $params = []);
 
     /**
-     * Reads view file and returns its content.
-     *
-     * @return string
-     */
-    public function read(): string;
-
-    /**
      * Compile view content.
      *
      * @return string

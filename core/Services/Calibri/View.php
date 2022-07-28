@@ -17,7 +17,7 @@ class View implements ResponsableContract
     /**
      * Default view files extendion.
      */
-    protected const VIEW_FILE_EXT = '.clbr.php';
+    protected const VIEW_FILE_EXT = '.clbr.html';
 
     /**
      * Name of view file.
