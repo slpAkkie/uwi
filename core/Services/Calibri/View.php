@@ -79,7 +79,7 @@ class View implements ResponsableContract, ViewContract
     }
 
     /**
-     * Render view.
+     * Render view content.
      *
      * @return string
      */

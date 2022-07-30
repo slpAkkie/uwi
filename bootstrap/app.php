@@ -1,8 +1,6 @@
 <?php
 
 use Uwi\Foundation\Application;
-use Uwi\Services\Application\ApplicationServiceLoader;
-use Uwi\Services\Database\Lion\LionServiceLoader;
 use Uwi\Services\Dotenv\DotenvServiceLoader;
 use Uwi\Services\Http\HttpKernelServiceLoader;
 

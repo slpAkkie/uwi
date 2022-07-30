@@ -17,7 +17,7 @@ interface CompilerContract extends SingletonContract
     );
 
     /**
-     * Set new view file to read from.
+     * Set view file to read from.
      *
      * @param string $viewPath
      * @param array<string, mixed> $params
@@ -26,7 +26,7 @@ interface CompilerContract extends SingletonContract
     public function setView(string $viewPath, array $params = []): static;
 
     /**
-     * Read next until provided string isn't present.
+     * Read next until provided string isn't found.
      *
      * @param string $needle
      * @return string
@@ -57,7 +57,7 @@ interface CompilerContract extends SingletonContract
     public function share(string $key, mixed $val): void;
 
     /**
-     * Resturns shared data.
+     * Resturns shared data by provided key.
      *
      * @param string $key
      * @return mixed

@@ -32,14 +32,14 @@ class Compiler implements CompilerContract
     ];
 
     /**
-     * TODO: Undocumented variable
+     * Path to view file.
      *
      * @var string
      */
     protected string $viewPath;
 
     /**
-     * TODO: Undocumented variable
+     * Parameters for compiling view content.
      *
      * @var array<string, mixed>
      */
@@ -80,6 +80,27 @@ class Compiler implements CompilerContract
     }
 
     /**
+     * Close file stream force when Compiler is destructing.
+     */
+    public function __destruct()
+    {
+        $this->closeFileStream();
+    }
+
+    /**
+     * Close file stream.
+     *
+     * @return void
+     */
+    protected function closeFileStream(): void
+    {
+        if ($this->fileStream !== null && is_resource($this->fileStream)) {
+            fclose($this->fileStream);
+            $this->fileStream = null;
+        }
+    }
+
+    /**
      * Set new view file to read from.
      *
      * @param string $viewPath
@@ -88,13 +109,10 @@ class Compiler implements CompilerContract
      */
     public function setView(string $viewPath, array $params = []): static
     {
-        if ($this->fileStream !== null) {
-            fclose($this->fileStream);
-            $this->fileStream = null;
-        }
+        $this->closeFileStream();
 
         $this->viewPath = $viewPath;
-        $this->params = $params;
+        $this->params = array_merge($this->params, $params);
 
         return $this;
     }
@@ -217,7 +235,6 @@ class Compiler implements CompilerContract
      */
     protected function readNext(): string|false
     {
-        // TODO: Close file...
         if (is_null($this->fileStream)) {
             $this->fileStream = fopen($this->viewPath, 'r');
         }

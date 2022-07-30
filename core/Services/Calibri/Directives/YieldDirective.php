@@ -7,9 +7,17 @@ use Uwi\Services\Calibri\Contracts\DirectiveContract;
 
 class YieldDirective implements DirectiveContract
 {
+    /**
+     * Instantiate new Directive instance.
+     *
+     * @param CompilerContract $compiler
+     * @param string $section
+     * @param string $default
+     */
     public function __construct(
         protected CompilerContract $compiler,
         protected string $section,
+        protected string $default = '',
     ) {
         $this->section = trim($this->section, '\'"');
     }
@@ -22,6 +30,7 @@ class YieldDirective implements DirectiveContract
     public function compile(): string
     {
         $sectionContent = $this->compiler->get("section.{$this->section}");
-        return $sectionContent ? $sectionContent : '';
+
+        return trim($sectionContent ? $sectionContent : $this->default, '\'"');
     }
 }

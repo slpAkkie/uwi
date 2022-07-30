@@ -7,8 +7,19 @@ use Uwi\Services\Calibri\Contracts\DirectiveContract;
 
 class ErrorDirective implements DirectiveContract
 {
+    /**
+     * End directive string.
+     * 
+     * @var string
+     */
     protected const END_DIRECTIVE = '#enderror';
 
+    /**
+     * Instantiate new Directive instance.
+     *
+     * @param CompilerContract $compiler
+     * @param string $errorKey
+     */
     public function __construct(
         protected CompilerContract $compiler,
         protected string $errorKey,

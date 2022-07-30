@@ -7,8 +7,20 @@ use Uwi\Services\Calibri\Contracts\DirectiveContract;
 
 class SectionDirective implements DirectiveContract
 {
+    /**
+     * End directive string.
+     * 
+     * @var string
+     */
     protected const END_DIRECTIVE = '#endsection';
 
+    /**
+     * Instantiate new Directive instance.
+     *
+     * @param CompilerContract $compiler
+     * @param string $name
+     * @param mixed $inlineContent
+     */
     public function __construct(
         protected CompilerContract $compiler,
         protected string $name,

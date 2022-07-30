@@ -9,6 +9,13 @@ use Uwi\Services\Calibri\Contracts\ViewContract;
 
 class ExtendsDirective implements DirectiveContract
 {
+    /**
+     * Instantiate new Directive instance.
+     *
+     * @param ApplicationContract $app
+     * @param CompilerContract $compiler
+     * @param string $template
+     */
     public function __construct(
         protected ApplicationContract $app,
         protected CompilerContract $compiler,
@@ -24,8 +31,10 @@ class ExtendsDirective implements DirectiveContract
      */
     public function compile(): string
     {
+        // Compile view content with sections for the template.
         $this->compiler->read();
 
+        // Create new view from specified template and render it.
         return $this->app->make(ViewContract::class, $this->template)->render();
     }
 }

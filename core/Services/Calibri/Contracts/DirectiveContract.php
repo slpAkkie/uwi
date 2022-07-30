@@ -5,7 +5,7 @@ namespace Uwi\Services\Calibri\Contracts;
 interface DirectiveContract
 {
     /**
-     * Returns compiled directive.
+     * Returns compiled directive content.
      *
      * @return string
      */
