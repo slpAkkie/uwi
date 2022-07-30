@@ -14,7 +14,7 @@ class YieldDirective implements DirectiveContract
         $this->section = trim($this->section, '\'"');
     }
 
-    /**section
+    /**
      * Returns compiled directive.
      *
      * @return string
