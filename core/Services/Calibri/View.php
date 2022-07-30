@@ -6,8 +6,9 @@ use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\Http\Request\RequestContract;
 use Uwi\Contracts\Http\Response\ResponsableContract;
 use Uwi\Services\Calibri\Contracts\CompilerContract;
+use Uwi\Services\Calibri\Contracts\ViewContract;
 
-class View implements ResponsableContract
+class View implements ResponsableContract, ViewContract
 {
     /**
      * Default path to views.
@@ -47,7 +48,7 @@ class View implements ResponsableContract
     public function __construct(
         protected ApplicationContract $app,
         string $view,
-        protected array $params,
+        protected array $params = [],
     ) {
         $pathToView = explode('.', $view);
         $this->view = array_pop($pathToView);
@@ -82,15 +83,14 @@ class View implements ResponsableContract
      *
      * @return string
      */
-    protected function render(): string
+    public function render(): string
     {
-        $compiler = $this->app->make(
-            CompilerContract::class,
+        $compiler = $this->app->resolve(CompilerContract::class);
+
+        $responseBody = $compiler->setView(
             sprintf('%s/%s', $this->viewPath, $this->getViewFileName()),
             $this->params
-        );
-
-        $responseBody = $compiler->compile();
+        )->compile();
 
         return $responseBody ? $responseBody : self::EMPTY_CONTENT_BODY;
     }

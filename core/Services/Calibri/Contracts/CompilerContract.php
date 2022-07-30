@@ -11,14 +11,19 @@ interface CompilerContract extends SingletonContract
      * Instantiate new Compiler instance.
      *
      * @param ApplicationContract $app
-     * @param string $viewPath
-     * @param array $params
      */
     public function __construct(
         ApplicationContract $app,
-        string $viewPath,
-        array $params = []
     );
+
+    /**
+     * Set new view file to read from.
+     *
+     * @param string $viewPath
+     * @param array<string, mixed> $params
+     * @return static
+     */
+    public function setView(string $viewPath, array $params = []): static;
 
     /**
      * Read next until provided string isn't present.

@@ -2,16 +2,19 @@
 
 namespace Uwi\Services\Calibri\Directives;
 
+use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Services\Calibri\Contracts\CompilerContract;
 use Uwi\Services\Calibri\Contracts\DirectiveContract;
+use Uwi\Services\Calibri\Contracts\ViewContract;
 
 class ExtendsDirective implements DirectiveContract
 {
     public function __construct(
+        protected ApplicationContract $app,
         protected CompilerContract $compiler,
         protected string $template,
     ) {
-        //
+        $this->template = trim($this->template, '\'"');
     }
 
     /**
@@ -23,6 +26,6 @@ class ExtendsDirective implements DirectiveContract
     {
         $this->compiler->read();
 
-        return '';
+        return $this->app->make(ViewContract::class, $this->template)->render();
     }
 }

@@ -32,6 +32,20 @@ class Compiler implements CompilerContract
     ];
 
     /**
+     * TODO: Undocumented variable
+     *
+     * @var string
+     */
+    protected string $viewPath;
+
+    /**
+     * TODO: Undocumented variable
+     *
+     * @var array<string, mixed>
+     */
+    protected array $params = [];
+
+    /**
      * Shared data allowed for directived.
      *
      * @var array
@@ -61,10 +75,28 @@ class Compiler implements CompilerContract
      */
     public function __construct(
         protected ApplicationContract $app,
-        protected string $viewPath,
-        protected array $params = [],
     ) {
         //
+    }
+
+    /**
+     * Set new view file to read from.
+     *
+     * @param string $viewPath
+     * @param array<string, mixed> $params
+     * @return static
+     */
+    public function setView(string $viewPath, array $params = []): static
+    {
+        if ($this->fileStream !== null) {
+            fclose($this->fileStream);
+            $this->fileStream = null;
+        }
+
+        $this->viewPath = $viewPath;
+        $this->params = $params;
+
+        return $this;
     }
 
     /**
