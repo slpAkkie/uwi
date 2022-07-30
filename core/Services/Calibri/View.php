@@ -85,9 +85,7 @@ class View implements ResponsableContract, ViewContract
      */
     public function render(): string
     {
-        $compiler = $this->app->resolve(CompilerContract::class);
-
-        $responseBody = $compiler->setView(
+        $responseBody = $this->app->resolve(CompilerContract::class)->setView(
             sprintf('%s/%s', $this->viewPath, $this->getViewFileName()),
             $this->params
         )->compile();

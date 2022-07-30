@@ -5,7 +5,6 @@ namespace Uwi\Services\Calibri;
 use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Services\Calibri\Contracts\CompilerContract;
 use Uwi\Services\Calibri\Contracts\DirectiveContract;
-use Uwi\Services\Calibri\Directives\ErrorDirective;
 use Uwi\Services\Calibri\Directives\ExtendsDirective;
 use Uwi\Services\Calibri\Directives\SectionDirective;
 use Uwi\Services\Calibri\Directives\YieldDirective;
@@ -28,8 +27,14 @@ class Compiler implements CompilerContract
         'extends' => ExtendsDirective::class,
         'section' => SectionDirective::class,
         'yield' => YieldDirective::class,
-        'error' => ErrorDirective::class,
     ];
+
+    /**
+     * Recursion depth of compiling.
+     *
+     * @var integer
+     */
+    protected static int $compilingDepth = 0;
 
     /**
      * Path to view file.
@@ -65,6 +70,13 @@ class Compiler implements CompilerContract
      * @var string
      */
     protected string $remainLastString = '';
+
+    /**
+     * Read view content.
+     *
+     * @var string
+     */
+    protected string $content = '';
 
     /**
      * Instantiate new Compiler instance.
@@ -111,6 +123,7 @@ class Compiler implements CompilerContract
     {
         $this->closeFileStream();
 
+        $this->content = '';
         $this->viewPath = $viewPath;
         $this->params = array_merge($this->params, $params);
 
@@ -258,11 +271,53 @@ class Compiler implements CompilerContract
      */
     public function read(): string
     {
-        $content = '';
-
         while (($buffer = $this->readNext()) !== false) {
-            $content .= $buffer;
+            $this->content .= $buffer;
         }
+
+        return $this->content;
+    }
+
+    /**
+     * Replace double directive symbol to single one and escaped interpolations.
+     *
+     * @return string
+     */
+    protected function replaceEscapedDirectiveSymbol(): string
+    {
+        $this->content = preg_replace('/(' . self::DIRECTIVE_SYMBOL . '{2})/', self::DIRECTIVE_SYMBOL, $this->content);
+        $this->content = preg_replace('/' . self::DIRECTIVE_SYMBOL . '{{(.*)?}}/', '{{$1}}', $this->content);
+
+        return $this->content;
+    }
+
+    /**
+     * Eval template interpolations.
+     *
+     * @return string
+     */
+    protected function evalInterpolations(): string
+    {
+        $directiveSymbol = self::DIRECTIVE_SYMBOL;
+
+        $this->content = preg_replace_callback("/(?<!$directiveSymbol){{(.*?)}}/", function ($match) {
+            extract($this->params);
+
+            return eval("return ({$match[1]});");
+        }, $this->content);
+
+        return $this->content;
+    }
+
+    /**
+     * Returns content and clear it in the compiler cache.
+     *
+     * @return string
+     */
+    protected function popContent(): string
+    {
+        $content = $this->content;
+        $this->content = '';
 
         return $content;
     }
@@ -274,8 +329,15 @@ class Compiler implements CompilerContract
      */
     public function compile(): string
     {
-        $viewContent = $this->read();
+        self::$compilingDepth++;
+        $this->read();
 
-        return $viewContent;
+        if (self::$compilingDepth === 1) {
+            $this->evalInterpolations();
+            $this->replaceEscapedDirectiveSymbol();
+        }
+        self::$compilingDepth--;
+
+        return $this->popContent();
     }
 }
