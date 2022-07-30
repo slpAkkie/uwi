@@ -2,7 +2,7 @@
 
 namespace Uwi\Services\Dotenv;
 
-use Uwi\Contracts\DotenvContract;
+use Uwi\Services\Dotenv\Contracts\DotenvContract;
 
 class Dotenv implements DotenvContract
 {
@@ -21,7 +21,7 @@ class Dotenv implements DotenvContract
     protected array $envars;
 
     /**
-     * Instantiate Dotenv Service.
+     * Instantiate Dotenv.
      */
     public function __construct()
     {
@@ -32,9 +32,9 @@ class Dotenv implements DotenvContract
      * Set many values.
      *
      * @param array<string, string> $vars
-     * @return static
+     * @return \Uwi\Services\Dotenv\Contracts\DotenvContract
      */
-    public function setMany(array $vars = []): static
+    public function setMany(array $vars = []): \Uwi\Services\Dotenv\Contracts\DotenvContract
     {
         $this->envars = array_merge($this->envars, $vars);
 

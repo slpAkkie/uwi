@@ -7,7 +7,7 @@ use Uwi\Services\Database\Lion\Model;
 class User extends Model
 {
     /**
-     * Column allowed for mass-assignment
+     * Column allowed for mass-assignment.
      *
      * @var array
      */

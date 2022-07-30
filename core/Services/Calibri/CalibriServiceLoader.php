@@ -16,7 +16,7 @@ class CalibriServiceLoader extends ServiceLoader
     public function register(): void
     {
         $this->app->bind(ViewContract::class, View::class);
-        $this->app->bind(CompilerContract::class, Compiler::class);
+        $this->app->bind(CompilerContract::class, Compiler::class, true);
     }
 
     /**

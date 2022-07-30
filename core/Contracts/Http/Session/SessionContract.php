@@ -10,9 +10,9 @@ interface SessionContract extends SingletonContract
      * Set many values.
      *
      * @param array<string, string> $vars
-     * @return static
+     * @return \Uwi\Contracts\Http\Session\SessionContract
      */
-    public function setMany(array $vars = []): static;
+    public function setMany(array $vars = []): \Uwi\Contracts\Http\Session\SessionContract;
 
     /**
      * Set single value.
@@ -34,9 +34,9 @@ interface SessionContract extends SingletonContract
     /**
      * Clear all session values.
      *
-     * @return static
+     * @return \Uwi\Contracts\Http\Session\SessionContract
      */
-    public function clear(): static;
+    public function clear(): \Uwi\Contracts\Http\Session\SessionContract;
 
     /**
      * Get single value.
@@ -57,28 +57,28 @@ interface SessionContract extends SingletonContract
     /**
      * Start session.
      *
-     * @return static
+     * @return \Uwi\Contracts\Http\Session\SessionContract
      */
-    public function start(): static;
+    public function start(): \Uwi\Contracts\Http\Session\SessionContract;
 
     /**
      * Write data to session and close.
      *
-     * @return static
+     * @return \Uwi\Contracts\Http\Session\SessionContract
      */
-    public function close(): static;
+    public function close(): \Uwi\Contracts\Http\Session\SessionContract;
 
     /**
      * Destory session.
      *
-     * @return static
+     * @return \Uwi\Contracts\Http\Session\SessionContract
      */
-    public function destory(): static;
+    public function destory(): \Uwi\Contracts\Http\Session\SessionContract;
 
     /**
      * Destroy and start new session.
      *
-     * @return static
+     * @return \Uwi\Contracts\Http\Session\SessionContract
      */
-    public function regenerate(): static;
+    public function regenerate(): \Uwi\Contracts\Http\Session\SessionContract;
 }

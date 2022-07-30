@@ -3,31 +3,29 @@
 namespace Uwi\Services\Database\Lion\Query;
 
 use Uwi\Services\Database\Lion\Contracts\BuilderContract;
-use Uwi\Services\Database\Lion\Contracts\ModelContract;
-use Uwi\Services\Database\Lion\Contracts\QueryContract;
 
 class Builder implements BuilderContract
 {
     /**
      * Query instance.
      *
-     * @var QueryContract
+     * @var \Uwi\Services\Database\Lion\Contracts\QueryContract
      */
-    private QueryContract $query;
+    private \Uwi\Services\Database\Lion\Contracts\QueryContract $query;
 
     /**
      * Model Builder created for.
      *
-     * @var ModelContract|null
+     * @var \Uwi\Services\Database\Lion\Contracts\ModelContract|null
      */
-    private ModelContract|null $model;
+    private \Uwi\Services\Database\Lion\Contracts\ModelContract|null $model;
 
     /**
      * Instantiate Builder.
      *
      * @param string $table
      * @param string $primaryKey
-     * @param string|ModelContract $model
+     * @param string|\Uwi\Services\Database\Lion\Contracts\ModelContract $model
      */
     public function __construct(string $table, string $primaryKey = 'id', mixed $model = null)
     {
@@ -39,9 +37,9 @@ class Builder implements BuilderContract
      * Returns record by the primary key value.
      *
      * @param integer|string $val
-     * @return ModelContract|null
+     * @return \Uwi\Services\Database\Lion\Contracts\ModelContract|null
      */
-    public function find(int|string $val): ModelContract|null
+    public function find(int|string $val): \Uwi\Services\Database\Lion\Contracts\ModelContract|null
     {
         return $this->query->addWherePrimary('=', $val)->get()[0];
     }
@@ -53,9 +51,9 @@ class Builder implements BuilderContract
      * @param string|null $operator
      * @param string|null $value
      * @param string $type
-     * @return static
+     * @return \Uwi\Services\Database\Lion\Contracts\BuilderContract
      */
-    public function where(string $columnName, string|null $operator = null, string|null $value = null, string $type = 'and'): static
+    public function where(string $columnName, string|null $operator = null, string|null $value = null, string $type = 'and'): \Uwi\Services\Database\Lion\Contracts\BuilderContract
     {
         $this->query->addWhere($columnName, $operator, $value, $type);
 
@@ -68,9 +66,9 @@ class Builder implements BuilderContract
      * @param string $columnName
      * @param string|null $operator
      * @param string|null $value
-     * @return static
+     * @return \Uwi\Services\Database\Lion\Contracts\BuilderContract
      */
-    public function orWhere(string $columnName, ?string $operator = null, ?string $value = null): static
+    public function orWhere(string $columnName, string|null $operator = null, string|null $value = null): \Uwi\Services\Database\Lion\Contracts\BuilderContract
     {
         return $this->where($columnName, $operator, $value, 'or');
     }
@@ -130,7 +128,7 @@ class Builder implements BuilderContract
      * Exec raw sql query with parameters.
      *
      * @param string $sql
-     * @param array $args
+     * @param array<string, mixed> $args
      * @return void
      */
     public function raw(string $sql, array $args = [])
@@ -141,10 +139,10 @@ class Builder implements BuilderContract
     /**
      * Exec query and get result.
      *
-     * @param ?array $columns
+     * @param array|null $columns
      * @return array|Model|null
      */
-    public function get(?array $columns = null): array|ModelContract|null
+    public function get(array|null $columns = null): array|\Uwi\Services\Database\Lion\Contracts\ModelContract|null
     {
         return $this->query->get($columns);
     }

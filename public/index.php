@@ -74,10 +74,7 @@ if (!defined('CORE_PATH')) {
 
 if (!defined('HELPERS_PATH')) {
     define('HELPERS_PATH', sprintf("%s/Helpers", CORE_PATH));
-}
-
-// Load all helpers from Helpers path in /core and /app
-{
+} {
     $helpersPath = [
         APP_BASE_PATH . '/core/Helpers',
         APP_BASE_PATH . '/app/Helpers',

@@ -2,7 +2,7 @@
 
 namespace Uwi\Services\Dotenv;
 
-use Uwi\Contracts\DotenvContract;
+use Uwi\Services\Dotenv\Contracts\DotenvContract;
 use Uwi\Services\ServiceLoader;
 
 class DotenvServiceLoader extends ServiceLoader

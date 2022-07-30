@@ -1,0 +1,28 @@
+#extends('templates.minimal')
+
+#section('title', 'View testing')
+
+#section('style')
+    <style>
+        * {
+            box-sizing: border-box; }
+        h1 {
+            color: #367ec9; }
+        h2 {
+            color: #04c01a; }
+        h3 {
+            color: #bb2626; }
+    </style>
+#endsection
+
+#section('body')
+    Welcome page
+
+    <h2>Hello world!!!</h2>
+    <p>It's Uwi. Page only for testing in in dev mode</p>
+    <p><b>Version </b>{{ "$version!!!" . ' (slpAkkie)' }}</p>
+
+    <h3>Testing</h3>
+    <p><b>Escaping version </b>#{{ $version . '!!!' }}</p>
+    <p><b>Section should be defined as </b>##section('Name of section')</p>
+#endsection

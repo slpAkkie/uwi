@@ -11,9 +11,9 @@ abstract class Facade implements FacadeContract
      *
      * @param string $name
      * @param array<mixed> $args
-     * @return void
+     * @return mixed
      */
-    public static function __callStatic($name, $args)
+    public static function __callStatic($name, $args): mixed
     {
         return app()->make((new static())->getAccessor())->{$name}(...$args);
     }

@@ -11,6 +11,13 @@ use Uwi\Services\Http\Response\Facades\Response;
 
 class HttpKernel implements KernelContract
 {
+    /**
+     * Instantiate HttpKernel.
+     *
+     * @param ApplicationContract $app
+     * @param RouterContract $router
+     * @param RequestContract $request
+     */
     public function __construct(
         protected ApplicationContract $app,
         protected RouterContract $router,

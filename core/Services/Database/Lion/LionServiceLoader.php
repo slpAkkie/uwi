@@ -2,8 +2,6 @@
 
 namespace Uwi\Services\Database\Lion;
 
-use Uwi\Contracts\Database\ConnectionContract;
-use Uwi\Services\Database\Connection;
 use Uwi\Services\Database\Lion\Contracts\BuilderContract;
 use Uwi\Services\Database\Lion\Contracts\ModelContract;
 use Uwi\Services\Database\Lion\Contracts\QueryContract;
@@ -20,7 +18,6 @@ class LionServiceLoader extends ServiceLoader
      */
     public function register(): void
     {
-        $this->app->bind(ConnectionContract::class, Connection::class);
         $this->app->bind(ModelContract::class, Model::class);
         $this->app->bind(BuilderContract::class, Builder::class);
         $this->app->bind(QueryContract::class, Query::class);
@@ -33,6 +30,6 @@ class LionServiceLoader extends ServiceLoader
      */
     public function boot(): void
     {
-        $this->app->resolve(ConnectionContract::class);
+        //
     }
 }

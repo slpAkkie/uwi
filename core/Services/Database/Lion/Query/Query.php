@@ -35,9 +35,9 @@ class Query implements QueryContract
     /**
      * Model that returns as Query result.
      *
-     * @var ?string
+     * @var string|null
      */
-    public ?string $model;
+    public string|null $model;
 
     /**
      * Table primary key.
@@ -76,9 +76,9 @@ class Query implements QueryContract
     public array $grammarProps = [];
 
     /**
-     * Instantiate new Query instance.
+     * Instantiate Query.
      */
-    public function __construct(string $table, string $primaryKey, ?string $model = null)
+    public function __construct(string $table, string $primaryKey, string|null $model = null)
     {
         $this->connection = app()->singleton(ConnectionContract::class);
         $this->model = $model;
@@ -90,9 +90,9 @@ class Query implements QueryContract
      * Set type for the query.
      *
      * @param string $type
-     * @return static
+     * @return \Uwi\Services\Database\Lion\Contracts\QueryContract
      */
-    public function setType(string $type): static
+    public function setType(string $type): \Uwi\Services\Database\Lion\Contracts\QueryContract
     {
         $this->type = $type;
 
@@ -117,10 +117,10 @@ class Query implements QueryContract
     /**
      * Set new select statement.
      *
-     * @param array|null $columns
-     * @return static
+     * @param array<string>|null $columns
+     * @return \Uwi\Services\Database\Lion\Contracts\QueryContract
      */
-    public function select(?array $columns = null): static
+    public function select(array|null $columns = null): \Uwi\Services\Database\Lion\Contracts\QueryContract
     {
         if ($columns && count($columns)) {
             $this->columns = $columns;
@@ -157,7 +157,7 @@ class Query implements QueryContract
     /**
      * Insert new record into the table.
      *
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      * @return ?int
      */
     public function insert(array $attributes): ?int
@@ -173,8 +173,9 @@ class Query implements QueryContract
     /**
      * Update row by primary key with dirty fields.
      *
+     * @param string $primaryKeyName
      * @param string $primaryKey
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      * @return boolean
      */
     public function update(string $primaryKeyName, string $primaryKey, array $attributes): bool
@@ -209,12 +210,12 @@ class Query implements QueryContract
      * Add where condition to the query.
      *
      * @param string $columnName
-     * @param ?string $operator
-     * @param ?string $value
+     * @param string|null $operator
+     * @param string|null $value
      * @param string $type
-     * @return static
+     * @return \Uwi\Services\Database\Lion\Contracts\QueryContract
      */
-    public function addWhere(string $columnName, ?string $operator = null, ?string $value = null, string $type = 'and'): static
+    public function addWhere(string $columnName, string|null $operator = null, string|null $value = null, string $type = 'and'): \Uwi\Services\Database\Lion\Contracts\QueryContract
     {
         $this->setTypeIfNot('select');
 
@@ -243,9 +244,9 @@ class Query implements QueryContract
      *
      * @param string $operator
      * @param string $val
-     * @return static
+     * @return \Uwi\Services\Database\Lion\Contracts\QueryContract
      */
-    public function addWherePrimary(string $operator, string $val): static
+    public function addWherePrimary(string $operator, string $val): \Uwi\Services\Database\Lion\Contracts\QueryContract
     {
         return $this->addWhere($this->primaryKey, $operator, $val);
     }
@@ -286,7 +287,7 @@ class Query implements QueryContract
      * Exec raw sql query.
      *
      * @param string $sql
-     * @param array $parameters
+     * @param array<string, mixed> $parameters
      * @return array
      */
     public function execRaw(string $sql, array $parameters = []): array
@@ -299,7 +300,7 @@ class Query implements QueryContract
     /**
      * Wrap result into models in array.
      *
-     * @param array $result
+     * @param array<string, mixed> $result
      * @return array
      */
     private function wrapResult(array $result = []): array
@@ -312,10 +313,10 @@ class Query implements QueryContract
     /**
      * Exec query and get the result.
      *
-     * @param ?array $columns
+     * @param array|null $columns
      * @return array
      */
-    public function get(?array $columns = null): array
+    public function get(array|null $columns = null): array
     {
         if ($columns) {
             $this->columns = $columns;
@@ -329,10 +330,10 @@ class Query implements QueryContract
     /**
      * Exec query and get the result without wrapping into array and model.
      *
-     * @param array|null $columns
+     * @param array<string, mixed>|null $columns
      * @return array
      */
-    public function getNude(?array $columns = null): array
+    public function getNude(array|null $columns = null): array
     {
         if ($columns) {
             $this->columns = $columns;

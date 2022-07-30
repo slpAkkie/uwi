@@ -3,14 +3,13 @@
 namespace Uwi\Contracts\Application;
 
 use Uwi\Contracts\Container\SingletonContract;
-use Uwi\Contracts\Http\Response\ResponseContract;
 
 interface KernelContract extends SingletonContract
 {
     /**
      * Starts the kernel and pass control to it.
      *
-     * @return ResponseContract
+     * @return \Uwi\Contracts\Http\Response\ResponseContract
      */
-    public function start(): ResponseContract;
+    public function start(): \Uwi\Contracts\Http\Response\ResponseContract;
 }

@@ -14,7 +14,7 @@ class Session implements SessionContract
     protected const SESSION_SAVE_PATH = '/storage/framework/sessions';
 
     /**
-     * Instantiate new Session Service.
+     * Instantiate Session.
      */
     public function __construct()
     {
@@ -33,9 +33,9 @@ class Session implements SessionContract
      * Set many values.
      *
      * @param array<string, string> $vars
-     * @return static
+     * @return \Uwi\Contracts\Http\Session\SessionContract
      */
-    public function setMany(array $vars = []): static
+    public function setMany(array $vars = []): \Uwi\Contracts\Http\Session\SessionContract
     {
         $_SESSION = array_merge($_SESSION, $vars);
 
@@ -72,9 +72,9 @@ class Session implements SessionContract
     /**
      * Clear all session values.
      *
-     * @return static
+     * @return \Uwi\Contracts\Http\Session\SessionContract
      */
-    public function clear(): static
+    public function clear(): \Uwi\Contracts\Http\Session\SessionContract
     {
         $_SESSION = [];
 
@@ -106,9 +106,9 @@ class Session implements SessionContract
     /**
      * Start session.
      *
-     * @return static
+     * @return \Uwi\Contracts\Http\Session\SessionContract
      */
-    public function start(): static
+    public function start(): \Uwi\Contracts\Http\Session\SessionContract
     {
         session_start();
 
@@ -118,9 +118,9 @@ class Session implements SessionContract
     /**
      * Write data to session and close.
      *
-     * @return static
+     * @return \Uwi\Contracts\Http\Session\SessionContract
      */
-    public function close(): static
+    public function close(): \Uwi\Contracts\Http\Session\SessionContract
     {
         session_write_close();
 
@@ -130,9 +130,9 @@ class Session implements SessionContract
     /**
      * Destory session.
      *
-     * @return static
+     * @return \Uwi\Contracts\Http\Session\SessionContract
      */
-    public function destory(): static
+    public function destory(): \Uwi\Contracts\Http\Session\SessionContract
     {
         session_destroy();
         $this->clear();
@@ -143,9 +143,9 @@ class Session implements SessionContract
     /**
      * Destroy and start new session.
      *
-     * @return static
+     * @return \Uwi\Contracts\Http\Session\SessionContract
      */
-    public function regenerate(): static
+    public function regenerate(): \Uwi\Contracts\Http\Session\SessionContract
     {
         $this->destory();
         $this->start();

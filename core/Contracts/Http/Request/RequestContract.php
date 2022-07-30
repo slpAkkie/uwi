@@ -10,7 +10,7 @@ interface RequestContract extends SingletonContract
      * Returns all cookie from the request or specified by key.
      *
      * @param string|null $key
-     * @param string|null|null $default
+     * @param string|null $default
      * @return array<string, string>|string
      */
     public function cookie(string|null $key = null, string|null $default = null): array|string;

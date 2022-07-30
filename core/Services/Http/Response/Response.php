@@ -21,7 +21,7 @@ class Response implements ResponseContract
     protected array $headers = [];
 
     /**
-     * Instantiate new Response.
+     * Instantiate Response.
      *
      * @param mixed $data
      */
@@ -37,9 +37,9 @@ class Response implements ResponseContract
      * Get or set response status code.
      *
      * @param integer|null $statusCode
-     * @return static
+     * @return \Uwi\Contracts\Http\Response\ResponseContract
      */
-    public function statusCode(int|null $statusCode = null): static
+    public function statusCode(int|null $statusCode = null): \Uwi\Contracts\Http\Response\ResponseContract
     {
         if (!is_null($statusCode)) {
             $this->responseCode = $statusCode;
@@ -90,9 +90,9 @@ class Response implements ResponseContract
      *
      * @param mixed $data
      * @param int $responseCode
-     * @return static
+     * @return \Uwi\Contracts\Http\Response\ResponseContract
      */
-    public function json(mixed $data = null, int $responseCode = null): static
+    public function json(mixed $data = null, int $responseCode = null): \Uwi\Contracts\Http\Response\ResponseContract
     {
         $this->data = json_encode($data ?? $this->data ?? []);
         $this->pushHeader('Content-Type', 'application/json');
@@ -106,9 +106,9 @@ class Response implements ResponseContract
      *
      * @param mixed $data
      * @param int $responseCode
-     * @return static
+     * @return \Uwi\Contracts\Http\Response\ResponseContract
      */
-    public function html(mixed $data = null, int $responseCode = null): static
+    public function html(mixed $data = null, int $responseCode = null): \Uwi\Contracts\Http\Response\ResponseContract
     {
         $this->data = $data ?? $this->data;
         $this->pushHeader('Content-Type', 'text/html');

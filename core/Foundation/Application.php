@@ -10,19 +10,19 @@ use Uwi\Contracts\Application\ServiceLoaderContract;
 class Application extends Container implements ApplicationContract
 {
     /**
-     * List of registered service loaders
+     * List of registered service loaders.
      *
      * @var array<string, ServiceLoaderContract>
      */
     protected array $registeredServiceLoaders = [];
 
     /**
-     * Instantiate new Application instance.
+     * Instantiate Application.
      *
      * @param array<ServiceLoaderContract> $serviceLoaders
-     * @return static
+     * @return \Uwi\Contracts\Application\ApplicationContract
      */
-    public static function create(array $serviceLoaders = []): static
+    public static function create(array $serviceLoaders = []): \Uwi\Contracts\Application\ApplicationContract
     {
         $app = new static();
 
@@ -44,7 +44,7 @@ class Application extends Container implements ApplicationContract
     }
 
     /**
-     * Register provided ServiceLoaders
+     * Register provided ServiceLoaders.
      *
      * @param array<ServiceLoaderContract> $serviceLoaders
      * @return void
@@ -59,7 +59,7 @@ class Application extends Container implements ApplicationContract
     /**
      * Register provided Service by it's ServiceLoader.
      *
-     * @param string $loader - Implementation of ServiceLoaderContract
+     * @param string $loader - Implementation of ServiceLoaderContract.
      * @return void
      */
     public function registerService(string $loader): void
@@ -71,7 +71,7 @@ class Application extends Container implements ApplicationContract
     }
 
     /**
-     * Boot registered ServiceLoaders
+     * Boot registered ServiceLoaders.
      *
      * @return void
      */
@@ -83,7 +83,7 @@ class Application extends Container implements ApplicationContract
     }
 
     /**
-     * Boot ServiceLoader
+     * Boot ServiceLoader.
      *
      * @param ServiceLoaderContract $loader
      * @return void

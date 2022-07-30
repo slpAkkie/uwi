@@ -1,20 +1,15 @@
 <?php
 
-use Uwi\Contracts\Application\ApplicationContract;
-use Uwi\Contracts\DotenvContract;
-
 /**
  * Returns global Application instance.
  *
- * @return ApplicationContract
+ * @return \Uwi\Contracts\Application\ApplicationContract
  */
-function app(): ApplicationContract
+function app(): \Uwi\Contracts\Application\ApplicationContract
 {
     global $app;
     return $app;
 }
-
-
 
 /**
  * Returns an envar by key or default.
@@ -25,14 +20,12 @@ function app(): ApplicationContract
  */
 function env(string $key, string|null $default = null): string|null
 {
-    return app()->singleton(DotenvContract::class)->get($key, $default);
+    return app()->singleton(\Uwi\Services\Dotenv\Contracts\DotenvContract::class)->get($key, $default);
 }
-
-
 
 /**
  * Tap the function or class method.
- * Runs it and inject params
+ * Runs it and inject params.
  *
  * @param \Closure|string|array $action
  * @param mixed ...$args

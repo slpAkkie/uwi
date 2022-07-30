@@ -5,17 +5,17 @@ namespace Uwi\Services\Database\Lion\Contracts;
 interface QueryContract
 {
     /**
-     * Instantiate new Query instance.
+     * Instantiate Query.
      */
-    public function __construct(string $table, string $primaryKey, ?string $model = null);
+    public function __construct(string $table, string $primaryKey, string|null $model = null);
 
     /**
      * Exec query and get the result.
      *
-     * @param ?array $columns
+     * @param array|null $columns
      * @return array
      */
-    public function get(?array $columns = null): array;
+    public function get(array|null $columns = null): array;
 
     /**
      * Returns if record with provided primary key exists.
@@ -37,7 +37,7 @@ interface QueryContract
     /**
      * Insert new record into the table.
      *
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      * @return ?int
      */
     public function insert(array $attributes): ?int;
@@ -45,8 +45,9 @@ interface QueryContract
     /**
      * Update row by primary key with dirty fields.
      *
+     * @param string $primaryKeyName
      * @param string $primaryKey
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      * @return boolean
      */
     public function update(string $primaryKeyName, string $primaryKey, array $attributes): bool;
@@ -62,21 +63,21 @@ interface QueryContract
      * Add where condition to the query.
      *
      * @param string $columnName
-     * @param ?string $operator
-     * @param ?string $value
+     * @param string|null $operator
+     * @param string|null $value
      * @param string $type
-     * @return static
+     * @return \Uwi\Services\Database\Lion\Contracts\QueryContract
      */
-    public function addWhere(string $columnName, ?string $operator = null, ?string $value = null, string $type = 'and'): static;
+    public function addWhere(string $columnName, string|null $operator = null, string|null $value = null, string $type = 'and'): \Uwi\Services\Database\Lion\Contracts\QueryContract;
 
     /**
      * Add where clause at primary key.
      *
      * @param string $operator
      * @param string $val
-     * @return static
+     * @return \Uwi\Services\Database\Lion\Contracts\QueryContract
      */
-    public function addWherePrimary(string $operator, string $val): static;
+    public function addWherePrimary(string $operator, string $val): \Uwi\Services\Database\Lion\Contracts\QueryContract;
 
     /**
      * Get colums as a string.
@@ -96,7 +97,7 @@ interface QueryContract
      * Exec raw sql query.
      *
      * @param string $sql
-     * @param array $parameters
+     * @param array<string, mixed> $parameters
      * @return array
      */
     public function execRaw(string $sql, array $parameters = []): array;
