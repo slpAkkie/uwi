@@ -21,6 +21,21 @@ interface CompilerContract extends SingletonContract
     );
 
     /**
+     * Read next until provided string isn't present.
+     *
+     * @param string $needle
+     * @return string
+     */
+    public function readUntil(string $needle): string;
+
+    /**
+     * Read all view file and return compiled content.
+     *
+     * @return string
+     */
+    public function read(): string;
+
+    /**
      * Compile view content.
      *
      * @return string

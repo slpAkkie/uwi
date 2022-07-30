@@ -5,13 +5,15 @@ namespace Uwi\Services\Calibri\Directives;
 use Uwi\Services\Calibri\Contracts\CompilerContract;
 use Uwi\Services\Calibri\Contracts\DirectiveContract;
 
-class ExtendsDirective implements DirectiveContract
+class ErrorDirective implements DirectiveContract
 {
+    protected const END_DIRECTIVE = '#enderror';
+
     public function __construct(
         protected CompilerContract $compiler,
-        protected string $template,
+        protected string $errorKey,
     ) {
-        //
+        $this->errorKey = trim($this->errorKey, '\'"');
     }
 
     /**
@@ -21,8 +23,8 @@ class ExtendsDirective implements DirectiveContract
      */
     public function compile(): string
     {
-        $this->compiler->read();
+        $content = $this->compiler->readUntil(self::END_DIRECTIVE);
 
-        return '';
+        return "{ Error if {$this->errorKey} }";
     }
 }

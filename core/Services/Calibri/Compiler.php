@@ -5,6 +5,7 @@ namespace Uwi\Services\Calibri;
 use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Services\Calibri\Contracts\CompilerContract;
 use Uwi\Services\Calibri\Contracts\DirectiveContract;
+use Uwi\Services\Calibri\Directives\ErrorDirective;
 use Uwi\Services\Calibri\Directives\ExtendsDirective;
 use Uwi\Services\Calibri\Directives\SectionDirective;
 use Uwi\Services\Calibri\Directives\YieldDirective;
@@ -27,6 +28,7 @@ class Compiler implements CompilerContract
         'extends' => ExtendsDirective::class,
         'section' => SectionDirective::class,
         'yield' => YieldDirective::class,
+        'error' => ErrorDirective::class,
     ];
 
     /**
@@ -42,6 +44,13 @@ class Compiler implements CompilerContract
      * @var resource
      */
     protected $fileStream = null;
+
+    /**
+     * Remain part of last read string.
+     *
+     * @var string
+     */
+    protected string $remainLastString = '';
 
     /**
      * Instantiate new Compiler instance.
@@ -118,27 +127,27 @@ class Compiler implements CompilerContract
     }
 
     /**
-     * Read next line of view file.
+     * Parse provided string to existsing directives.
      *
-     * @return string|false
+     * @param string $line
+     * @return string
      */
-    protected function readNext(): string|false
+    protected function parseString(string $line): string
     {
-        if (is_null($this->fileStream)) {
-            $this->fileStream = fopen($this->viewPath, 'r');
-        }
-
-        $line = fgets($this->fileStream);
-
         $directive = [];
         preg_match($this->getDirectiveRegexp(), $line, $directive, PREG_OFFSET_CAPTURE);
         if (count($directive)) {
+            $disassembledLine = explode($directive[0][0], $line, 2);
+            $line = $disassembledLine[0];
+            $this->remainLastString = $disassembledLine[1];
             $directiveName = $directive[1][0];
             $directiveHandler = $this->getDirectiveHandler($directiveName);
             if ($directiveHandler) {
                 /** @var DirectiveContract */
                 $directiveHandler = $this->app->make($directiveHandler, ...$this->parseArgs($directive[2][0]));
-                d($directiveHandler->compile());
+                $line .= $directiveHandler->compile();
+            } else {
+                $line .= $directive[0][0];
             }
         }
 
@@ -146,11 +155,59 @@ class Compiler implements CompilerContract
     }
 
     /**
+     * Read next until provided string isn't present.
+     *
+     * @param string $needle
+     * @return string
+     */
+    public function readUntil(string $needle): string
+    {
+        $carry = '';
+        while ($line = $this->readNext()) {
+            $directive = [];
+            if (preg_match("/$needle/", $line, $directive, PREG_OFFSET_CAPTURE)) {
+                $disassembledLine = explode($needle, $line, 2);
+                $carry .= $disassembledLine[0];
+                $this->remainLastString = $disassembledLine[1];
+                break;
+            }
+
+            $carry .= $line;
+        }
+
+        return trim(trim($carry, $needle));
+    }
+
+    /**
+     * Read next line of view file.
+     *
+     * @return string|false
+     */
+    protected function readNext(): string|false
+    {
+        // TODO: Close file...
+        if (is_null($this->fileStream)) {
+            $this->fileStream = fopen($this->viewPath, 'r');
+        }
+
+        $line = '';
+
+        if ($this->remainLastString !== '') {
+            $line = $this->remainLastString;
+            $this->remainLastString = '';
+        } else {
+            $line = fgets($this->fileStream);
+        }
+
+        return $line === false ? false : $this->parseString($line);
+    }
+
+    /**
      * Read all view file and return compiled content.
      *
      * @return string
      */
-    protected function read(): string
+    public function read(): string
     {
         $content = '';
 
@@ -169,7 +226,6 @@ class Compiler implements CompilerContract
     public function compile(): string
     {
         $viewContent = $this->read();
-        d($this);
 
         return $viewContent;
     }

@@ -20,6 +20,11 @@ class View implements ResponsableContract
     protected const VIEW_FILE_EXT = '.clbr.html';
 
     /**
+     * Default view content if nothing returned from Compiler::compile().
+     */
+    protected const EMPTY_CONTENT_BODY = '<html></html>';
+
+    /**
      * Name of view file.
      *
      * @var string
@@ -85,6 +90,8 @@ class View implements ResponsableContract
             $this->params
         );
 
-        return $compiler->compile();
+        $responseBody = $compiler->compile();
+
+        return $responseBody ? $responseBody : self::EMPTY_CONTENT_BODY;
     }
 }
