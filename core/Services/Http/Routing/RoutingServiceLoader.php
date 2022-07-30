@@ -14,7 +14,7 @@ class RoutingServiceLoader extends ServiceLoader
     protected const ROUTES_FOLDER = 'routes';
 
     /**
-     * Files with routes
+     * Files that should be included to load routes.
      */
     protected const ROUTES_FILES = [
         'web.php',

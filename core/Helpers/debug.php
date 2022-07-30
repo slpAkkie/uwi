@@ -1,5 +1,7 @@
 <?php
 
+use Uwi\Contracts\Http\Response\ResponseContract;
+
 /**
  * Dump.
  *
@@ -45,14 +47,17 @@ function d(mixed ...$args): void
  */
 function dd(mixed ...$args): void
 {
+    ob_start();
     d(...$args);
 
+    app()->make(ResponseContract::class, ob_get_clean(), 500)->send();
     exit(1);
 }
 
 /**
  * Primary exception handler.
- * Just print info from Exception object
+ * Just print info from Exception object on page
+ * and set status code to 500.
  *
  * @param Throwable $e
  * @return void

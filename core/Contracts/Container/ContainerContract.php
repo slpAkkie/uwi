@@ -2,7 +2,7 @@
 
 namespace Uwi\Contracts\Container;
 
-interface ContainerContract
+interface ContainerContract extends SingletonContract
 {
     /**
      * Bindings abstract to concrete implementation.

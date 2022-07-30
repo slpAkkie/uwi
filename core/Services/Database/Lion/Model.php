@@ -61,9 +61,9 @@ class Model implements ModelContract
     protected bool $exists;
 
     /**
-     * Instantiate new Model instance.
+     * Instantiate Model.
      *
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      */
     public function __construct(array $attributes = [], bool $preserveFillable = false)
     {
@@ -157,7 +157,7 @@ class Model implements ModelContract
     }
 
     /**
-     * Instantiate new builder object.
+     * Instantiate new Builder.
      *
      * @return BuilderContract
      */
@@ -194,7 +194,7 @@ class Model implements ModelContract
     /**
      * Update model with provided data.
      *
-     * @param array $attributes
+     * @param array<string, mixed> $attributes
      * @return boolean
      */
     public function update(array $attributes = []): bool
@@ -227,10 +227,10 @@ class Model implements ModelContract
     /**
      * Get the model column value.
      *
-     * @param $key
+     * @param string $key
      * @return mixed
      */
-    public function __get($key): mixed
+    public function __get(string $key): mixed
     {
         if (property_exists($this::class, $key)) {
             return $this->$key;
@@ -250,10 +250,11 @@ class Model implements ModelContract
     /**
      * Set the model column value.
      *
-     * @param $key
-     * @param $val
+     * @param string $key
+     * @param mixed $val
+     * @return mixed
      */
-    public function __set($key, $val)
+    public function __set(string $key, mixed $val)
     {
         if (property_exists($this::class, $key)) {
             return $this->$key = $val;
@@ -267,10 +268,10 @@ class Model implements ModelContract
     }
 
     /**
-     * Call Buidler methods
+     * Call Buidler methods.
      *
      * @param string $name
-     * @param array $args
+     * @param array<mixed> $args
      * @return mixed
      */
     public function __call(string $name, array $args): mixed
@@ -279,10 +280,10 @@ class Model implements ModelContract
     }
 
     /**
-     * Handle static calls
+     * Handle static calls.
      *
      * @param string $name
-     * @param array $args
+     * @param array<mixed> $args
      * @return mixed
      */
     public static function __callStatic(string $name, array $args): mixed

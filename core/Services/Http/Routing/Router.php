@@ -12,12 +12,14 @@ class Router implements RouterContract
     /**
      * List of available routes.
      *
-     * @var array<string, RouteContract>
+     * @var array<string, \Uwi\Contracts\Http\Routing\RouteContract>
      */
     protected array $routes = [];
 
     /**
-     * Instantiate new Router.
+     * Instantiate Router.
+     *
+     * @param \Uwi\Contracts\Http\Request\RequestContract $request
      */
     public function __construct(
         protected RequestContract $request
@@ -28,10 +30,10 @@ class Router implements RouterContract
     /**
      * Add new route to routes list.
      *
-     * @param RouteContract $route
-     * @return RouteContract
+     * @param \Uwi\Contracts\Http\Routing\RouteContract $route
+     * @return \Uwi\Contracts\Http\Routing\RouteContract
      */
-    public function addRoute(RouteContract $route): RouteContract
+    public function addRoute(RouteContract $route): \Uwi\Contracts\Http\Routing\RouteContract
     {
         return $this->routes[] = $route;
     }
@@ -39,11 +41,11 @@ class Router implements RouterContract
     /**
      * Returns current Route according to Request
      *
-     * @return RouteContract
+     * @return \Uwi\Contracts\Http\Routing\RouteContract
      * 
      * @throws Exception
      */
-    public function current(): RouteContract
+    public function current(): \Uwi\Contracts\Http\Routing\RouteContract
     {
         foreach ($this->routes as $route) {
             if ($route->url() === $this->request->url() && $route->method() === $this->request->method()) {

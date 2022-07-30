@@ -8,7 +8,7 @@ use Uwi\Services\Database\Lion\Contracts\QueryContract;
 abstract class Grammar implements GrammarContract
 {
     /**
-     * Instantiate Grammar
+     * Instantiate Grammar.
      *
      * @param QueryContract $query
      */

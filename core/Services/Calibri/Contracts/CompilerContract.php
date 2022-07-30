@@ -8,7 +8,7 @@ use Uwi\Contracts\Container\SingletonContract;
 interface CompilerContract extends SingletonContract
 {
     /**
-     * Instantiate new Compiler instance.
+     * Instantiate Compiler.
      *
      * @param ApplicationContract $app
      */
@@ -21,9 +21,9 @@ interface CompilerContract extends SingletonContract
      *
      * @param string $viewPath
      * @param array<string, mixed> $params
-     * @return static
+     * @return \Uwi\Services\Calibri\Contracts\CompilerContract
      */
-    public function setView(string $viewPath, array $params = []): static;
+    public function setView(string $viewPath, array $params = []): \Uwi\Services\Calibri\Contracts\CompilerContract;
 
     /**
      * Read next until provided string isn't found.

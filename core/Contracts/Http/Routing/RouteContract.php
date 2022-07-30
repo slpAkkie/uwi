@@ -5,7 +5,7 @@ namespace Uwi\Contracts\Http\Routing;
 interface RouteContract
 {
     /**
-     * Instantiate new Route.
+     * Instantiate Route.
      *
      * @param string $method
      * @param string $url

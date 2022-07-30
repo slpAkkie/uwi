@@ -7,7 +7,7 @@ use Uwi\Contracts\Http\Routing\RouteContract;
 class Route implements RouteContract
 {
     /**
-     * Instantiate new Route.
+     * Instantiate Route.
      *
      * @param string $method
      * @param string $url

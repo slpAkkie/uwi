@@ -14,7 +14,7 @@ class Connection implements ConnectionContract
     private \PDO $connection;
 
     /**
-     * Instantiate new Connection instance.
+     * Instantiate Connection.
      */
     public function __construct()
     {

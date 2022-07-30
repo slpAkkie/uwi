@@ -8,9 +8,9 @@ use Uwi\Contracts\Application\ServiceLoaderContract;
 abstract class ServiceLoader implements ServiceLoaderContract
 {
     /**
-     * Instantiate ServiceLoader
+     * Instantiate ServiceLoader.
      *
-     * @param ApplicationContract $app
+     * @param \Uwi\Contracts\Application\ApplicationContract $app
      */
     public function __construct(
         protected ApplicationContract $app,

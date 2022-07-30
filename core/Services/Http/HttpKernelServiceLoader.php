@@ -21,17 +21,15 @@ class HttpKernelServiceLoader extends ServiceLoader
      */
     public function register(): void
     {
-        // Register Kernel dependencies.
         $this->app->registerServices([
+            // Register Kernel dependencies.
             SessionServiceLoader::class,
             RequestServiceLoader::class,
             ResponseServiceLoader::class,
             RoutingServiceLoader::class,
-        ]);
 
-        // Register Optional services.
-        $this->app->registerServices([
-            // LionServiceLoader::class,
+            // Register Optional services.
+            LionServiceLoader::class,
             CalibriServiceLoader::class,
         ]);
 

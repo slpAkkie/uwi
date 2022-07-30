@@ -17,7 +17,7 @@ class RouteFactory
     ];
 
     /**
-     * Instantiate new RouteFactory.
+     * Instantiate RouteFactory.
      *
      * @param ApplicationContract $app
      * @param RouterContract $router
@@ -50,9 +50,9 @@ class RouteFactory
      *
      * @param string $method
      * @param array<string> $args
-     * @return void
+     * @return mixed
      */
-    public function __call($method, $args)
+    public function __call($method, $args): mixed
     {
         if (in_array(strtoupper($method), static::HTTP_METHODS)) {
             return $this->createRoute(strtoupper($method), ...$args);

@@ -11,17 +11,30 @@ use Uwi\Services\Calibri\Contracts\ViewContract;
 class View implements ResponsableContract, ViewContract
 {
     /**
+     * Default view path delimiter.
+     *
+     * @var string
+     */
+    protected const VIEW_PATH_DELIMITER = '.';
+
+    /**
      * Default path to views.
+     *
+     * @var string
      */
     protected const DEFAULT_VIEW_PATH = '/views';
 
     /**
      * Default view files extendion.
+     *
+     * @var string
      */
     protected const VIEW_FILE_EXT = '.clbr.html';
 
     /**
      * Default view content if nothing returned from Compiler::compile().
+     *
+     * @var string
      */
     protected const EMPTY_CONTENT_BODY = '<html></html>';
 
@@ -43,14 +56,15 @@ class View implements ResponsableContract, ViewContract
      * Instantiare new View.
      *
      * @param string $view
-     * @param array $params
+     * @param array<string, mixed> $params
      */
     public function __construct(
         protected ApplicationContract $app,
         string $view,
         protected array $params = [],
     ) {
-        $pathToView = explode('.', $view);
+        $pathToView = explode(self::VIEW_PATH_DELIMITER, $view);
+
         $this->view = array_pop($pathToView);
         $pathToView = implode('/', $pathToView);
 

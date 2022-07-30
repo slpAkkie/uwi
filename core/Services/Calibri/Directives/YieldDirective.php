@@ -8,7 +8,7 @@ use Uwi\Services\Calibri\Contracts\DirectiveContract;
 class YieldDirective implements DirectiveContract
 {
     /**
-     * Instantiate new Directive instance.
+     * Instantiate Directive.
      *
      * @param CompilerContract $compiler
      * @param string $section

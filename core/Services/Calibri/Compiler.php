@@ -19,7 +19,7 @@ class Compiler implements CompilerContract
     protected const DIRECTIVE_SYMBOL = '#';
 
     /**
-     * Array of processors for the directives
+     * Array of processors for the directives.
      *
      * @var array<string, string>
      */
@@ -69,7 +69,7 @@ class Compiler implements CompilerContract
      *
      * @var string
      */
-    protected string $remainLastString = '';
+    protected string $remainLastLine = '';
 
     /**
      * Read view content.
@@ -79,11 +79,9 @@ class Compiler implements CompilerContract
     protected string $content = '';
 
     /**
-     * Instantiate new Compiler instance.
+     * Instantiate Compiler.
      *
      * @param ApplicationContract $app
-     * @param string $viewPath
-     * @param array $params
      */
     public function __construct(
         protected ApplicationContract $app,
@@ -117,9 +115,9 @@ class Compiler implements CompilerContract
      *
      * @param string $viewPath
      * @param array<string, mixed> $params
-     * @return static
+     * @return \Uwi\Services\Calibri\Contracts\CompilerContract
      */
-    public function setView(string $viewPath, array $params = []): static
+    public function setView(string $viewPath, array $params = []): \Uwi\Services\Calibri\Contracts\CompilerContract
     {
         $this->closeFileStream();
 
@@ -198,16 +196,22 @@ class Compiler implements CompilerContract
     protected function parseString(string $line): string
     {
         $directive = [];
+
         preg_match($this->getDirectiveRegexp(), $line, $directive, PREG_OFFSET_CAPTURE);
         if (count($directive)) {
+            // Dissasemle read line into two parts.
             $disassembledLine = explode($directive[0][0], $line, 2);
             $line = $disassembledLine[0];
-            $this->remainLastString = $disassembledLine[1];
+            // Save remain part of line.
+            $this->remainLastLine = $disassembledLine[1];
+
+            // Try to find directive jandler.
             $directiveName = $directive[1][0];
-            $directiveHandler = $this->getDirectiveHandler($directiveName);
-            if ($directiveHandler) {
+            $directiveHandlerName = $this->getDirectiveHandler($directiveName);
+
+            if ($directiveHandlerName) {
                 /** @var DirectiveContract */
-                $directiveHandler = $this->app->make($directiveHandler, ...$this->parseArgs($directive[2][0]));
+                $directiveHandler = $this->app->make($directiveHandlerName, ...$this->parseArgs($directive[2][0]));
                 $line .= $directiveHandler->compile();
             } else {
                 $line .= $directive[0][0];
@@ -226,19 +230,27 @@ class Compiler implements CompilerContract
     public function readUntil(string $needle): string
     {
         $carry = '';
+
         while ($line = $this->readNext()) {
             $directive = [];
+
+            // If needle in the line then disassemble the line,
+            // save remain part and part of directive slot
+            // then break the loop.
             if (preg_match("/$needle/", $line, $directive, PREG_OFFSET_CAPTURE)) {
                 $disassembledLine = explode($needle, $line, 2);
                 $carry .= $disassembledLine[0];
-                $this->remainLastString = $disassembledLine[1];
+                $this->remainLastLine = $disassembledLine[1];
+
                 break;
             }
 
+            // If there is no needle in the line
+            // then just append line to the carry.
             $carry .= $line;
         }
 
-        return trim(trim($carry, $needle));
+        return trim($carry);
     }
 
     /**
@@ -254,9 +266,11 @@ class Compiler implements CompilerContract
 
         $line = '';
 
-        if ($this->remainLastString !== '') {
-            $line = $this->remainLastString;
-            $this->remainLastString = '';
+        // Set lthe ine to remain of last read line
+        // if it's not empty or read new line from the file.
+        if ($this->remainLastLine !== '') {
+            $line = $this->remainLastLine;
+            $this->remainLastLine = '';
         } else {
             $line = fgets($this->fileStream);
         }
@@ -279,11 +293,11 @@ class Compiler implements CompilerContract
     }
 
     /**
-     * Replace double directive symbol to single one and escaped interpolations.
+     * Escape compiler directive symbol.
      *
      * @return string
      */
-    protected function replaceEscapedDirectiveSymbol(): string
+    protected function escapeDirectiveSymbol(): string
     {
         $this->content = preg_replace('/(' . self::DIRECTIVE_SYMBOL . '{2})/', self::DIRECTIVE_SYMBOL, $this->content);
         $this->content = preg_replace('/' . self::DIRECTIVE_SYMBOL . '{{(.*)?}}/', '{{$1}}', $this->content);
@@ -300,6 +314,7 @@ class Compiler implements CompilerContract
     {
         $directiveSymbol = self::DIRECTIVE_SYMBOL;
 
+        // Replace all compiler interpolations with its evaluated value.
         $this->content = preg_replace_callback("/(?<!$directiveSymbol){{(.*?)}}/", function ($match) {
             extract($this->params);
 
@@ -310,7 +325,7 @@ class Compiler implements CompilerContract
     }
 
     /**
-     * Returns content and clear it in the compiler cache.
+     * Returns content and clear compiler cached content.
      *
      * @return string
      */
@@ -329,13 +344,17 @@ class Compiler implements CompilerContract
      */
     public function compile(): string
     {
+        // Control the recursion depth.
         self::$compilingDepth++;
         $this->read();
 
+        // Execute evalInterpolations and escapeDirectiveSymbol
+        // only then it's zero recursion depth.
         if (self::$compilingDepth === 1) {
             $this->evalInterpolations();
-            $this->replaceEscapedDirectiveSymbol();
+            $this->escapeDirectiveSymbol();
         }
+        // Control the recursion depth.
         self::$compilingDepth--;
 
         return $this->popContent();

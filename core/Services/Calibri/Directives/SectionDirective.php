@@ -15,7 +15,7 @@ class SectionDirective implements DirectiveContract
     protected const END_DIRECTIVE = '#endsection';
 
     /**
-     * Instantiate new Directive instance.
+     * Instantiate Directive.
      *
      * @param CompilerContract $compiler
      * @param string $name

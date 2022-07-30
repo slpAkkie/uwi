@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use Uwi\Contracts\Application\ApplicationContract;
+use Uwi\Contracts\Http\Response\ResponseContract;
 use Uwi\Services\Http\Controller as HttpController;
-use Uwi\Services\Http\Request\Request;
 
 class Controller extends HttpController
 {
-    public function welcome(ApplicationContract $app, Request $request)
+    /**
+     * Show welcome page.
+     *
+     * @return ResponseContract
+     */
+    public function welcome(): ResponseContract
     {
         return view('welcome', [
             'version' => '2.x-alpha',

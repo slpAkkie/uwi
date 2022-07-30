@@ -1,6 +1,6 @@
 <?php
 
-namespace Uwi\Contracts;
+namespace Uwi\Services\Dotenv\Contracts;
 
 use Uwi\Contracts\Container\SingletonContract;
 
@@ -10,9 +10,9 @@ interface DotenvContract extends SingletonContract
      * Set many values.
      *
      * @param array<string, string> $vars
-     * @return static
+     * @return \Uwi\Services\Dotenv\Contracts\DotenvContract
      */
-    public function setMany(array $vars = []): static;
+    public function setMany(array $vars = []): \Uwi\Services\Dotenv\Contracts\DotenvContract;
 
 
     /**

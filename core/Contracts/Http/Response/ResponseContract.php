@@ -8,18 +8,18 @@ interface ResponseContract
      * Get or set response status code.
      *
      * @param integer|null $statusCode
-     * @return static
+     * @return \Uwi\Contracts\Http\Response\ResponseContract
      */
-    public function statusCode(int|null $statusCode = null): static;
+    public function statusCode(int|null $statusCode = null): \Uwi\Contracts\Http\Response\ResponseContract;
 
     /**
      * Set response header to send a JSON.
      *
      * @param mixed $data
      * @param int $responseCode
-     * @return static
+     * @return \Uwi\Contracts\Http\Response\ResponseContract
      */
-    public function json(mixed $data = null, int $responseCode = null): static;
+    public function json(mixed $data = null, int $responseCode = null): \Uwi\Contracts\Http\Response\ResponseContract;
 
 
     /**
@@ -27,9 +27,9 @@ interface ResponseContract
      *
      * @param mixed $data
      * @param int $responseCode
-     * @return static
+     * @return \Uwi\Contracts\Http\Response\ResponseContract
      */
-    public function html(mixed $data = null, int $responseCode = null): static;
+    public function html(mixed $data = null, int $responseCode = null): \Uwi\Contracts\Http\Response\ResponseContract;
 
     /**
      * Send response to the client.

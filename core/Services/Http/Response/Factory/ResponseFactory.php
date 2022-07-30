@@ -8,7 +8,7 @@ use Uwi\Contracts\Http\Response\ResponseContract;
 class ResponseFactory
 {
     /**
-     * Instantiate Response Factory.
+     * Instantiate ResponseFactory.
      *
      * @param ApplicationContract $app
      */

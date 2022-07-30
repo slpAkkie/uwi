@@ -5,19 +5,19 @@ namespace Uwi\Support;
 class Str
 {
     /**
-     * Convert string to plural
-     * TODO: Improve
+     * Convert word to plural.
+     * TODO: Improve converting...
      *
-     * @param string $singular
+     * @param string $str
      * @return string
      */
-    public static function plural(string $singular): string
+    public static function plural(string $str): string
     {
-        return $singular . 's';
+        return $str . 's';
     }
 
     /**
-     * Make a string's first character uppercase
+     * Make a string's first character uppercase.
      *
      * @param string $str
      * @return string
@@ -28,7 +28,7 @@ class Str
     }
 
     /**
-     * Convert strong to lower case
+     * Convert string to lower case.
      *
      * @param string $str
      * @return string

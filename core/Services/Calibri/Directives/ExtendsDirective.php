@@ -10,7 +10,7 @@ use Uwi\Services\Calibri\Contracts\ViewContract;
 class ExtendsDirective implements DirectiveContract
 {
     /**
-     * Instantiate new Directive instance.
+     * Instantiate Directive.
      *
      * @param ApplicationContract $app
      * @param CompilerContract $compiler
