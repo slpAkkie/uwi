@@ -72,9 +72,9 @@ class View implements ResponsableContract, ViewContract
     }
 
     /**
-     * Convert object to response.
+     * Convert object to response data.
      *
-     * @param RequestContract $request
+     * @param \Uwi\Contracts\Http\Request\RequestContract $request
      * @return mixed
      */
     public function toResponse(RequestContract $request): mixed

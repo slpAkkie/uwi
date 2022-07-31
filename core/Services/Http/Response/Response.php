@@ -117,6 +117,11 @@ class Response implements ResponseContract
         return $this;
     }
 
+    /**
+     * Retrieve a response data.
+     *
+     * @return mixed
+     */
     protected function getResponseData(): mixed
     {
         return is_subclass_of($this->data, ResponsableContract::class)

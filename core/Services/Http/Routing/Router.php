@@ -2,10 +2,12 @@
 
 namespace Uwi\Services\Http\Routing;
 
-use Exception;
+use Uwi\Contracts\Application\ApplicationContract;
+use Uwi\Contracts\Application\Exceptions\ExceptionContract;
 use Uwi\Contracts\Http\Request\RequestContract;
 use Uwi\Contracts\Http\Routing\RouteContract;
 use Uwi\Contracts\Http\Routing\RouterContract;
+use Uwi\Foundation\Exceptions\Exception;
 
 class Router implements RouterContract
 {
@@ -19,9 +21,11 @@ class Router implements RouterContract
     /**
      * Instantiate Router.
      *
+     * @param \Uwi\Contracts\Application\ApplicationContract $app
      * @param \Uwi\Contracts\Http\Request\RequestContract $request
      */
     public function __construct(
+        protected ApplicationContract $app,
         protected RequestContract $request
     ) {
         //
@@ -43,7 +47,7 @@ class Router implements RouterContract
      *
      * @return \Uwi\Contracts\Http\Routing\RouteContract
      * 
-     * @throws Exception
+     * @throws \Uwi\Contracts\Application\Exceptions\ExceptionContract
      */
     public function current(): \Uwi\Contracts\Http\Routing\RouteContract
     {
@@ -53,6 +57,6 @@ class Router implements RouterContract
             }
         }
 
-        throw new Exception("Route [{$this->request->url()}] not found");
+        throw new Exception("Route [{$this->request->url()}] not found", 404);
     }
 }

@@ -11,7 +11,7 @@ interface ConnectionContract extends SingletonContract
      *
      * @return integer|null
      */
-    public function lastInsertedId(): ?int;
+    public function lastInsertedId(): int|null;
 
     /**
      * Exec a query.

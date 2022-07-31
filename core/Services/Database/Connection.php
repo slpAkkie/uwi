@@ -37,7 +37,7 @@ class Connection implements ConnectionContract
      *
      * @return integer|null
      */
-    public function lastInsertedId(): ?int
+    public function lastInsertedId(): int|null
     {
         return $this->connection->lastInsertId();
     }

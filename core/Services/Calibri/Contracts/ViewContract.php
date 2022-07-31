@@ -15,9 +15,9 @@ interface ViewContract extends ResponsableContract
     public function render(): string;
 
     /**
-     * Convert object to response.
+     * Convert object to response data.
      *
-     * @param RequestContract $request
+     * @param \Uwi\Contracts\Http\Request\RequestContract $request
      * @return mixed
      */
     public function toResponse(RequestContract $request): mixed;
