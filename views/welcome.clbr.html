@@ -1,28 +1,39 @@
-#extends('templates.minimal')
+<!DOCTYPE html>
 
-#section('title', 'View testing')
+<html lang="en">
+<head>
+    <!-- Meta -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Style -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    
+    <!-- Title -->
+    <title>Uwi - {{ $version }}</title>
+</head>
+<body class="bg-light">
+    <div class="container-fluid">
+        <div class="row">
+            <h1 class="m-0 py-4 p-5 bg-dark text-white">Hello there!!!</h1>
 
-#section('style')
-    <style>
-        * {
-            box-sizing: border-box; }
-        h1 {
-            color: #367ec9; }
-        h2 {
-            color: #04c01a; }
-        h3 {
-            color: #bb2626; }
-    </style>
-#endsection
+            <article class="p-5">
+                <h2>Welcome to Uwi</h2>
+                <p class="lead">Uwi - Simple and legacy backend framework without any third-party packages.</p>
+                <figure>
+                    <img class="img-fluid" src="https://akkie.cyou/files/uwi_banner.png" alt="uwi_banner">
+                </figure>
 
-#section('body')
-    Welcome page
+                <h3>Author</h3>
+                <p>Alexandr Shamanin (<a href="https://github.com/slpAkkie" target="_blank">@slpAkkie</a>)</p>
 
-    <h2>Hello world!!!</h2>
-    <p>It's Uwi. Page only for testing in in dev mode</p>
-    <p><b>Version </b>{{ "$version!!!" . ' (slpAkkie)' }}</p>
+                <h3>Features</h3>
+                <p><span class="fw-bold">Version: </span>{{ $version }}</p>
+                <p><span class="fw-bold">Source: </span><a href="https://github.com/slpAkkie/Uwi" target="_blank">Uwi on github</a></p>
+            </article>
+        </div>
+    </div>
+</body>
 
-    <h3>Testing</h3>
-    <p><b>Escaping version </b>#{{ $version . '!!!' }}</p>
-    <p><b>Section should be defined as </b>##section('Name of section')</p>
-#endsection
+</html>
