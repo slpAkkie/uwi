@@ -16,6 +16,6 @@ class Controller extends HttpController
     {
         return view('welcome', [
             'version' => '2.x-alpha',
-        ])->statusCode(404);
+        ]);
     }
 }

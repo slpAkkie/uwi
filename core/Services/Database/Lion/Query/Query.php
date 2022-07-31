@@ -158,9 +158,9 @@ class Query implements QueryContract
      * Insert new record into the table.
      *
      * @param array<string, mixed> $attributes
-     * @return ?int
+     * @return int|null
      */
-    public function insert(array $attributes): ?int
+    public function insert(array $attributes): int|null
     {
         $this->setType('insert');
         $this->grammarProps = $attributes;

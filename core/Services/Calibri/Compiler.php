@@ -3,6 +3,7 @@
 namespace Uwi\Services\Calibri;
 
 use Uwi\Contracts\Application\ApplicationContract;
+use Uwi\Foundation\Exceptions\Exception;
 use Uwi\Services\Calibri\Contracts\CompilerContract;
 use Uwi\Services\Calibri\Contracts\DirectiveContract;
 use Uwi\Services\Calibri\Directives\ExtendsDirective;
@@ -261,7 +262,11 @@ class Compiler implements CompilerContract
     protected function readNext(): string|false
     {
         if (is_null($this->fileStream)) {
-            $this->fileStream = fopen($this->viewPath, 'r');
+            $this->fileStream = @fopen($this->viewPath, 'r');
+
+            if ($this->fileStream === false) {
+                throw new Exception("No such file for view at [{$this->viewPath}]");
+            }
         }
 
         $line = '';

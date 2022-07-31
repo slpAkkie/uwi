@@ -19,7 +19,7 @@ interface RouterContract extends SingletonContract
      *
      * @return \Uwi\Contracts\Http\Routing\RouteContract
      * 
-     * @throws Exception
+     * @throws \Uwi\Contracts\Application\Exceptions\ExceptionContract
      */
     public function current(): \Uwi\Contracts\Http\Routing\RouteContract;
 }

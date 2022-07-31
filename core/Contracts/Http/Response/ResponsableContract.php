@@ -2,15 +2,13 @@
 
 namespace Uwi\Contracts\Http\Response;
 
-use Uwi\Contracts\Http\Request\RequestContract;
-
 interface ResponsableContract
 {
     /**
-     * Convert object to response.
+     * Convert object to response data.
      *
-     * @param RequestContract $request
+     * @param \Uwi\Contracts\Http\Request\RequestContract $request
      * @return mixed
      */
-    public function toResponse(RequestContract $request): mixed;
+    public function toResponse(\Uwi\Contracts\Http\Request\RequestContract $request): mixed;
 }

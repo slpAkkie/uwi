@@ -21,7 +21,7 @@ function d(mixed ...$args): void
                 padding: 25px;
                 color: #00cf2d;
                 font-size: .8em;
-                font-family: 'Fira Code';
+                font-family: 'Consolas', sans-serif;
                 white-space: pre-wrap;
                 background: #0d0d0e; }
         </style>
@@ -64,39 +64,46 @@ function dd(mixed ...$args): void
  */
 function ddException(Throwable $e): void
 {
-    $stackTraceDepth = 0;
+    http_response_code(500);
 
-    dd(
-        implode('<br />', array_merge([
-            <<<HTML
-            <br />
-            Internal Server Error
-            Server cannot send a response.
+    echo <<<HTML
+    <!DOCTYPE html>
+    <html lang="en">
 
-            <p>
-            <b>Message:</b> {$e->getMessage()} <br />
-            <b>Exit code:</b> {$e->getCode()} <br />
-            <b>In File:</b> {$e->getFile()} <br />
-            <b>On Line:</b> {$e->getLine()}
-            </p>
-            HTML, '', '', '',
+    <head>
+        <!-- Meta -->
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <!-- Style -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
 
+        <!-- Title -->
+        <title>Exception occured</title>
+    </head>
 
-            'Stack Trace:', '',
+    <body class="bg-light">
+        <div class="container-fluid">
+            <div class="row">
+                <h1 class="m-0 py-4 p-5 bg-dark text-white"><span class="text-danger">Exception:</span> <span class="fs-4">{$e->getMessage()}</span></h1>
 
-        ], array_map(function ($el) use (&$stackTraceDepth) {
-            extract($el);
-            $el = '#' . $stackTraceDepth++ . ' ';
+                <article class="p-5">
+                    <div><b>In File:</b> {$e->getFile()}</div>
+                    <div><b>On Line:</b> {$e->getLine()}</div>
+                    <div><b>Exit Code:</b> {$e->getCode()}</div>
+                </article>
+            </div>
+            <div class="row">
+                <h2 class="m-0 py-4 px-5 bg-secondary text-white">Stack Trace</h2>
 
-            $el .= isset($file, $line) ? "$file($line): " : "[Internal code]: ";
+                <code class="py-4 px-5">
+                    <pre>{$e->getTraceAsString()}</pre>
+                </code>
+            </div>
+        </div>
+    </body>
 
-            $args = isset($args)
-                ? ($args = strlen($args = implode(', ', $args)) > 16 ? '...' : $args)
-                : '';
-
-            $el .= isset($class) ? "$class$type$function($args)" : "$function(...)";
-
-            return $el;
-        }, $e->getTrace())))
-    );
+    </html>
+    HTML;
 }

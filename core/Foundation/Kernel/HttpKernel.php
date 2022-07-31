@@ -7,7 +7,6 @@ use Uwi\Contracts\Application\KernelContract;
 use Uwi\Contracts\Http\Response\ResponseContract;
 use Uwi\Contracts\Http\Request\RequestContract;
 use Uwi\Contracts\Http\Routing\RouterContract;
-use Uwi\Services\Http\Response\Facades\Response;
 
 class HttpKernel implements KernelContract
 {
@@ -33,8 +32,8 @@ class HttpKernel implements KernelContract
      */
     public function start(): ResponseContract
     {
-        $controllerResponse = $this->app->tap($this->router->current()->action()) ?? null;
-
-        return Response::make($controllerResponse);
+        return response(
+            $this->app->tap($this->router->current()->action()) ?? null
+        );
     }
 }

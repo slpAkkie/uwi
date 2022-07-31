@@ -4,8 +4,11 @@ namespace Uwi\Foundation;
 
 use Uwi\Container\Container;
 use Uwi\Contracts\Application\ApplicationContract;
+use Uwi\Contracts\Application\Exceptions\ExceptionContract;
 use Uwi\Contracts\Application\KernelContract;
 use Uwi\Contracts\Application\ServiceLoaderContract;
+use Uwi\Contracts\Http\Response\ResponseContract;
+use Uwi\Foundation\Exceptions\Exception;
 
 class Application extends Container implements ApplicationContract
 {
@@ -132,8 +135,12 @@ class Application extends Container implements ApplicationContract
     public function start(): void
     {
         $this->bootServices();
-        $response = $this->tap([KernelContract::class, 'start']);
-
-        $response->send();
+        try {
+            $this->tap([KernelContract::class, 'start'])->send();
+        } catch (ExceptionContract $e) {
+            $this->tap([$e, 'toResponse'])->send();
+        } catch (\Throwable $e) {
+            Exception::makeResponse($e)->send();
+        }
     }
 }
