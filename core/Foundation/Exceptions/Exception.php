@@ -3,6 +3,7 @@
 namespace Uwi\Foundation\Exceptions;
 
 use Uwi\Contracts\Application\Exceptions\ExceptionContract;
+use Uwi\Contracts\Http\Request\RequestContract;
 
 class Exception extends \Exception implements ExceptionContract
 {
@@ -27,7 +28,7 @@ class Exception extends \Exception implements ExceptionContract
      * @param \Uwi\Contracts\Http\Request\RequestContract $request
      * @return mixed
      */
-    public function toResponse(\Uwi\Contracts\Http\Request\RequestContract $request): mixed
+    public function toResponse(RequestContract $request): mixed
     {
         return view('errors.500', [
             'e' => $this,

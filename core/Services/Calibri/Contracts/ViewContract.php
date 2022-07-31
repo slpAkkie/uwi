@@ -2,6 +2,7 @@
 
 namespace Uwi\Services\Calibri\Contracts;
 
+use Uwi\Contracts\Http\Request\RequestContract;
 use Uwi\Contracts\Http\Response\ResponsableContract;
 
 interface ViewContract extends ResponsableContract
@@ -19,5 +20,5 @@ interface ViewContract extends ResponsableContract
      * @param \Uwi\Contracts\Http\Request\RequestContract $request
      * @return mixed
      */
-    public function toResponse(\Uwi\Contracts\Http\Request\RequestContract $request): mixed;
+    public function toResponse(RequestContract $request): mixed;
 }

@@ -3,6 +3,7 @@
 namespace Uwi\Services\Calibri;
 
 use Uwi\Contracts\Application\ApplicationContract;
+use Uwi\Contracts\Http\Request\RequestContract;
 use Uwi\Contracts\Http\Response\ResponsableContract;
 use Uwi\Services\Calibri\Contracts\CompilerContract;
 use Uwi\Services\Calibri\Contracts\ViewContract;
@@ -76,7 +77,7 @@ class View implements ResponsableContract, ViewContract
      * @param \Uwi\Contracts\Http\Request\RequestContract $request
      * @return mixed
      */
-    public function toResponse(\Uwi\Contracts\Http\Request\RequestContract $request): mixed
+    public function toResponse(RequestContract $request): mixed
     {
         return $this->render();
     }
