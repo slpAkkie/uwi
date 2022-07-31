@@ -69,17 +69,24 @@ function ddException(Throwable $e): void
     dd(
         implode('<br />', array_merge([
             <<<HTML
-            Message: {$e->getMessage()}
-            Exit code: {$e->getCode()}
+            <br />
+            Internal Server Error
+            Server cannot send a response.
+
+            <p>
+            <b>Message:</b> {$e->getMessage()} <br />
+            <b>Exit code:</b> {$e->getCode()} <br />
+            <b>In File:</b> {$e->getFile()} <br />
+            <b>On Line:</b> {$e->getLine()}
+            </p>
             HTML, '', '', '',
 
 
             'Stack Trace:', '',
 
-            "#$stackTraceDepth {$e->getFile()}({$e->getLine()})"
         ], array_map(function ($el) use (&$stackTraceDepth) {
             extract($el);
-            $el = '#' . ++$stackTraceDepth . ' ';
+            $el = '#' . $stackTraceDepth++ . ' ';
 
             $el .= isset($file, $line) ? "$file($line): " : "[Internal code]: ";
 
