@@ -97,7 +97,13 @@ class Dotenv implements DotenvContract
      */
     public function loadEnvars(string $envFile = self::ENV_FILENAME): void
     {
-        $envars = array_filter(explode("\n", file_get_contents(APP_BASE_PATH . "/$envFile")));
+        $envFileContent = @file_get_contents(APP_BASE_PATH . "/$envFile");
+
+        if ($envFileContent === false) {
+            $envFileContent = '';
+        }
+
+        $envars = array_filter(explode("\n", $envFileContent));
 
         foreach ($envars as $envar) {
             $this->set(...explode('=', $envar, 2));
