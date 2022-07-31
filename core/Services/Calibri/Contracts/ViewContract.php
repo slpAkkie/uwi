@@ -8,6 +8,15 @@ use Uwi\Contracts\Http\Response\ResponsableContract;
 interface ViewContract extends ResponsableContract
 {
     /**
+     * Add new namespace for views.
+     *
+     * @param string $namespace
+     * @param string $path
+     * @return void
+     */
+    public static function namespace(string $namespace, string $path): void;
+
+    /**
      * Render view.
      *
      * @return string

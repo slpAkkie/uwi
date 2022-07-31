@@ -5,6 +5,7 @@ namespace Uwi\Services\Calibri;
 use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\Http\Request\RequestContract;
 use Uwi\Contracts\Http\Response\ResponsableContract;
+use Uwi\Foundation\Exceptions\Exception;
 use Uwi\Services\Calibri\Contracts\CompilerContract;
 use Uwi\Services\Calibri\Contracts\ViewContract;
 
@@ -18,11 +19,25 @@ class View implements ResponsableContract, ViewContract
     protected const VIEW_PATH_DELIMITER = '.';
 
     /**
+     * Default view namespace delimiter.
+     *
+     * @var string
+     */
+    protected const VIEW_NAMESPACE_DELIMITER = '::';
+
+    /**
      * Default path to views.
      *
      * @var string
      */
     protected const DEFAULT_VIEW_PATH = '/views';
+
+    /**
+     * Default views namespace.
+     *
+     * @var string
+     */
+    protected const DEFAULT_VIEW_NAMESPACE = 'app';
 
     /**
      * Default view files extendion.
@@ -37,6 +52,15 @@ class View implements ResponsableContract, ViewContract
      * @var string
      */
     protected const EMPTY_CONTENT_BODY = '<html></html>';
+
+    /**
+     * Array of available namespaces for views.
+     *
+     * @var array
+     */
+    protected static array $namespaces = [
+        'app' => self::DEFAULT_VIEW_PATH,
+    ];
 
     /**
      * Name of view file.
@@ -63,12 +87,38 @@ class View implements ResponsableContract, ViewContract
         string $view,
         protected array $params = [],
     ) {
-        $pathToView = explode(self::VIEW_PATH_DELIMITER, $view);
+        // Define namespace
+        $namespace = null;
+        $disassembledView = explode(self::VIEW_NAMESPACE_DELIMITER, $view, 2);
+        if (count($disassembledView) !== 1) {
+            $namespace = array_shift($disassembledView);
+            $view = $disassembledView[0];
+        }
+        $namespace = $namespace ? $namespace : self::DEFAULT_VIEW_NAMESPACE;
 
-        $this->view = array_pop($pathToView);
-        $pathToView = implode('/', $pathToView);
+        if (!key_exists($namespace, self::$namespaces)) {
+            throw new Exception("Namespace [{$namespace}] for views is not defined");
+        }
+        $namespacePath = self::$namespaces[$namespace];
 
-        $this->viewPath = APP_BASE_PATH . self::DEFAULT_VIEW_PATH . ($pathToView ? "/$pathToView" : '');
+        // Define path
+        $disassembledView = explode(self::VIEW_PATH_DELIMITER, $view);
+        $this->view = array_pop($disassembledView);
+        $pathToView = implode('/', $disassembledView);
+
+        $this->viewPath = APP_BASE_PATH . $namespacePath . ($pathToView ? "/$pathToView" : '');
+    }
+
+    /**
+     * Add new namespace for views.
+     *
+     * @param string $namespace
+     * @param string $path
+     * @return void
+     */
+    public static function namespace(string $namespace, string $path): void
+    {
+        self::$namespaces[$namespace] = $path;
     }
 
     /**
