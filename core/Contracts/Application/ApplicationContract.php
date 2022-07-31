@@ -31,6 +31,16 @@ interface ApplicationContract extends ContainerContract
     public function registerService(string $loader): void;
 
     /**
+     * Tap the static class method.
+     * Runs it and inject params.
+     *
+     * @param array $action
+     * @param mixed ...$args
+     * @return mixed
+     */
+    public function tapStatic(array $action, mixed ...$args): mixed;
+
+    /**
      * Tap the function or class method.
      * Runs it and inject params.
      *

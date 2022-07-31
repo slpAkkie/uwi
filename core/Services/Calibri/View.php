@@ -77,6 +77,13 @@ class View implements ResponsableContract, ViewContract
     protected string $viewPath;
 
     /**
+     * View namespace.
+     *
+     * @var string
+     */
+    protected string $viewNamespace;
+
+    /**
      * Instantiare new View.
      *
      * @param string $view
@@ -99,6 +106,7 @@ class View implements ResponsableContract, ViewContract
         if (!key_exists($namespace, self::$namespaces)) {
             throw new Exception("Namespace [{$namespace}] for views is not defined");
         }
+        $this->viewNamespace = $namespace;
         $namespacePath = self::$namespaces[$namespace];
 
         // Define path
@@ -119,6 +127,25 @@ class View implements ResponsableContract, ViewContract
     public static function namespace(string $namespace, string $path): void
     {
         self::$namespaces[$namespace] = $path;
+    }
+
+    /**
+     * Returns true or false depending on
+     * whether the provided view exists.
+     *
+     * @param string $view
+     * @return boolean
+     */
+    public static function exists(string $view): bool
+    {
+        $view = app()->make(ViewContract::class, $view);
+        $viewPath = sprintf('%s/%s', $view->viewPath, $view->getViewFileName());
+
+        if (!file_exists($viewPath)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -149,8 +176,13 @@ class View implements ResponsableContract, ViewContract
      */
     public function render(): string
     {
+        $viewPath = sprintf('%s/%s', $this->viewPath, $this->getViewFileName());
+        if (!file_exists($viewPath)) {
+            throw new Exception("View [{$this->view}] in [{$this->viewNamespace}] namespace not found");
+        }
+
         $responseBody = $this->app->resolve(CompilerContract::class)->setView(
-            sprintf('%s/%s', $this->viewPath, $this->getViewFileName()),
+            $viewPath,
             $this->params
         )->compile();
 

@@ -7,7 +7,6 @@ use Uwi\Contracts\Application\ApplicationContract;
 use Uwi\Contracts\Application\Exceptions\ExceptionContract;
 use Uwi\Contracts\Application\KernelContract;
 use Uwi\Contracts\Application\ServiceLoaderContract;
-use Uwi\Contracts\Http\Response\ResponseContract;
 use Uwi\Foundation\Exceptions\Exception;
 
 class Application extends Container implements ApplicationContract
@@ -94,6 +93,27 @@ class Application extends Container implements ApplicationContract
     public function bootService(ServiceLoaderContract $loader): void
     {
         $loader->boot();
+    }
+
+    /**
+     * Tap the static class method.
+     * Runs it and inject params.
+     *
+     * @param array $action
+     * @param mixed ...$args
+     * @return mixed
+     */
+    public function tapStatic(array $action, mixed ...$args): mixed
+    {
+        $action[0] = $this->concreteFor($action[0]);
+
+        if (is_null($action[0])) {
+            throw new Exception("Concrete for [{$action[0]}] is not defined");
+        }
+
+        return $action[0]::{$action[1]}(
+            ...$this->resolveArgs([$action[0], $action[1]], ...$args)
+        );
     }
 
     /**

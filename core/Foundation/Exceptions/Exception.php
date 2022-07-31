@@ -4,6 +4,7 @@ namespace Uwi\Foundation\Exceptions;
 
 use Uwi\Contracts\Application\Exceptions\ExceptionContract;
 use Uwi\Contracts\Http\Request\RequestContract;
+use Uwi\Services\Calibri\Contracts\ViewContract;
 
 class Exception extends \Exception implements ExceptionContract
 {
@@ -30,8 +31,14 @@ class Exception extends \Exception implements ExceptionContract
      */
     public function toResponse(RequestContract $request): mixed
     {
-        return view('errors::500', [
+        $view = 'errors::' . $this->statusCode;
+        if (!app()->tapStatic([ViewContract::class, 'exists'], $view)) {
+            $view = 'errors::' . self::DEFAULT_STATUS_CODE;
+        }
+
+        return view($view, [
             'e' => $this,
+            'responseCode' => $this->statusCode
         ])->statusCode($this->statusCode);
     }
 
@@ -45,6 +52,7 @@ class Exception extends \Exception implements ExceptionContract
     {
         return view('errors::500', [
             'e' => $e,
+            'responseCode' => self::DEFAULT_STATUS_CODE
         ])->statusCode(self::DEFAULT_STATUS_CODE);
     }
 }

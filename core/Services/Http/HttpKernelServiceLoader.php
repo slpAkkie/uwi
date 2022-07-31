@@ -46,6 +46,6 @@ class HttpKernelServiceLoader extends ServiceLoader
     public function boot(): void
     {
         // Register views namespace for error pages.
-        $this->app->concreteFor(ViewContract::class)::namespace('errors', '/core/Views/errors');
+        $this->app->tapStatic([ViewContract::class, 'namespace'], 'errors', '/core/Views/errors');
     }
 }
