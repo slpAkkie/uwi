@@ -43,6 +43,19 @@ class Container implements ContainerContract
     }
 
     /**
+     * Returns binded concrete for the abstract.
+     *
+     * @param string $abstract
+     * @return string|null
+     */
+    public function concreteFor(string $abstract): string|null
+    {
+        $binded = $this->getBinded($abstract);
+
+        return $binded ? $binded[0] : null;
+    }
+
+    /**
      * Returns true if abstract has been binded to the Container.
      *
      * @param string $abstract

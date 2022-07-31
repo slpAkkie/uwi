@@ -30,7 +30,7 @@ class Exception extends \Exception implements ExceptionContract
      */
     public function toResponse(RequestContract $request): mixed
     {
-        return view('errors.500', [
+        return view('errors::500', [
             'e' => $this,
         ])->statusCode($this->statusCode);
     }
@@ -43,7 +43,7 @@ class Exception extends \Exception implements ExceptionContract
      */
     public static function makeResponse(\Throwable $e): mixed
     {
-        return view('errors.500', [
+        return view('errors::500', [
             'e' => $e,
         ])->statusCode(self::DEFAULT_STATUS_CODE);
     }

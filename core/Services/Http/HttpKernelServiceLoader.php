@@ -5,6 +5,7 @@ namespace Uwi\Services\Http;
 use Uwi\Contracts\Application\KernelContract;
 use Uwi\Foundation\Kernel\HttpKernel;
 use Uwi\Services\Calibri\CalibriServiceLoader;
+use Uwi\Services\Calibri\Contracts\ViewContract;
 use Uwi\Services\Database\Lion\LionServiceLoader;
 use Uwi\Services\Http\Request\RequestServiceLoader;
 use Uwi\Services\Http\Response\ResponseServiceLoader;
@@ -44,6 +45,7 @@ class HttpKernelServiceLoader extends ServiceLoader
      */
     public function boot(): void
     {
-        //
+        // Register views namespace for error pages.
+        $this->app->concreteFor(ViewContract::class)::namespace('errors', '/core/Views/errors');
     }
 }
