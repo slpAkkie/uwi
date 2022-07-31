@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Uwi\Contracts\Http\Response\ResponseContract;
-use Uwi\Foundation\Exceptions\Exception;
 use Uwi\Services\Http\Controller as HttpController;
 
 class Controller extends HttpController

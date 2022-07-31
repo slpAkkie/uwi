@@ -24,6 +24,19 @@ function env(string $key, string|null $default = null): string|null
 }
 
 /**
+ * Tap the static class method.
+ * Runs it and inject params.
+ *
+ * @param array $action
+ * @param mixed ...$args
+ * @return mixed
+ */
+function tapStatic(array $action, mixed ...$args): mixed
+{
+    return app()->tapStatic($action, ...$args);
+}
+
+/**
  * Tap the function or class method.
  * Runs it and inject params.
  *

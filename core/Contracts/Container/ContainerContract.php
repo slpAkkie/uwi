@@ -15,14 +15,6 @@ interface ContainerContract extends SingletonContract
     public function bind(string $abstract, string|null $concrete = null, bool $shared = false): void;
 
     /**
-     * Returns binded concrete for the abstract.
-     *
-     * @param string $abstract
-     * @return string|null
-     */
-    public function concreteFor(string $abstract): string|null;
-
-    /**
      * Create new instance of concrete for the abstract.
      * If abstract marked as shared then created instance
      * will be added for sharing into the Container.

@@ -17,6 +17,15 @@ interface ViewContract extends ResponsableContract
     public static function namespace(string $namespace, string $path): void;
 
     /**
+     * Returns true or false depending on
+     * whether the provided view exists.
+     *
+     * @param string $view
+     * @return boolean
+     */
+    public static function exists(string $view): bool;
+
+    /**
      * Render view.
      *
      * @return string

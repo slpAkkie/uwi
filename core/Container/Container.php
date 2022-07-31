@@ -48,7 +48,7 @@ class Container implements ContainerContract
      * @param string $abstract
      * @return string|null
      */
-    public function concreteFor(string $abstract): string|null
+    protected function concreteFor(string $abstract): string|null
     {
         $binded = $this->getBinded($abstract);
 
