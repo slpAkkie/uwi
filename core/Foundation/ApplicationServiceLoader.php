@@ -4,6 +4,7 @@ namespace Uwi\Foundation;
 
 use Uwi\Contracts\Database\ConnectionContract;
 use Uwi\Services\Database\Connection;
+use Uwi\Services\Database\Lion\LionServiceLoader;
 use Uwi\Services\Dotenv\DotenvServiceLoader;
 use Uwi\Services\ServiceLoader;
 
@@ -19,6 +20,7 @@ class ApplicationServiceLoader extends ServiceLoader
         // Register Application dependencies.
         $this->app->registerServices([
             DotenvServiceLoader::class,
+            LionServiceLoader::class,
         ]);
 
         // Register Conncetion.
