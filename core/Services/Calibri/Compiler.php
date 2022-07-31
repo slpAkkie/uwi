@@ -355,12 +355,15 @@ class Compiler implements CompilerContract
 
         // Execute evalInterpolations and escapeDirectiveSymbol
         // only then it's zero recursion depth.
-        if (self::$compilingDepth === 1) {
-            $this->evalInterpolations();
-            $this->escapeDirectiveSymbol();
+        try {
+            if (self::$compilingDepth === 1) {
+                $this->evalInterpolations();
+                $this->escapeDirectiveSymbol();
+            }
+        } finally {
+            // Control the recursion depth.
+            self::$compilingDepth--;
         }
-        // Control the recursion depth.
-        self::$compilingDepth--;
 
         return $this->popContent();
     }
