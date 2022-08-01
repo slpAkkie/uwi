@@ -26,6 +26,20 @@ interface ViewContract extends ResponsableContract
     public static function exists(string $view): bool;
 
     /**
+     * Returns path ro view file.
+     *
+     * @return string
+     */
+    public function getViewPath(): string;
+
+    /**
+     * Returns view params.
+     *
+     * @return array
+     */
+    public function getParams(): array;
+
+    /**
      * Render view.
      *
      * @return string

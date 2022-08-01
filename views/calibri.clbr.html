@@ -1,0 +1,38 @@
+#extends('templates.main')
+
+#section('title', 'Calibri')
+
+#section('page-body')
+    <div class="row">
+        <div class="col">
+            <h2>Calibri template engine</h2>
+            <p class="lead">Calibri is a simple legacy <span class="text-muted">(also as a framework itself)</span> template engine.</p>
+            <p>On this page you can explore all features that Calibri provided.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <!-- Interpolation -->
+            #include('components.calibri.interpolation')
+
+            <!-- Extends -->
+            #include('components.calibri.extends')
+
+            <!-- Section -->
+            #include('components.calibri.section')
+
+            <!-- Yield -->
+            #include('components.calibri.yield')
+
+            <!-- Include -->
+            #include('components.calibri.include')
+
+            <!-- If -->
+            #include('components.calibri.if')
+
+            <!-- Escaping -->
+            #include('components.calibri.escaping')
+        </div>
+    </div>
+#endsection

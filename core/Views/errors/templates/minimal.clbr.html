@@ -21,10 +21,11 @@
 </head>
 
 <body class="bg-light text-muted">
-    <div class="d-flex align-items-center">
-        <h1>{{ $responseCode }}</h1>
-        <div class="vr mx-5 flex-shrink-1 align-self-stretch"></div>
-        <h2 class="flex-grow-1">{{ $e->getMessage() }}</h2>
+    <div class="d-flex align-items-center flex-column flex-md-row">
+        <h1 class="px-5">{{ $responseCode }}</h1>
+        <div class="d-none d-md-block vr flex-shrink-1 align-self-stretch"></div>
+        <hr class="d-block d-md-none w-100">
+        <h2 class="flex-grow-1 px-5 text-break text-center text-md-start">{{ $e->getMessage() }}</h2>
     </div>
 </body>
 

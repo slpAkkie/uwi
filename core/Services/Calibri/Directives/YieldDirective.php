@@ -19,7 +19,11 @@ class YieldDirective implements DirectiveContract
         protected string $section,
         protected string $default = '',
     ) {
-        $this->section = trim($this->section, '\'"');
+        $this->section = trimQuotes($this->section);
+
+        if ($this->default) {
+            $this->default = reval($this->default, $this->compiler->getParams());
+        }
     }
 
     /**
@@ -31,6 +35,6 @@ class YieldDirective implements DirectiveContract
     {
         $sectionContent = $this->compiler->get("section.{$this->section}");
 
-        return trim($sectionContent ? $sectionContent : $this->default, '\'"');
+        return trimQuotes($sectionContent ? $sectionContent : $this->default);
     }
 }

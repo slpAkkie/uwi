@@ -1,0 +1,22 @@
+<section class="mt-5 pt-5 border-top">
+    <h2><code>##If</code> Using condition output</h2>
+
+    <p>Use <code>##if</code> directive to set conditional output</p>
+
+    <h3 class="text-muted">Examples</h3>
+    <code>
+        <pre>##if(true) This text will be visible #endif</pre>
+        <pre>##if(true, 'This text will also be visible')</pre>
+        <pre>##if(false, 'But it won\'t be visible')</pre>
+    </code>
+
+    <h3 class="text-muted">Result</h3>
+    <pre>#if(true) This text will be visible #endif</pre>
+    <pre>#if(true, 'This text will also be visible')</pre>
+    <pre>#if(false, 'But it won\'t be visible')</pre>
+
+    <article class="text-muted">
+        <p>Unfortunately <code>##else</code> directive not supported yet.</p>
+    <p>And also the content will still be executed and parsed even if a statement in the <code>##if</code> directive equals false.</p>
+    </article>
+</section>

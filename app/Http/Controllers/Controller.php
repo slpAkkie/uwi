@@ -15,7 +15,19 @@ class Controller extends HttpController
     public function welcome(): ResponseContract
     {
         return view('welcome', [
-            'version' => '2.x-alpha',
+            'version' => env('APP_VERSION'),
+        ]);
+    }
+
+    /**
+     * Show page for testing Calibri.
+     *
+     * @return ResponseContract
+     */
+    public function calibri(): ResponseContract
+    {
+        return view('calibri', [
+            'appName' => env('APP_NAME'),
         ]);
     }
 }

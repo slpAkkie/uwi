@@ -32,6 +32,17 @@ class Request implements RequestContract
         return $_SERVER['HTTP_ACCEPT'];
     }
 
+
+    /**
+     * Returns request scheme.
+     *
+     * @return string
+     */
+    public function scheme(): string
+    {
+        return key_exists('HTTPS', $_SERVER) ? 'https' : 'http';
+    }
+
     /**
      * Returns HTTP host.
      *
@@ -40,6 +51,17 @@ class Request implements RequestContract
     public function host(): string
     {
         return $_SERVER['HTTP_HOST'];
+    }
+
+
+    /**
+     * Returns request host with its sheme.
+     *
+     * @return string
+     */
+    public function fullHost(): string
+    {
+        return $this->scheme() . '://' . $this->host();
     }
 
     /**

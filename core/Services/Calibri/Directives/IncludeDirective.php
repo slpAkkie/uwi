@@ -7,20 +7,21 @@ use Uwi\Services\Calibri\Contracts\CompilerContract;
 use Uwi\Services\Calibri\Contracts\DirectiveContract;
 use Uwi\Services\Calibri\Contracts\ViewContract;
 
-class ExtendsDirective implements DirectiveContract
+class IncludeDirective implements DirectiveContract
 {
     /**
      * Instantiate Directive.
      *
+     * @param ApplicationContract $app
      * @param CompilerContract $compiler
-     * @param string $template
+     * @param string $view
      */
     public function __construct(
         protected ApplicationContract $app,
         protected CompilerContract $compiler,
-        protected string $template,
+        protected string $view,
     ) {
-        $this->template = trimQuotes($this->template);
+        $this->view = trimQuotes($this->view);
     }
 
     /**
@@ -30,7 +31,7 @@ class ExtendsDirective implements DirectiveContract
      */
     public function compile(): string
     {
-        $this->compiler->setView($this->app->make(ViewContract::class, $this->template), true);
+        $this->compiler->setView($this->app->make(ViewContract::class, $this->view));
 
         return '';
     }

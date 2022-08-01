@@ -22,8 +22,33 @@ function view(string $view, array $params = []): \Uwi\Contracts\Http\Response\Re
  * @param string $characters
  * @return string
  */
-function trim_once(string $string, string $characters): string
+function trimOnce(string $string, string $characters): string
 {
     $characters = preg_quote($characters);
-    return preg_replace("#^([$characters])?(.*?)([$characters])?$#", '$2', $string);
+    return preg_replace("/^([$characters])?(.*?)([$characters])?$/", '$2', $string);
+}
+
+/**
+ * Trim quotes around the str.
+ *
+ * @param string $str
+ * @return string
+ */
+function trimQuotes(string $str): string
+{
+    return trimOnce($str, '\'"');
+}
+
+/**
+ * Eval command and return it's result.
+ *
+ * @param mixed $command
+ * @param array $params
+ * @return mixed
+ */
+function reval(mixed $command, array $params = []): mixed
+{ {
+        extract($params);
+        return eval("return ($command);");
+    }
 }
