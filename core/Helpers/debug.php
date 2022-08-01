@@ -31,7 +31,7 @@ function d(mixed ...$args): void
     echo '<pre class="dump-pre">';
     foreach ($args as $arg) {
         echo '>>> ';
-        var_dump($arg);
+        var_dump(is_string($arg) ? htmlspecialchars($arg) : $arg);
         echo '<br />';
     }
     echo '</pre>';

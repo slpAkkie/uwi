@@ -170,21 +170,38 @@ class View implements ResponsableContract, ViewContract
     }
 
     /**
+     * Returns path ro view file.
+     *
+     * @return string
+     */
+    public function getViewPath(): string
+    {
+        return sprintf('%s/%s', $this->viewPath, $this->getViewFileName());
+    }
+
+    /**
+     * Returns view params.
+     *
+     * @return array
+     */
+    public function getParams(): array
+    {
+        return $this->params;
+    }
+
+    /**
      * Render view content.
      *
      * @return string
      */
     public function render(): string
     {
-        $viewPath = sprintf('%s/%s', $this->viewPath, $this->getViewFileName());
+        $viewPath = $this->getViewPath();
         if (!file_exists($viewPath)) {
             throw new Exception("View [{$this->view}] in [{$this->viewNamespace}] namespace not found");
         }
 
-        $responseBody = $this->app->resolve(CompilerContract::class)->setView(
-            $viewPath,
-            $this->params
-        )->compile();
+        $responseBody = $this->app->make(CompilerContract::class)->setView($this)->compile();
 
         return $responseBody ? $responseBody : self::EMPTY_CONTENT_BODY;
     }

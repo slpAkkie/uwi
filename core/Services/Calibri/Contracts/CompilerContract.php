@@ -2,50 +2,16 @@
 
 namespace Uwi\Services\Calibri\Contracts;
 
-use Uwi\Contracts\Application\ApplicationContract;
-use Uwi\Contracts\Container\SingletonContract;
-
-interface CompilerContract extends SingletonContract
+interface CompilerContract
 {
-    /**
-     * Instantiate Compiler.
-     *
-     * @param ApplicationContract $app
-     */
-    public function __construct(
-        ApplicationContract $app,
-    );
-
     /**
      * Set view file to read from.
      *
-     * @param string $viewPath
-     * @param array<string, mixed> $params
+     * @param bool $last - Indicate that view should be compiled last of all.
+     * @param \Uwi\Services\Calibri\Contracts\ViewContract $view
      * @return \Uwi\Services\Calibri\Contracts\CompilerContract
      */
-    public function setView(string $viewPath, array $params = []): \Uwi\Services\Calibri\Contracts\CompilerContract;
-
-    /**
-     * Read next until provided string isn't found.
-     *
-     * @param string $needle
-     * @return string
-     */
-    public function readUntil(string $needle): string;
-
-    /**
-     * Read all view file and return compiled content.
-     *
-     * @return string
-     */
-    public function read(): string;
-
-    /**
-     * Compile view content.
-     *
-     * @return string
-     */
-    public function compile(): string;
+    public function setView(ViewContract $view, bool $last = false): \Uwi\Services\Calibri\Contracts\CompilerContract;
 
     /**
      * Share something into Compiler.
@@ -63,4 +29,26 @@ interface CompilerContract extends SingletonContract
      * @return mixed
      */
     public function get(string $key): mixed;
+
+    /**
+     * Returns array of parameters.
+     *
+     * @return array
+     */
+    public function getParams(): array;
+
+    /**
+     * Read next until provided string isn't found.
+     *
+     * @param string $needle
+     * @return string
+     */
+    public function readUntil(string $needle): string;
+
+    /**
+     * Compile view content.
+     *
+     * @return string
+     */
+    public function compile(): string;
 }
