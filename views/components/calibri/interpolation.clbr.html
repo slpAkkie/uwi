@@ -1,0 +1,15 @@
+<section class="mt-5 pt-5 border-top">
+    <h2><code>Interpolation</code> Variable value</h2>
+
+    <p>Use <code>#{{ expression }}</code> to insert expression value into the view</p>
+
+    <h3 class="text-muted">Examples</h3>
+    <code>
+        <pre>Framework name: #{{ $appName }}</pre>
+        <pre>App name from ENV: #{{ env('APP_NAME') }}</pre>
+    </code>
+
+    <h3 class="text-muted">Result</h3>
+    <pre>Framework name: {{ $appName }}</pre>
+    <pre>App name from ENV: {{ env('APP_NAME') }}</pre>
+</section>

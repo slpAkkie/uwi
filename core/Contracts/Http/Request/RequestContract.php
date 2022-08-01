@@ -25,11 +25,27 @@ interface RequestContract extends SingletonContract
 
 
     /**
+     * Returns request scheme.
+     *
+     * @return string
+     */
+    public function scheme(): string;
+
+
+    /**
      * Returns HTTP host.
      *
      * @return string
      */
     public function host(): string;
+
+
+    /**
+     * Returns request host with its sheme.
+     *
+     * @return string
+     */
+    public function fullHost(): string;
 
 
     /**

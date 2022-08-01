@@ -15,3 +15,4 @@ use Uwi\Services\Http\Routing\Facades\Route;
  */
 
 Route::get('/', [\App\Http\Controllers\Controller::class, 'welcome']);
+Route::get('/calibri', [\App\Http\Controllers\Controller::class, 'calibri']);
