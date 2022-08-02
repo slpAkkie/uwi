@@ -8,7 +8,7 @@ use Uwi\Services\Http\Controller as HttpController;
 class Controller extends HttpController
 {
     /**
-     * Show welcome page.
+     * Show page for Uwi.
      *
      * @return ResponseContract
      */
@@ -20,7 +20,7 @@ class Controller extends HttpController
     }
 
     /**
-     * Show page for testing Calibri.
+     * Show page for Calibri.
      *
      * @return ResponseContract
      */
@@ -29,5 +29,15 @@ class Controller extends HttpController
         return view('calibri', [
             'appName' => env('APP_NAME'),
         ]);
+    }
+
+    /**
+     * Show page for Lion.
+     *
+     * @return ResponseContract
+     */
+    public function lion(): ResponseContract
+    {
+        return view('lion');
     }
 }

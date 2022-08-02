@@ -20,7 +20,7 @@
             <h1 class="m-0 py-4 p-5 bg-dark text-white text-break"><span class="text-danger">Exception:</span> <span class="fs-4">{{ $e->getMessage() }}</span></h1>
 
             <article class="p-5">
-                <div><b>In File:</b> {{ $e->getFile() }}</div>
+                <div class="text-break"><b>In File:</b> {{ $e->getFile() }}</div>
                 <div><b>On Line:</b> {{ $e->getLine() }}</div>
                 <div><b>Exit Code:</b> {{ $e->getCode() }}</div>
             </article>
