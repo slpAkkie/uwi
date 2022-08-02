@@ -151,17 +151,6 @@ class View implements ResponsableContract, ViewContract
     }
 
     /**
-     * Convert object to response data.
-     *
-     * @param \Uwi\Contracts\Http\Request\RequestContract $request
-     * @return mixed
-     */
-    public function toResponse(RequestContract $request): mixed
-    {
-        return $this->render();
-    }
-
-    /**
      * Returns view file name with extension.
      *
      * @return string
@@ -201,6 +190,7 @@ class View implements ResponsableContract, ViewContract
     public function render(): string
     {
         $viewPath = $this->getViewPath();
+
         if (!file_exists($viewPath)) {
             throw new Exception("View [{$this->view}] in [{$this->viewNamespace}] namespace not found");
         }
@@ -208,5 +198,16 @@ class View implements ResponsableContract, ViewContract
         $responseBody = $this->app->make(CompilerContract::class)->setView($this)->compile();
 
         return $responseBody ? $responseBody : self::EMPTY_CONTENT_BODY;
+    }
+
+    /**
+     * Convert object to response data.
+     *
+     * @param \Uwi\Contracts\Http\Request\RequestContract $request
+     * @return mixed
+     */
+    public function toResponse(RequestContract $request): mixed
+    {
+        return $this->render();
     }
 }
