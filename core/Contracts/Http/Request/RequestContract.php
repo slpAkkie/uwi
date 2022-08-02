@@ -85,7 +85,7 @@ interface RequestContract extends SingletonContract
      *
      * @return string
      */
-    public function fullurl(): string;
+    public function fullUrl(): string;
 
 
     /**

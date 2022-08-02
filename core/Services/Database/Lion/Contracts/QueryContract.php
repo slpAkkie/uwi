@@ -7,7 +7,11 @@ interface QueryContract
     /**
      * Instantiate Query.
      */
-    public function __construct(string $table, string $primaryKey, string|null $model = null);
+    public function __construct(
+        string $table,
+        string $primaryKey,
+        string|null $model = null,
+    );
 
     /**
      * Exec query and get the result.

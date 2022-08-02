@@ -23,7 +23,7 @@ interface ContainerContract extends SingletonContract
      * @param array<mixed> ...$args
      * @return object
      * 
-     * @throws Exception
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function make(string $abstract, mixed ...$args): object;
 
@@ -55,7 +55,7 @@ interface ContainerContract extends SingletonContract
      * @param array<mixed> ...$args
      * @return object
      * 
-     * @throws Exception
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function singleton(string $abstract, mixed ...$args): object;
 

@@ -27,8 +27,11 @@ class Builder implements BuilderContract
      * @param string $primaryKey
      * @param string|\Uwi\Services\Database\Lion\Contracts\ModelContract $model
      */
-    public function __construct(string $table, string $primaryKey = 'id', mixed $model = null)
-    {
+    public function __construct(
+        string $table,
+        string $primaryKey = 'id',
+        mixed $model = null,
+    ) {
         $this->model = isset($model) ? (gettype($model) === 'string' ? new $model() : $model) : null;
         $this->query = new Query($table, $primaryKey, $this->model ? $this->model::class : null);
     }

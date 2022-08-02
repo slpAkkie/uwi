@@ -37,7 +37,7 @@ if (!defined('APP_BASE_PATH')) {
  * |
  */
 
-require_once sprintf("%s/deps/Scal/Scal.php", APP_BASE_PATH);
+require_once APP_BASE_PATH . '/deps/Scal/Scal.php';
 
 
 
@@ -54,11 +54,11 @@ require_once sprintf("%s/deps/Scal/Scal.php", APP_BASE_PATH);
  */
 
 if (!defined('CONFIG_PATH')) {
-    define('CONFIG_PATH', sprintf("%s/config", APP_BASE_PATH));
+    define('CONFIG_PATH', APP_BASE_PATH . '/config');
 }
 
 if (!defined('CORE_PATH')) {
-    define('CORE_PATH', sprintf("%s/core", APP_BASE_PATH));
+    define('CORE_PATH', APP_BASE_PATH . '/core');
 }
 
 
@@ -73,7 +73,7 @@ if (!defined('CORE_PATH')) {
  */
 
 if (!defined('HELPERS_PATH')) {
-    define('HELPERS_PATH', sprintf("%s/Helpers", CORE_PATH));
+    define('HELPERS_PATH', CORE_PATH . '/Helpers');
 } {
     $helpersPath = [
         APP_BASE_PATH . '/core/Helpers',
@@ -103,4 +103,4 @@ if (!defined('HELPERS_PATH')) {
  * |
  */
 
-require_once sprintf("%s/bootstrap/app.php", APP_BASE_PATH);
+require_once APP_BASE_PATH . '/bootstrap/app.php';

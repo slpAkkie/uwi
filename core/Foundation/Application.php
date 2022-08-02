@@ -39,7 +39,7 @@ class Application extends Container implements ApplicationContract
      *
      * @return void
      */
-    public function registerApplication(): void
+    protected function registerApplication(): void
     {
         $this->bind(ApplicationContract::class, static::class, true);
         $this->share(ApplicationContract::class, $this);
@@ -77,7 +77,7 @@ class Application extends Container implements ApplicationContract
      *
      * @return void
      */
-    public function bootServices(): void
+    protected function bootServices(): void
     {
         foreach ($this->registeredServiceLoaders as $loader) {
             $this->bootService($loader);
@@ -90,7 +90,7 @@ class Application extends Container implements ApplicationContract
      * @param ServiceLoaderContract $loader
      * @return void
      */
-    public function bootService(ServiceLoaderContract $loader): void
+    protected function bootService(ServiceLoaderContract $loader): void
     {
         $loader->boot();
     }
@@ -102,6 +102,8 @@ class Application extends Container implements ApplicationContract
      * @param array $action
      * @param mixed ...$args
      * @return mixed
+     * 
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function tapStatic(array $action, mixed ...$args): mixed
     {

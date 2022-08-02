@@ -1,7 +1,5 @@
 <?php
 
-use Uwi\Contracts\Http\Response\ResponseContract;
-
 /**
  * Dump.
  *
@@ -50,7 +48,7 @@ function dd(mixed ...$args): void
     ob_start();
     d(...$args);
 
-    app()->make(ResponseContract::class, ob_get_clean(), 500)->send();
+    app()->make(\Uwi\Contracts\Http\Response\ResponseContract::class, ob_get_clean(), 500)->send();
     exit(1);
 }
 

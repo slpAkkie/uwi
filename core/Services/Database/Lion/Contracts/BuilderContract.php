@@ -11,7 +11,11 @@ interface BuilderContract
      * @param string $primaryKey
      * @param string|\Uwi\Services\Database\Lion\Contracts\ModelContract $model
      */
-    public function __construct(string $table, string $primaryKey = 'id', mixed $model = null);
+    public function __construct(
+        string $table,
+        string $primaryKey = 'id',
+        mixed $model = null,
+    );
 
     /**
      * Returns record by the primary key value.

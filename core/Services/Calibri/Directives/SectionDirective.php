@@ -21,6 +21,8 @@ class SectionDirective implements DirectiveContract
      * @param CompilerContract $compiler
      * @param string $name
      * @param mixed $inlineContent
+     * 
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function __construct(
         protected CompilerContract $compiler,

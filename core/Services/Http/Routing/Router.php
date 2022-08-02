@@ -3,7 +3,6 @@
 namespace Uwi\Services\Http\Routing;
 
 use Uwi\Contracts\Application\ApplicationContract;
-use Uwi\Contracts\Application\Exceptions\ExceptionContract;
 use Uwi\Contracts\Http\Request\RequestContract;
 use Uwi\Contracts\Http\Routing\RouteContract;
 use Uwi\Contracts\Http\Routing\RouterContract;
@@ -26,7 +25,7 @@ class Router implements RouterContract
      */
     public function __construct(
         protected ApplicationContract $app,
-        protected RequestContract $request
+        protected RequestContract $request,
     ) {
         //
     }
@@ -52,7 +51,10 @@ class Router implements RouterContract
     public function current(): \Uwi\Contracts\Http\Routing\RouteContract
     {
         foreach ($this->routes as $route) {
-            if ($route->url() === $this->request->url() && $route->method() === $this->request->method()) {
+            if (
+                $route->url() === $this->request->url()
+                && $route->method() === $this->request->method()
+            ) {
                 return $route;
             }
         }
