@@ -1,2 +1,6 @@
-.vscode
+.idea/
+.vscode/
+node_modules/
+dist/
+
 .env

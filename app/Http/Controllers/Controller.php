@@ -30,4 +30,14 @@ class Controller extends HttpController
             'appName' => env('APP_NAME'),
         ]);
     }
+
+    /**
+     * Show page about webpack tools.
+     *
+     * @return ResponseContract
+     */
+    public function webpack(): ResponseContract
+    {
+        return view('webpack');
+    }
 }
