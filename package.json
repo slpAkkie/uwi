@@ -1,7 +1,7 @@
 {
-  "name": "frontend-webpack-template",
+  "name": "uwi",
   "version": "1.0.0",
-  "description": "A small config for building frontend projects on webpack",
+  "description": "Uwi - Simple and legacy backend framework without any third-party packages based on MVC pattern.",
   "main": "index.js",
   "scripts": {
     "build": "webpack",
