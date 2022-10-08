@@ -37,4 +37,4 @@ Alexandr Shamanin (@slpakkie).
 
 ## Version
 
-2.x-dev
+2.2.0

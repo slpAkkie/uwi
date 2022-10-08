@@ -1,6 +1,6 @@
 {
   "name": "uwi",
-  "version": "1.0.0",
+  "version": "2.2.0",
   "description": "Uwi - Simple and legacy backend framework without any third-party packages based on MVC pattern.",
   "main": "index.js",
   "scripts": {
