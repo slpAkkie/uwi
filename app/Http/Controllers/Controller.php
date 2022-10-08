@@ -40,4 +40,14 @@ class Controller extends HttpController
     {
         return view('lion');
     }
+    
+    /**
+     * Show page about webpack tools.
+     *
+     * @return ResponseContract
+     */
+    public function webpack(): ResponseContract
+    {
+        return view('webpack');
+    }
 }

@@ -17,7 +17,7 @@ class Compiler implements CompilerContract
 {
     /**
      * Symbol with which strarts directives in view files.
-     * 
+     *
      * @var string
      */
     protected const DIRECTIVE_SYMBOL = '#';
@@ -213,7 +213,7 @@ class Compiler implements CompilerContract
     {
         $directiveSymbol = self::DIRECTIVE_SYMBOL;
 
-        return "/(?<!$directiveSymbol)$directiveSymbol([a-z]+)(\(.*\))?/";
+        return "/(?<!$directiveSymbol)$directiveSymbol([a-zA-Z]+)(\(.*?\))/";
     }
 
     /**

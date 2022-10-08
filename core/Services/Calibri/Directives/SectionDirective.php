@@ -10,7 +10,7 @@ class SectionDirective implements DirectiveContract
 {
     /**
      * End directive string.
-     * 
+     *
      * @var string
      */
     protected const END_DIRECTIVE = '#endsection';
@@ -35,7 +35,7 @@ class SectionDirective implements DirectiveContract
             $this->inlineContent = reval($this->inlineContent, $this->compiler->getParams());
 
             if (is_null($this->inlineContent)) {
-                throw new Exception('If inline content in the section specified it\'s cannot be null');
+                throw new Exception("[Section: {$this->name}] If inline content in the section specified it's cannot be null");
             }
         }
     }

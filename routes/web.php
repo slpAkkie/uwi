@@ -17,3 +17,4 @@ use Uwi\Services\Http\Routing\Facades\Route;
 Route::get('/', [\App\Http\Controllers\Controller::class, 'welcome']);
 Route::get('/calibri', [\App\Http\Controllers\Controller::class, 'calibri']);
 Route::get('/lion', [\App\Http\Controllers\Controller::class, 'lion']);
+Route::get('/webpack', [\App\Http\Controllers\Controller::class, 'webpack']);
