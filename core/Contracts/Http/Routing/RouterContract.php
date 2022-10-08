@@ -12,7 +12,7 @@ interface RouterContract extends SingletonContract
      * @param \Uwi\Contracts\Http\Routing\RouteContract $route
      * @return \Uwi\Contracts\Http\Routing\RouteContract
      */
-    public function addRoute(\Uwi\Contracts\Http\Routing\RouteContract $route): \Uwi\Contracts\Http\Routing\RouteContract;
+    public function addRoute(RouteContract $route): \Uwi\Contracts\Http\Routing\RouteContract;
 
     /**
      * Returns current Route according to Request.

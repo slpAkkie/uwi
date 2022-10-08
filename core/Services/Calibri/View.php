@@ -88,6 +88,8 @@ class View implements ResponsableContract, ViewContract
      *
      * @param string $view
      * @param array<string, mixed> $params
+     *
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function __construct(
         protected ApplicationContract $app,
@@ -139,24 +141,13 @@ class View implements ResponsableContract, ViewContract
     public static function exists(string $view): bool
     {
         $view = app()->make(ViewContract::class, $view);
-        $viewPath = sprintf('%s/%s', $view->viewPath, $view->getViewFileName());
+        $viewPath = $view->getViewPath();
 
         if (!file_exists($viewPath)) {
             return false;
         }
 
         return true;
-    }
-
-    /**
-     * Convert object to response data.
-     *
-     * @param \Uwi\Contracts\Http\Request\RequestContract $request
-     * @return mixed
-     */
-    public function toResponse(RequestContract $request): mixed
-    {
-        return $this->render();
     }
 
     /**
@@ -176,7 +167,7 @@ class View implements ResponsableContract, ViewContract
      */
     public function getViewPath(): string
     {
-        return sprintf('%s/%s', $this->viewPath, $this->getViewFileName());
+        return "{$this->viewPath}/{$this->getViewFileName()}";
     }
 
     /**
@@ -193,10 +184,13 @@ class View implements ResponsableContract, ViewContract
      * Render view content.
      *
      * @return string
+     *
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function render(): string
     {
         $viewPath = $this->getViewPath();
+
         if (!file_exists($viewPath)) {
             throw new Exception("View [{$this->view}] in [{$this->viewNamespace}] namespace not found");
         }
@@ -204,5 +198,16 @@ class View implements ResponsableContract, ViewContract
         $responseBody = $this->app->make(CompilerContract::class)->setView($this)->compile();
 
         return $responseBody ? $responseBody : self::EMPTY_CONTENT_BODY;
+    }
+
+    /**
+     * Convert object to response data.
+     *
+     * @param \Uwi\Contracts\Http\Request\RequestContract $request
+     * @return mixed
+     */
+    public function toResponse(RequestContract $request): mixed
+    {
+        return $this->render();
     }
 }

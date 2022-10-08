@@ -78,8 +78,11 @@ class Query implements QueryContract
     /**
      * Instantiate Query.
      */
-    public function __construct(string $table, string $primaryKey, string|null $model = null)
-    {
+    public function __construct(
+        string $table,
+        string $primaryKey,
+        string|null $model = null,
+    ) {
         $this->connection = app()->singleton(ConnectionContract::class);
         $this->model = $model;
         $this->table = $table;

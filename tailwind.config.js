@@ -1,17 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./resources/**/*.{pug,scss}'],
+    content: ["./views/**/*.clbr.html"],
 
-  theme: {
-    extend: {
-      //
+    theme: {
+        extend: {
+            //
+        },
     },
-  },
 
-  plugins: [
-    require('@tailwindcss/typography'),
-    require('@tailwindcss/forms'),
-    require('@tailwindcss/line-clamp'),
-    require('@tailwindcss/aspect-ratio'),
-  ],
-}
+    plugins: [
+        require("@tailwindcss/typography"),
+        require("@tailwindcss/forms"),
+        require("@tailwindcss/line-clamp"),
+        require("@tailwindcss/aspect-ratio"),
+    ],
+};

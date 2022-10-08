@@ -31,6 +31,8 @@ class Exception extends \Exception implements ExceptionContract
      */
     public function toResponse(RequestContract $request): mixed
     {
+        // Assume a view for the exception.
+        // If no such view then default exception view will be set.
         $view = 'errors::' . $this->statusCode;
         if (!app()->tapStatic([ViewContract::class, 'exists'], $view)) {
             $view = 'errors::' . self::DEFAULT_STATUS_CODE;

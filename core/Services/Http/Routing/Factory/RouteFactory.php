@@ -51,6 +51,8 @@ class RouteFactory
      * @param string $method
      * @param array<string> $args
      * @return mixed
+     * 
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function __call($method, $args): mixed
     {

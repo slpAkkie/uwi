@@ -17,14 +17,14 @@ class ApplicationServiceLoader extends ServiceLoader
      */
     public function register(): void
     {
+        // Register database connection.
+        $this->app->bind(ConnectionContract::class, Connection::class);
+
         // Register Application dependencies.
         $this->app->registerServices([
             DotenvServiceLoader::class,
             LionServiceLoader::class,
         ]);
-
-        // Register Conncetion.
-        $this->app->bind(ConnectionContract::class, Connection::class);
     }
 
     /**

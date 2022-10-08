@@ -14,7 +14,6 @@ interface DotenvContract extends SingletonContract
      */
     public function setMany(array $vars = []): \Uwi\Services\Dotenv\Contracts\DotenvContract;
 
-
     /**
      * Set single value.
      *
@@ -23,7 +22,6 @@ interface DotenvContract extends SingletonContract
      * @return string
      */
     public function set(string $key, string $val): string;
-
 
     /**
      * Get single value.
@@ -34,7 +32,6 @@ interface DotenvContract extends SingletonContract
      */
     public function get(string $key, string|null $default = null): string|null;
 
-
     /**
      * Unset the value.
      *
@@ -43,7 +40,6 @@ interface DotenvContract extends SingletonContract
      */
     public function unset(string $key): string;
 
-
     /**
      * Check wheter the key exists.
      *
@@ -51,7 +47,6 @@ interface DotenvContract extends SingletonContract
      * @return boolean
      */
     public function has(string $key): bool;
-
 
     /**
      * Load vars from env file.

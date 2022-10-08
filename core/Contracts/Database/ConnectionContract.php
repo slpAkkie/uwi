@@ -4,6 +4,9 @@ namespace Uwi\Contracts\Database;
 
 use Uwi\Contracts\Container\SingletonContract;
 
+/**
+ * TODO: Rework...
+ */
 interface ConnectionContract extends SingletonContract
 {
     /**

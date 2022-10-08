@@ -8,6 +8,7 @@
 function app(): \Uwi\Contracts\Application\ApplicationContract
 {
     global $app;
+
     return $app;
 }
 

@@ -21,7 +21,6 @@ interface ResponseContract
      */
     public function json(mixed $data = null, int $responseCode = null): \Uwi\Contracts\Http\Response\ResponseContract;
 
-
     /**
      * Set response header to send a HTML.
      *

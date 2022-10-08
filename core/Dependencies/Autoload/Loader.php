@@ -20,7 +20,7 @@ class Loader
      *
      * @var string
      */
-    private const DEFAULT_CONFIGURATION_FILENAME = 'Scal.json';
+    private const DEFAULT_CONFIGURATION_FILENAME = 'autoload.conf.json';
 
     /**
      * Namespace map from configuration file
@@ -54,7 +54,7 @@ class Loader
      *
      * @param string $file
      * @return array
-     * 
+     *
      * @throws Exception
      */
     private static function loadConfiguration(string $file): array
@@ -74,7 +74,7 @@ class Loader
      * Boot Scal
      *
      * @return void
-     * 
+     *
      * @throws Exception
      */
     public static function boot(): void
@@ -199,7 +199,7 @@ class Loader
      * @param string $remain
      * @param string $file
      * @return ?string
-     * 
+     *
      * @throws Exception
      */
     public static function findClassFile(string|array $path, string $remain, string $file): ?string
@@ -227,7 +227,7 @@ class Loader
      *
      * @param string $class
      * @return void
-     * 
+     *
      * @throws Exception
      */
     public static function load(string $class): void

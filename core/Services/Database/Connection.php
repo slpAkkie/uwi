@@ -25,10 +25,10 @@ class Connection implements ConnectionContract
                 env('DATABASE_HOST'),
                 env('DATABASE_PORT'),
                 env('DATABASE_NAME'),
-                env('DATABASE_CHARSET')
+                env('DATABASE_CHARSET'),
             ),
             env('DATABASE_USER'),
-            env('DATABASE_PASSWORD')
+            env('DATABASE_PASSWORD'),
         );
     }
 

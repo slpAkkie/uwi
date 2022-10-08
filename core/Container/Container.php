@@ -43,19 +43,6 @@ class Container implements ContainerContract
     }
 
     /**
-     * Returns binded concrete for the abstract.
-     *
-     * @param string $abstract
-     * @return string|null
-     */
-    protected function concreteFor(string $abstract): string|null
-    {
-        $binded = $this->getBinded($abstract);
-
-        return $binded ? $binded[0] : null;
-    }
-
-    /**
      * Returns true if abstract has been binded to the Container.
      *
      * @param string $abstract
@@ -80,6 +67,19 @@ class Container implements ContainerContract
     }
 
     /**
+     * Returns binded concrete for the abstract.
+     *
+     * @param string $abstract
+     * @return string|null
+     */
+    protected function concreteFor(string $abstract): string|null
+    {
+        $binded = $this->getBinded($abstract);
+
+        return $binded ? $binded[0] : null;
+    }
+
+    /**
      * Create new instance of concrete for the abstract.
      * If abstract marked as shared then created instance
      * will be added for sharing into the Container.
@@ -88,7 +88,7 @@ class Container implements ContainerContract
      * @param array<mixed> ...$args
      * @return object
      * 
-     * @throws Exception
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function make(string $abstract, mixed ...$args): object
     {
@@ -150,6 +150,8 @@ class Container implements ContainerContract
             $arg = $type ? $this->resolve($type) : null;
 
             if (is_null($arg)) {
+                // If resolved argument is null then check
+                // arguments that were passed.
                 if (count($passedArgs)) {
                     $args[$argName] = array_shift($passedArgs);
                 }
@@ -213,7 +215,7 @@ class Container implements ContainerContract
      * @param array<mixed> ...$args
      * @return object
      * 
-     * @throws Exception
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function singleton(string $abstract, mixed ...$args): object
     {

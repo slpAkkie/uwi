@@ -12,7 +12,12 @@ interface RouteContract
      * @param string $controller
      * @param string $action
      */
-    public function __construct(string $method, string $url, string $controller, string $action);
+    public function __construct(
+        string $method,
+        string $url,
+        string $controller,
+        string $action,
+    );
 
     /**
      * Returns route's method.

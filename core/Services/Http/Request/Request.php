@@ -40,7 +40,7 @@ class Request implements RequestContract
      */
     public function scheme(): string
     {
-        return key_exists('HTTPS', $_SERVER) ? 'https' : 'http';
+        return $this->isSecure() ? 'https' : 'http';
     }
 
     /**
@@ -109,7 +109,7 @@ class Request implements RequestContract
      *
      * @return string
      */
-    public function fullurl(): string
+    public function fullUrl(): string
     {
         return $_SERVER['REQUEST_URI'];
     }
@@ -121,7 +121,7 @@ class Request implements RequestContract
      */
     public function url(): string
     {
-        return explode('?', $this->fullurl(), 2)[0];
+        return explode('?', $this->fullUrl(), 2)[0];
     }
 
     /**

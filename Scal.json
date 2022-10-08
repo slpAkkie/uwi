@@ -1,7 +1,0 @@
-{
-  "mapping": {
-    "App\\" : "app\\",
-    "Uwi\\" : "core\\",
-    "Tests\\" : "tests\\"
-  }
-}

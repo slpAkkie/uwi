@@ -64,9 +64,13 @@ class Model implements ModelContract
      * Instantiate Model.
      *
      * @param array<string, mixed> $attributes
+     * 
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
-    public function __construct(array $attributes = [], bool $preserveFillable = false)
-    {
+    public function __construct(
+        array $attributes = [],
+        bool $preserveFillable = false,
+    ) {
         $this->loadSchema();
 
         $primaryKey = key_exists($this->primaryKey, $attributes) ? $attributes[$this->primaryKey] : null;
@@ -229,6 +233,8 @@ class Model implements ModelContract
      *
      * @param string $key
      * @return mixed
+     * 
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function __get(string $key): mixed
     {
@@ -253,6 +259,8 @@ class Model implements ModelContract
      * @param string $key
      * @param mixed $val
      * @return mixed
+     * 
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function __set(string $key, mixed $val)
     {

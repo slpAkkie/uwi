@@ -97,11 +97,16 @@ class Compiler implements CompilerContract
      * @param bool $last - Indicate that view should be compiled last of all.
      * @param \Uwi\Services\Calibri\Contracts\ViewContract $view
      * @return \Uwi\Services\Calibri\Contracts\CompilerContract
+     * 
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function setView(ViewContract $view, bool $last = false): \Uwi\Services\Calibri\Contracts\CompilerContract
     {
+        // Get previous stack item to merge params.
         $prevStackItem = $this->currentStackItem >= 0 ? $this->stack[$this->currentStackItem] : null;
 
+        // Open file stream to read from view file.
+        // If stream fopen returns false then throw an exception.
         $path = $view->getViewPath();
         $stream = @fopen($path, 'r');
 
@@ -109,18 +114,25 @@ class Compiler implements CompilerContract
             throw new Exception("File not found for view at [$path]");
         }
 
+        // Collect data for new stack item.
         $stack = [
             'view' => $view,
             'path' => $path,
             'content' => '',
+            // Collect parameters from entire stack from above.
             'params' => array_merge($prevStackItem ? $prevStackItem['params'] : [], $view->getParams()),
             'stream' => $stream,
             'remainLine' => '',
         ];
 
+        // If $last is true then push new stack item
+        // at the top of the stack.
+        // In this case this stack item will be executed last of all
         if ($last) {
             array_unshift($this->stack, $stack);
-        } else {
+        }
+        // Else push at the end as a current stack item.
+        else {
             array_push($this->stack, $stack);
         }
 
@@ -159,13 +171,7 @@ class Compiler implements CompilerContract
      */
     public function getParams(): array
     {
-        $params = [];
-
-        for ($i = 0; $i <= $this->currentStackItem; $i++) {
-            $params = array_merge($this->stack[$i]['params'], $params);
-        }
-
-        return $params;
+        return $this->stack[$this->currentStackItem]['params'];
     }
 
     /**
@@ -175,13 +181,8 @@ class Compiler implements CompilerContract
      */
     protected function clearStack(): void
     {
-        foreach ($this->stack as $stackItem) {
-            if ($stackItem['stream'] !== null && is_resource($stackItem['stream'])) {
-                fclose($stackItem['stream']);
-                $stackItem['stream'] = null;
-            }
-
-            $this->currentStackItem--;
+        while ($this->currentStackItem >= 0) {
+            $this->popStack();
         }
     }
 
@@ -194,6 +195,7 @@ class Compiler implements CompilerContract
     {
         $stackItem = array_pop($this->stack);
 
+        // Close file stram.
         if ($stackItem['stream'] !== null && is_resource($stackItem['stream'])) {
             fclose($stackItem['stream']);
             $stackItem['stream'] = null;
@@ -250,8 +252,8 @@ class Compiler implements CompilerContract
 
         $directive = [];
 
-        preg_match($this->getDirectiveRegexp(), $line, $directive, PREG_OFFSET_CAPTURE);
-        if (count($directive)) {
+        // Find directive in the line.
+        if (preg_match($this->getDirectiveRegexp(), $line, $directive, PREG_OFFSET_CAPTURE)) {
             // Dissasemle read line into two parts.
             $disassembledLine = explode($directive[0][0], $line, 2);
             $line = $disassembledLine[0];
@@ -276,10 +278,12 @@ class Compiler implements CompilerContract
     }
 
     /**
-     * Read next until provided string isn't present.
+     * Read next until provided string isn't found.
      *
      * @param string $needle
      * @return string
+     * 
+     * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function readUntil(string $needle): string
     {
@@ -288,7 +292,7 @@ class Compiler implements CompilerContract
         $needleFound = false;
         $carry = '';
 
-        while (($line = $this->readNext(false)) !== false) {
+        while (($line = $this->readNext(true)) !== false) {
             // If needle in the line then disassemble the line,
             // save remain part and part of directive slot
             // then break the loop.
@@ -306,10 +310,15 @@ class Compiler implements CompilerContract
             $carry .= $line;
         }
 
+        // If needle isn't found but there is one more in stack
+        // then pop current stack and readUntil again.
         if (!$needleFound && $this->currentStackItem > 0) {
             $this->popStack();
             $carry .= $this->readUntil($needle);
-        } else if (!$needleFound) {
+        }
+        // Else if no more stack but needle is still not found
+        // throw an exception.
+        else if (!$needleFound) {
             throw new Exception("{$needle} expected but wasn't found");
         }
 
@@ -319,10 +328,10 @@ class Compiler implements CompilerContract
     /**
      * Read next line of view file.
      *
-     * @param bool $saveLine
+     * @param bool $preserveSave
      * @return string|false
      */
-    protected function readNext(bool $saveLine = true): string|false
+    protected function readNext(bool $preserveSave = false): string|false
     {
         $stackItem = &$this->stack[$this->currentStackItem];
 
@@ -337,11 +346,15 @@ class Compiler implements CompilerContract
             $line = fgets($stackItem['stream']);
         }
 
+        // If stream isn't ended then parse line.
         if ($line !== false) {
             $line = $this->parseLine($line);
-            if ($saveLine) {
+            // If no preserveSave then save line
+            // into stack item content.
+            if (!$preserveSave) {
                 $stackItem['content'] .= $line;
             }
+
             return $line;
         }
 
@@ -360,12 +373,19 @@ class Compiler implements CompilerContract
                 //
             }
 
+            $content = $this->evalInterpolations();
+            // If there is more than one last in the stack
+            // then eval interpolations in it and save
+            // content to the previous one.
             if ($this->currentStackItem > 0) {
-                $this->stack[$this->currentStackItem - 1]['content'] .= $this->evalInterpolations();
-            } else {
-                $this->content .= $this->evalInterpolations();
+                $this->stack[$this->currentStackItem - 1]['content'] .= $content;
+            }
+            // Else save content to the result content.
+            else {
+                $this->content .= $content;
             }
 
+            // And remove read stack.
             $this->popStack();
         }
 
@@ -397,11 +417,11 @@ class Compiler implements CompilerContract
         $directiveSymbol = self::DIRECTIVE_SYMBOL;
 
         // Replace all compiler interpolations with its evaluated value.
-        $stackItem['content'] = preg_replace_callback("/(?<!$directiveSymbol){{(.*?)}}/", function ($match) use ($stackItem) {
-            extract($stackItem['params']);
-
-            return eval("return ({$match[1]});");
-        }, $stackItem['content']);
+        $stackItem['content'] = preg_replace_callback(
+            "/(?<!$directiveSymbol){{(.*?)}}/",
+            fn ($match) => reval($match[1], $stackItem['params']),
+            $stackItem['content']
+        );
 
         return $stackItem['content'];
     }
