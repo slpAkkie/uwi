@@ -88,7 +88,7 @@ class View implements ResponsableContract, ViewContract
      *
      * @param string $view
      * @param array<string, mixed> $params
-     * 
+     *
      * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function __construct(
@@ -181,30 +181,10 @@ class View implements ResponsableContract, ViewContract
     }
 
     /**
-     * Returns path ro view file.
-     *
-     * @return string
-     */
-    public function getViewPath(): string
-    {
-        return sprintf('%s/%s', $this->viewPath, $this->getViewFileName());
-    }
-
-    /**
-     * Returns view params.
-     *
-     * @return array
-     */
-    public function getParams(): array
-    {
-        return $this->params;
-    }
-
-    /**
      * Render view content.
      *
      * @return string
-     * 
+     *
      * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function render(): string
