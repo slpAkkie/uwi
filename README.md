@@ -1,8 +1,8 @@
-# Uwi Framework
+## Uwi Framework
 
 Uwi - Simple and legacy backend framework without any third-party packages based on MVC pattern.
 
-## Description
+### Description
 
 Framework based on Container with binding concrete realization to abstract interfaces.
 After core Application components has been loaded one of Kernel will be started.
@@ -11,7 +11,7 @@ Kernel handle all proccess according the context. Kernel may be replaced with ot
 
 There is only one Kernel available now - `HttpKernel`.
 
-### Application
+#### Application
 
 Application container provide some features:
 
@@ -19,7 +19,7 @@ Application container provide some features:
 -   Dotenv - extract variables from .env files.
 -   Lion ORM - to work with database entities.
 
-### HttpKernel
+#### HttpKernel
 
 This Kernel responsible for http requests.
 
