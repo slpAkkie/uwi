@@ -12,7 +12,7 @@ module.exports = {
 
     output: {
         path: path.join(__dirname, "storage/app/dist/"),
-        publicPath: "/",
+        publicPath: "/dist/",
         filename: "[name].bundle.js",
         clean: true,
     },
