@@ -1,10 +1,8 @@
-# Uwi Framework
-
-<img src="https://akkie.cyou/files/uwi_banner.png" alt="Uwi Banner" />
+## Uwi Framework
 
 Legacy php framework based on MVC pattern
 
-## Description
+### Description
 
 This is a framework written from beginning to end without any packages
 
