@@ -1,0 +1,6 @@
+{
+    "mapping": {
+        "Services\\": "Framework\\Services\\",
+        "App\\": "app\\"
+    }
+}
