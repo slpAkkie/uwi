@@ -1,15 +1,15 @@
 [submodule "Framework/Services/Container"]
 	path = Framework/Services/Container
-	url = git@github.com:slpAkkie/php-di-container
+	url = https://github.com/slpAkkie/php-di-container
 [submodule "Framework/Services/Calibri"]
 	path = Framework/Services/Calibri
-	url = git@github.com:slpAkkie/Calibri
+	url = https://github.com/slpAkkie/Calibri
 [submodule "Framework/Autoload"]
 	path = Framework/Autoload
-	url = git@github.com:slpAkkie/php-class-autoloader
+	url = https://github.com/slpAkkie/php-class-autoloader
 [submodule "Framework/Services/Dotenv"]
 	path = Framework/Services/Dotenv
-	url = git@github.com:slpAkkie/php-dotenv
+	url = https://github.com/slpAkkie/php-dotenv
 [submodule "Framework/Services/Http"]
 	path = Framework/Services/Http
-	url = git@github.com:slpAkkie/php-http-module
+	url = https://github.com/slpAkkie/php-http-module
