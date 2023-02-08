@@ -1,9 +1,10 @@
 <?php
 
-define('APP_ROOT_PATH', __DIR__);
+define('APP_ROOT_PATH', realpath('../'));
 
 
 
+require_once APP_ROOT_PATH . '/bootstrap/app.php';
 require_once APP_ROOT_PATH . '/Framework/Autoload/Initializer.php';
 
 $application = new \Framework\Foundation\Application([
