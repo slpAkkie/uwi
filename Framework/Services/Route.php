@@ -2,10 +2,9 @@
 
 namespace Services;
 
-use Services\Container\Contracts\SingletonContract;
 use Services\Http\Routing\Route as BaseRoute;
 
-class Route extends BaseRoute implements SingletonContract
+class Route extends BaseRoute
 {
     /**
      * TODO: Undocumented function
