@@ -1,39 +1,36 @@
 # Uwi Framework
 
-Uwi - Simple and legacy backend framework without any third-party packages based on MVC pattern.
+Uwi - Простой и легкий `backend-фреймворк` написанный без привлечения каких-либо пакетов, следующий принципу `MVC`
 
-## Description
+## Описание
 
-Framework based on Container with binding concrete realization to abstract interfaces.
-After core Application components has been loaded one of Kernel will be started.
+Uwi основан на контейнере с привязками реализаций к их абстрактным интерфейсам
 
-Kernel handle all proccess according the context. Kernel may be replaced with other one.
-
-There is only one Kernel available now - `WebKernel`.
+После того, как приложение, класс `Application`, загружен, запуститься Ядро, которое обрабатывает запрос
 
 ### Application
 
-Application container provide some features:
+Application контейнер предоставляет следующие вохможности:
 
-- Inject dependencies into functions and methods.
-- Dotenv - extract variables from .env files.
+- Внедрение зависимостей в функции и методы
+- `Dotenv` - чтение файла `.env` и загрузка переменных окружения
 
 ### WebKernel
 
-This Kernel responsible for http requests.
+Это ядро отвечает за обработку `HTTP` запросов
 
-Components in this Kernel:
+Компоненты ядра:
 
-- Router - to specify which action use for the current request.
-- Request - handle `HTTP` requests.
-- Response - to send `HTTP` response.
-- Sessions - to work with sessions.
-- Calibri Templates - tempalte engine to construct your `html` file.
+- `Router` - Распределяет запросы по обработчикам.
+- `Request` - Представляет собой объект запроса.
+- `Response` - Представляет собой объект ответа, отправлемый клиенту.
+- `Sessions` - Объект работы с сессиями.
+- `Calibri` - Шаблонизатор для ваших страниц.
 
-## Author
+## Автор
 
 Alexandr Shamanin (@slpakkie).
 
-## Version
+## Версия
 
-2.3.0-beta
+2.x-dev
