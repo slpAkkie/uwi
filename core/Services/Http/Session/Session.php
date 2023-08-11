@@ -7,18 +7,12 @@ use Uwi\Contracts\Http\Session\SessionContract;
 class Session implements SessionContract
 {
     /**
-     * Deafult path where to store sessions.
-     * 
-     * @var string
-     */
-    protected const SESSION_SAVE_PATH = '/storage/framework/sessions';
-
-    /**
      * Instantiate Session.
      */
-    public function __construct()
+    public function __construct(?string $save_path = null)
     {
-        session_save_path(APP_BASE_PATH . static::SESSION_SAVE_PATH);
+        if (!is_null($save_path))
+            session_save_path(APP_BASE_PATH . $save_path);
     }
 
     /**
