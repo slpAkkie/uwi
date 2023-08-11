@@ -11,7 +11,5 @@ class User extends Model
      *
      * @var array
      */
-    protected array $fillable = [
-        'name',
-    ];
+    protected array $fillable = [];
 }
