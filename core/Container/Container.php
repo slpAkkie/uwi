@@ -87,7 +87,7 @@ class Container implements ContainerContract
      * @param string $abstract
      * @param array<mixed> ...$args
      * @return object
-     * 
+     *
      * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function make(string $abstract, mixed ...$args): object
@@ -214,7 +214,7 @@ class Container implements ContainerContract
      * @param string $abstract
      * @param array<mixed> ...$args
      * @return object
-     * 
+     *
      * @throws \Uwi\Foundation\Exceptions\Exception
      */
     public function singleton(string $abstract, mixed ...$args): object
