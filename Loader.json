@@ -1,0 +1,8 @@
+{
+    "psr-4": {
+        "Uwi\\": "./",
+        "Psr\\": [
+            "./Container/Psr/src"
+        ]
+    }
+}

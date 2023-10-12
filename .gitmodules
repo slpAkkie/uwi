@@ -1,0 +1,6 @@
+[submodule "Loader"]
+	path = Loader
+	url = https://github.com/slpakkie/uwi-loader
+[submodule "Container"]
+	path = Container
+	url = https://github.com/slpakkie/uwi-container
