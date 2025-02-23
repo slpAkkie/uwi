@@ -19,7 +19,7 @@ interface ResponseContract
      * @param int $responseCode
      * @return \Uwi\Contracts\Http\Response\ResponseContract
      */
-    public function json(mixed $data = null, int $responseCode = null): \Uwi\Contracts\Http\Response\ResponseContract;
+    public function json(mixed $data = null, ?int $responseCode = null): \Uwi\Contracts\Http\Response\ResponseContract;
 
     /**
      * Set response header to send a HTML.
@@ -28,7 +28,7 @@ interface ResponseContract
      * @param int $responseCode
      * @return \Uwi\Contracts\Http\Response\ResponseContract
      */
-    public function html(mixed $data = null, int $responseCode = null): \Uwi\Contracts\Http\Response\ResponseContract;
+    public function html(mixed $data = null, ?int $responseCode = null): \Uwi\Contracts\Http\Response\ResponseContract;
 
     /**
      * Send response to the client.
