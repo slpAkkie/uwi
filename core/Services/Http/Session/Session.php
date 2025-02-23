@@ -82,7 +82,7 @@ class Session implements SessionContract
      * @param string|null $default
      * @return string|null
      */
-    public function get(string $key, string $default = null): string|null
+    public function get(string $key, ?string $default = null): string|null
     {
         return key_exists($key, $_SESSION) ? $_SESSION[$key] : $default;
     }

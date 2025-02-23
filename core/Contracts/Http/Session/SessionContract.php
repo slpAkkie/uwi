@@ -45,7 +45,7 @@ interface SessionContract extends SingletonContract
      * @param string|null $default
      * @return string|null
      */
-    public function get(string $key, string $default = null): string|null;
+    public function get(string $key, ?string $default = null): string|null;
 
     /**
      * Get all session data.
