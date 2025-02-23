@@ -1,14 +1,17 @@
-const { glob } = require("glob");
+const { globSync } = require("glob");
 const path = require("path");
 
 module.exports = {
     mode: "development",
 
-    entry: glob.sync("./src/ts/*.ts").reduce((entries, el) => {
-        entries[path.parse(el).name] = el;
+    entry: globSync("./src/ts/*.ts", { dotRelative: true }).reduce(
+        (entries, el) => {
+            entries[path.parse(el).name] = el;
 
-        return entries;
-    }, {}),
+            return entries;
+        },
+        {}
+    ),
 
     output: {
         path: path.join(__dirname, "storage/app/dist/"),
@@ -18,9 +21,9 @@ module.exports = {
     },
 
     optimization: {
-        splitChunks: {
-            chunks: "all",
-        },
+        // splitChunks: {
+        //     chunks: "all",
+        // },
     },
 
     resolve: {
