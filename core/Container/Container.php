@@ -146,8 +146,16 @@ class Container implements ContainerContract
 
         foreach ($argsToResolve as $type) {
             $argName = $type->name;
-            $type = $type->getType()?->getName();
-            $arg = $type ? $this->resolve($type) : null;
+            $typeReflection = $type->getType();
+            $typeName = $typeReflection?->getName();
+
+            if ($typeReflection->isBuiltin()) {
+                if (count($passedArgs) > 0)
+                    $args[$argName] = array_shift($passedArgs);
+                continue;
+            }
+
+            $arg = $typeName ? $this->resolve($typeName) : null;
 
             if (is_null($arg)) {
                 // If resolved argument is null then check
